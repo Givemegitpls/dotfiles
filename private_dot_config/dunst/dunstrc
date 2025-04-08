@@ -20,8 +20,6 @@ origin = bottom-right
 [urgency_low]
 background = "#20212C6A"
 foreground = "#C0CAF5"
-#frame_color = "#BD93F9"
-#foreground = "#CDD6F4"
 
 [urgency_normal]
 background = "#20212C6A"
