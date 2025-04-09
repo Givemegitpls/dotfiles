@@ -3,10 +3,6 @@
  *
  * Author : Levi Lacoss (fishyfishfish55)
  * Github : @fishyfishfish55
- *
- * Colors
- * background:     #20212C6A;
- * foreground:     #C0CAF5;
  **/
 
 * {
@@ -17,5 +13,5 @@
     selected:       #87B2F6;
     active:         #33CCFF;
     urgent:         #50FA7B;
-	border:			#87B2F6;
+    border:   			#87B2F6;
 }

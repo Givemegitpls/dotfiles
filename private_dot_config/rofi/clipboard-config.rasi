@@ -9,14 +9,14 @@
 
 /*****----- Configuration -----*****/
 configuration {
-	modi:                       "drun,run,filebrowser,window";
+    modi:                       "drun,run,filebrowser,window";
     show-icons:                 true;
     display-drun:               " ";
     display-run:                " ";
     display-filebrowser:        " ";
     display-window:             " ";
-	drun-display-format:        "{name}";
-	window-format:              "{w} · {c} · {t}";
+    drun-display-format:        "{name}";
+    window-format:              "{w} · {c} · {t}";
 }
 
 /*****----- Global Properties -----*****/
@@ -24,10 +24,10 @@ configuration {
 @import                          "./fonts.rasi"
 
 * {
-    border-color:               var(border);
-    handle-color:               var(selected);
-    background-color:           var(background);
-    foreground-color:           var(foreground);
+    border-color:                var(border);
+    handle-color:                var(selected);
+    background-color:            var(background);
+    foreground-color:            var(foreground);
     alternate-background:        var(background-alt);
     normal-background:           var(background);
     normal-foreground:           var(foreground);
@@ -70,14 +70,6 @@ window {
     cursor:                      "default";
     /* Backgroud Colors */
     background-color:            @background-color;
-    /* Backgroud Image */
-    //background-image:          url("/path/to/image.png", none);
-    /* Simple Linear Gradient */
-    //background-image:          linear-gradient(red, orange, pink, purple);
-    /* Directional Linear Gradient */
-    //background-image:          linear-gradient(to bottom, pink, yellow, magenta);
-    /* Angle Linear Gradient */
-    //background-image:          linear-gradient(45, cyan, purple, indigo);
 }
 
 /*****----- Main Box -----*****/
