@@ -80,7 +80,7 @@ mainbox {
     padding:                     30px;
     border:                      0px solid;
     border-radius:               15px;
-    border-color:                #6f91c9;
+    border-color:                @border-color;
     background-color:            transparent;
     transparency :               "real";
     children:                    [ "inputbar", "message", "listview" ];
@@ -109,7 +109,7 @@ textbox-prompt-colon {
     enabled:                     true;
     padding:                     5px 0px;
     expand:                      false;
-    str:                         "";
+    str:                         " ";
     background-color:            inherit;
     text-color:                  inherit;
 }
