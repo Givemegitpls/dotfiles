@@ -10,5 +10,4 @@ do
 	for k, v in pairs(neovim_options) do
 		vim.opt[k] = v
 	end
-	require("config.autoclose")
 end
