@@ -98,6 +98,7 @@ plugins=(git zsh-syntax-highlighting zsh-autosuggestions zsh-vi-mode zsh-history
 # For a full list of active aliases, run `alias`.
 #
 # Example aliases
+alias cat="bat -P"
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
@@ -117,6 +118,23 @@ prompt_context() {
 if uwsm check may-start; then
     exec uwsm start hyprland-uwsm.desktop
 fi
+
+function rp() {
+  poetry env info &> /dev/null
+  if [[ $? -eq 0 ]]; then
+    if [[ -z $1 ]]; then
+      poetry run python
+    else
+      poetry run python "$1"
+    fi
+  else
+    if [[ -z $1 ]]; then
+      python
+    else
+      python "$1"
+    fi
+  fi
+}
 
 #Syntax Highlighting
 ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets)
@@ -159,3 +177,5 @@ bindkey -M viins '\eOB' history-substring-search-down # or '^[[B'
 bindkey -M vicmd 'j' history-substring-search-up
 bindkey -M vicmd 'h' history-substring-search-down
 HISTORY_SUBSTRING_SEARCH_ENSURE_UNIQUE=1
+
+
