@@ -70,7 +70,7 @@ ZSH_CUSTOM=~/.config/zsh
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git zsh-syntax-highlighting zsh-autosuggestions zsh-history-substring-search zsh-vi-mode)
+plugins=(git zsh-syntax-highlighting zsh-autosuggestions zsh-vi-mode zsh-history-substring-search)
 
 # User configuration
 
@@ -148,6 +148,14 @@ ZSH_HIGHLIGHT_STYLES[bracket-level-4]=fg=cyan
 ZSH_HIGHLIGHT_STYLES[cursor-matchingbracket]=fg=237,bold,bg=74 
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=fg=240
 
-#Search KeyBinds
-bindkey "$terminfo[kcuu1]" history-substring-search-up
-bindkey "$terminfo[kcud1]" history-substring-search-down
+AGNOSTER_STATUS_RETVAL_NUMERIC=true
+AGNOSTER_GIT_INLINE=true
+
+# zsh-history-substring-search configuration
+bindkey -M vicmd '\eOA' history-substring-search-up # or '^[[A'
+bindkey -M vicmd '\eOB' history-substring-search-down # or '^[[B'
+bindkey -M viins '\eOA' history-substring-search-up # or '^[[A'
+bindkey -M viins '\eOB' history-substring-search-down # or '^[[B'
+bindkey -M vicmd 'j' history-substring-search-up
+bindkey -M vicmd 'h' history-substring-search-down
+HISTORY_SUBSTRING_SEARCH_ENSURE_UNIQUE=1
