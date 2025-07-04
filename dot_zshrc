@@ -80,11 +80,11 @@ plugins=(git zsh-syntax-highlighting zsh-autosuggestions zsh-vi-mode zsh-history
 # export LANG=en_US.UTF-8
 
 # Preferred editor for local and remote sessions
-# if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
-# else
-#   export EDITOR='nvim'
-# fi
+if [[ -n $SSH_CONNECTION ]]; then
+  export TERM="xterm-256color"
+fi
+
+export EDITOR='nvim'
 
 # Compilation flags
 # export ARCHFLAGS="-arch $(uname -m)"
@@ -110,7 +110,7 @@ fi
 source $ZSH/oh-my-zsh.sh
 
 prompt_context() {
-  if [[ -n "$SSH_CLIENT" ]]; then
+  if [[ -n $SSH_CONNECTION ]]; then
     prompt_segment black default "%(!.%{%F{yellow}%}.)$HOST@$USER"
   fi
 }
