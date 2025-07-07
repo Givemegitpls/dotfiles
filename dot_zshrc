@@ -140,7 +140,7 @@ function rp() {
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-#Syntax Highlighting
+# Syntax Highlighting
 ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets)
 
 ZSH_HIGHLIGHT_STYLES[default]=fg=cyan
