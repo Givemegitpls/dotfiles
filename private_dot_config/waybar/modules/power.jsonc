@@ -1,0 +1,24 @@
+{
+  "group/power-group": {
+    "orientation": "horizontal",
+    "modules": ["backlight", "battery"],
+  },
+
+  "battery": {
+    "format": "{icon}",
+    "format-icons": ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂂", "󰁹"],
+    "format-charging": "󰂄",
+    "on-click": "$HOME/.config/hypr/scripts/dunst/ROGprofiler.sh",
+    "tooltip-format": "{capacity}% {timeTo}",
+  },
+  "backlight": {
+    "device": "intel_backlight",
+    "format": "{icon}",
+    "format-icons": ["", "", "", "", "", "", "", "", ""],
+    "smooth-scrolling-threshold": 1, // This value was tested using a trackpad, it should be lowered if using a mouse.
+    "on-scroll-down": "brightnessctl --device='amdgpu_bl0' set 5%+",
+    "on-scroll-up": "brightnessctl --device='amdgpu_bl0' set 5%-",
+    "on-click": "python $HOME/.config/hypr/scripts/swww.py",
+    "tooltip-format": "{percent}%",
+  },
+}

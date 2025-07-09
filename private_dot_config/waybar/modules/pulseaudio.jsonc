@@ -1,0 +1,29 @@
+{
+  "group/pulseaudio-group": {
+    "orientation": "horizontal",
+    "modules": ["pulseaudio#input", "pulseaudio#output"],
+  },
+
+  "pulseaudio#output": {
+    "format": "{icon}",
+    "tooltip-format": "{volume}%",
+    "format-muted": " ",
+    "format-icons": {
+      "headphone": " ",
+      "hdmi": "󰽟 ",
+      "default": [" ", " ", " ", " "],
+    },
+    "scroll-step": 1,
+    "on-click": "rofi-mixer",
+    "smooth-scrolling-threshold": 1, // This value was tested using a trackpad, it should be lowered if using a mouse.
+    "on-scroll-down": "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+ -l 1.0",
+    "on-scroll-up": "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%- -l 1.0",
+  },
+  "pulseaudio#input": {
+    "format-source": "",
+    "format-source-muted": "",
+    "tooltip": false,
+    "format": "{format_source}",
+    "on-click": "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle",
+  },
+}

@@ -1,0 +1,10 @@
+{
+  "tray": {
+    "icon-size": 14,
+    "spacing": 10,
+    "icons": {
+      "Steam": "",
+      "Telegram Desktop": "",
+    },
+  },
+}

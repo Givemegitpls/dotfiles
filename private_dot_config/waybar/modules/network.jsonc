@@ -1,0 +1,24 @@
+{
+  "group/network-group": {
+    "orientation": "horizontal",
+    "modules": ["bluetooth", "network"],
+  },
+
+  "bluetooth": {
+    "format": "",
+    "format-disabled": "", // an empty format will hide the module
+    "format-connected": "",
+    "on-click": "kitty bluetui",
+    "tooltip-format": "{device_enumerate}",
+    "tooltip-format-enumerate-connected": "{device_alias}",
+  },
+  "network": {
+    "format": "{ifname}",
+    "format-wifi": " ",
+    "format-ethernet": "󰈀 ",
+    "format-disconnected": "󰖪 ",
+    "tooltip-format-wifi": "{essid}",
+    "tooltip-format-ethernet": "{ipaddr}",
+    "on-click": "networkmanager_dmenu",
+  },
+}

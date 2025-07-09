@@ -1,0 +1,29 @@
+{
+  "group/workspaces-group": {
+    "orientation": "horizontal",
+    "modules": ["hyprland/windowcount", "hyprland/workspaces"],
+  },
+
+  "hyprland/workspaces": {
+    "format": "{icon}",
+    "tooltip": true,
+    "tooltips": {
+      "default": "{name}: {windows}",
+      "empty": "", // Will result in no tooltip
+    },
+    "all-outputs": false,
+    "on-scroll-up": "hyprctl dispatch focusworkspaceoncurrentmonitor r-1",
+    "on-scroll-down": "hyprctl dispatch focusworkspaceoncurrentmonitor r+1",
+    "format-icons": {
+      "active": "",
+      "default": "",
+    },
+  },
+  "hyprland/windowcount": {
+    "format": "{}",
+    "format-empty": "{}",
+    "format-windowed": "{}",
+    "separate-outputs": true,
+    "on-click": "rofi -show window",
+  },
+}
