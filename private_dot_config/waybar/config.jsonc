@@ -12,7 +12,7 @@
   ],
   "group/workspaces-group": {
     "orientation": "horizontal",
-    "modules": ["hyprland/workspaces", "hyprland/windowcount"],
+    "modules": ["hyprland/windowcount", "hyprland/workspaces"],
   },
   "hyprland/workspaces": {
     "format": "{icon}",
@@ -31,10 +31,10 @@
   },
   "hyprland/windowcount": {
     "format": "{}",
-    "format-empty": "X",
+    "format-empty": "{}",
     "format-windowed": "{}",
     "separate-outputs": true,
-    "on-click": "dunstify %{}",
+    "on-click": "rofi -show window",
   },
 
   "custom/media": {

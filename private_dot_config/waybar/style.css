@@ -65,10 +65,12 @@ tooltip label {
   padding-right: 12px;
 }
 
-#workspaces,
-#windowcount,
 #workspaces button {
   padding-left: 4px;
+}
+
+#windowcount {
+  padding-right: 4px;
 }
 
 #network,
