@@ -1,12 +1,12 @@
 #!/bin/bash
 
-asusctl fan-curve -m "quiet" -f cpu -D 24:0,61:0,67:10,72:29,75:65,77:101,79:141,99:190
-asusctl fan-curve -m "quiet" -f gpu -D 24:0,61:0,67:10,72:29,75:65,77:101,79:141,99:190
-asusctl fan-curve -m "performance" -f cpu -D 24:0,50:0,55:50,60:103,64:128,68:154,73:192,75:255
-asusctl fan-curve -m "performance" -f gpu -D 24:0,50:0,55:50,60:103,64:128,68:154,73:192,75:255
-asusctl fan-curve -m "balanced" -f cpu -D 20c:0%,48c:0%,51c:18%,54c:22%,57c:27%,61c:40%,65c:46%,98c:52%
-asusctl fan-curve -m "balanced" -f gpu -D 20c:0%,48c:0%,51c:24%,54c:27%,57c:33%,61c:43%,65c:50%,98c:60%
+asusctl fan-curve -m "quiet" -f cpu -D 20c:0%,50c:10%,55c:15%,60c:25%,65c:40%,70c:60%,75c:80%,80c:100%
+asusctl fan-curve -m "quiet" -f gpu -D 20c:0%,50c:10%,55c:15%,60c:25%,65c:40%,70c:60%,75c:80%,80c:100%
 asusctl fan-curve -m "quiet" -e true
-asusctl fan-curve -m "performance" -e true
+asusctl fan-curve -m "balanced" -f cpu -D 24c:0%,40c:15%,50c:25%,55c:35%,60c:50%,65c:65%,70c:80%,75c:100%
+asusctl fan-curve -m "balanced" -f gpu -D 24c:0%,40c:15%,50c:25%,55c:35%,60c:50%,65c:65%,70c:80%,75c:100%
 asusctl fan-curve -m "balanced" -e true
+asusctl fan-curve -m "performance" -f cpu -D 24c:10%,35c:25%,40c:40%,50c:60%,55c:75%,60c:85%,65c:95%,70c:100%
+asusctl fan-curve -m "performance" -f gpu -D 24c:10%,35c:25%,40c:40%,50c:60%,55c:75%,60c:85%,65c:95%,70c:100%
+asusctl fan-curve -m "performance" -e true
 asusctl profile -P "balanced"
