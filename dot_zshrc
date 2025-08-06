@@ -117,7 +117,7 @@ fi
 source $ZSH/oh-my-zsh.sh
 
 if uwsm check may-start; then
-    exec uwsm start hyprland-uwsm.desktop
+  exec uwsm start default
 fi
 
 function rp() {
