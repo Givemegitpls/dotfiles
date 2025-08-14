@@ -4,9 +4,9 @@
   "modules-left": ["group/workspaces-group", "custom/media"],
   "modules-center": [],
   "modules-right": [
-    "group/power-group",
     "tray",
     "group/pulseaudio-group",
+    "group/power-group",
     "group/network-group",
     "clock",
   ],
