@@ -6,8 +6,8 @@
   "modules-right": [
     "tray",
     "group/pulseaudio-group",
-    "group/power-group",
     "group/network-group",
+    "group/power-group",
     "clock",
   ],
   "include": [
