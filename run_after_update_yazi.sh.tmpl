@@ -1,0 +1,5 @@
+{{  if eq .chezmoi.osRelease.id "arch" -}}
+#!/bin/sh
+ya pkg add yazi-rs/plugins:mount
+ya pkg upgrade
+{{ end -}}
