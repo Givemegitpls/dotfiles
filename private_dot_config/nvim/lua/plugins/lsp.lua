@@ -14,43 +14,14 @@ return {
 			vim.lsp.buf.hover()
 		end, opts)
 
-		local util = require("lspconfig/util")
-		local path = util.path
-
-		-- source https://github.com/neovim/nvim-lspconfig/issues/500#issuecomment-877293306
-		local function get_python_path(workspace)
-			workspace = workspace or ""
-			-- Use activated virtualenv.
-			if vim.env.VIRTUAL_ENV then
-				return path.join(vim.env.VIRTUAL_ENV, "bin", "python")
-			end
-
-			-- Find and use virtualenv via poetry in workspace directory.
-			if workspace ~= "" then
-				local match = vim.fn.glob(path.join(workspace, "poetry.lock"))
-				if match ~= "" then
-					local venv = vim.fn.trim(vim.fn.system("poetry env info -p 2> /dev/null"))
-					if venv ~= "" then
-						return path.join(venv, "bin", "python")
-					end
-				end
-			end
-
-			-- Fallback to system Python.
-			return vim.fn.exepath("python3") or vim.fn.exepath("python") or "python"
-		end
+		local python_utils = require("functions.python")
 
 		require("lspconfig").ruff.setup({
-			before_init = function(_, config)
-				config.settings.interpreter = get_python_path(config.root_dir)
-			end,
+			settings = { interpreter = python_utils.get_python_path() },
 		})
 		require("lspconfig").basedpyright.setup({
-			before_init = function(_, config)
-				config.settings.python.pythonPath = get_python_path(config.root_dir)
-			end,
 			settings = {
-				python = {},
+				python = { pythonPath = python_utils.get_python_path() },
 				basedpyright = {
 					analysis = {
 						typeCheckingMode = "strict",

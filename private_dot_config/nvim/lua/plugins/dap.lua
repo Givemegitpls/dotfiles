@@ -33,8 +33,11 @@ return {
 		dependencies = {
 			"mfussenegger/nvim-dap",
 		},
+
 		config = function()
-			require("dap-python").setup()
+			local python_utils = require("functions.python")
+			local python_path = python_utils.get_python_path()
+			require("dap-python").setup(python_path)
 		end,
 	},
 }
