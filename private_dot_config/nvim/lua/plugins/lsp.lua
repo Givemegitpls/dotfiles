@@ -15,13 +15,14 @@ return {
 		end, opts)
 
 		local python_utils = require("functions.python")
+		local python_path = python_utils.get_python_path()
 
 		require("lspconfig").ruff.setup({
-			settings = { interpreter = python_utils.get_python_path() },
+			settings = { interpreter = python_path },
 		})
 		require("lspconfig").basedpyright.setup({
 			settings = {
-				python = { pythonPath = python_utils.get_python_path() },
+				python = { pythonPath = python_path },
 				basedpyright = {
 					analysis = {
 						typeCheckingMode = "strict",
