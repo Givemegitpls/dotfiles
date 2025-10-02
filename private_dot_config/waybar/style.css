@@ -35,7 +35,7 @@ tooltip {
 tooltip label {
 }
 
-#hyprland-group,
+#workspaces-group,
 #custom-media {
   margin-left: 5px;
 }
@@ -63,7 +63,6 @@ tooltip label {
 }
 
 #workspaces button {
-  padding-left: 4px;
   padding-left: 4px;
 }
 
