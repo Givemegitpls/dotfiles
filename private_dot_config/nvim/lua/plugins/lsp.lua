@@ -17,10 +17,11 @@ return {
 		local python_utils = require("functions.python")
 		local python_path = python_utils.get_python_path()
 
-		require("lspconfig").ruff.setup({
+		vim.lsp.config("ruff", {
 			settings = { interpreter = python_path },
 		})
-		require("lspconfig").basedpyright.setup({
+		vim.lsp.enable("ruff")
+		vim.lsp.config("basedpyright", {
 			settings = {
 				python = { pythonPath = python_path },
 				basedpyright = {
@@ -30,9 +31,11 @@ return {
 				},
 			},
 		})
-		require("lspconfig").bashls.setup({
+		vim.lsp.enable("basedpyright")
+		vim.lsp.config("bashls", {
 			cmd = { "bash-language-server", "start" },
 			filetypes = { "bash", "sh" },
 		})
+		vim.lsp.enable("bashls")
 	end,
 }
