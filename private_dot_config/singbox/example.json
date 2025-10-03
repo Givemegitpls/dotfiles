@@ -1,0 +1,136 @@
+{
+  "dns": {
+    "servers": [
+      {
+        "tag": "dns-remote",
+        "type": "https",
+        "server": "8.8.8.8",
+        "detour": "proxy"
+      },
+      {
+        "tag": "dns-direct",
+        "type": "local",
+        "detour": "direct"
+      }
+    ]
+  },
+  "inbounds": [
+    {
+      "listen": "127.0.0.1",
+      "listen_port": 2080,
+      "sniff": true,
+      "sniff_override_destination": false,
+      "tag": "mixed-in",
+      "type": "mixed"
+    },
+    {
+      "address": ["172.19.0.1/24"],
+      "auto_redirect": false,
+      "auto_route": true,
+      "endpoint_independent_nat": true,
+      "gso": false,
+      "interface_name": "nekoray",
+      "mtu": 1500,
+      "sniff": true,
+      "sniff_override_destination": false,
+      "stack": "gvisor",
+      "strict_route": true,
+      "tag": "tun-in",
+      "type": "tun"
+    }
+  ],
+  "log": {
+    "level": "warn"
+  },
+  "outbounds": [
+    {
+      "tag": "direct",
+      "type": "direct"
+    },
+    {
+      "domain_resolver": {
+        "server": "dns-direct",
+        "strategy": "prefer_ipv4"
+      },
+      "flow": "xtls-rprx-vision",
+      "packet_encoding": "",
+      "server": "changeme",
+      "server_port": 443,
+      "tag": "proxy",
+      "tls": {
+        "enabled": true,
+        "reality": {
+          "enabled": true,
+          "public_key": "changeme",
+          "short_id": "changeme"
+        },
+        "server_name": "changeme",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "type": "vless",
+      "uuid": "changeme"
+    }
+  ],
+  "route": {
+    "auto_detect_interface": true,
+    "final": "direct",
+    "default_domain_resolver": {
+      "server": "dns-direct",
+      "strategy": "prefer_ipv4"
+    },
+    "rule_set": [
+      {
+        "tag": "geoip-ru",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/SagerNet/sing-geoip/rule-set/geoip-ru.srs",
+        "download_detour": "proxy"
+      }
+    ],
+    "rules": [
+      {
+        "action": "hijack-dns",
+        "protocol": "dns"
+      },
+      {
+        "domain_keyword": [".ru", ".xn--p1ai", ".su"],
+        "rule_set": "geoip-ru",
+        "outbound": "direct"
+      },
+      {
+        "process_name": [
+          "neovim",
+          "git",
+          "chrome",
+          "electron",
+          "firefox",
+          "Telegram"
+        ],
+        "outbound": "proxy"
+      },
+      {
+        "inbound": "mixed-in",
+        "action": "resolve",
+        "strategy": "prefer_ipv4"
+      },
+      {
+        "inbound": "mixed-in",
+        "action": "sniff",
+        "timeout": "1s"
+      },
+      {
+        "inbound": "tun-in",
+        "action": "resolve",
+        "strategy": "prefer_ipv4"
+      },
+      {
+        "inbound": "tun-in",
+        "action": "sniff",
+        "timeout": "1s"
+      }
+    ]
+  }
+}
