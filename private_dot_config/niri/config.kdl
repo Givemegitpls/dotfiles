@@ -1,0 +1,29 @@
+// This config is in the KDL format: https://kdl.dev
+// "/-" comments out the following node.
+// Check the wiki for a full description of the configuration:
+// https://yalter.github.io/niri/Configuration:-Introduction
+
+
+hotkey-overlay {
+    // Uncomment this line to disable the "Important Hotkeys" pop-up at startup.
+    skip-at-startup
+}
+
+// You can change the path where screenshots are saved.
+// A ~ at the front will be expanded to the home directory.
+// The path is formatted with strftime(3) to give you the screenshot date and time.
+screenshot-path "~/Pictures/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png"
+
+// You can also set this to null to disable saving screenshots to disk.
+// screenshot-path null
+
+
+// Example: enable rounded corners for all windows.
+// (This example rule is commented out with a "/-" in front.)
+
+include "config/binds.kdl"
+include "config/startup.kdl"
+include "config/monitors.kdl"
+include "config/input.kdl"
+include "config/gestures.kdl"
+include "config/visual.kdl"
