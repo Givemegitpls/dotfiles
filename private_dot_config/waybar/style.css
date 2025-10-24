@@ -4,7 +4,6 @@
   font-size: 16px;
   font-weight: 700;
   font-feature-settings: '"zero", "ss01", "ss02", "ss03", "ss04", "ss05", "cv31"';
-  min-height: 20px;
   color: #c0caf5;
 }
 
@@ -27,6 +26,7 @@ tooltip,
   padding-top: 1px;
   margin-bottom: 2px;
   margin-top: 1px;
+  min-height: 36px;
 }
 
 tooltip {
