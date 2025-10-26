@@ -11,7 +11,6 @@ window#waybar {
   background: transparent;
 }
 
-tooltip,
 #clock,
 #tray,
 #language,
@@ -27,12 +26,6 @@ tooltip,
   margin-bottom: 2px;
   margin-top: 1px;
   min-height: 36px;
-}
-
-tooltip {
-  background: rgba(32, 33, 44, 0.82);
-}
-tooltip label {
 }
 
 #workspaces-group,
@@ -56,24 +49,28 @@ tooltip label {
 #tray,
 #language,
 #backlight,
-#bluetooth,
-#windowcount {
+#bluetooth {
   padding-left: 12px;
   padding-right: 12px;
 }
 
 #workspaces button {
   padding-left: 4px;
+  padding-right: 9px;
 }
 
 #windowcount {
+  padding-left: 6px;
   padding-right: 4px;
 }
+
+#workspaces-group,
 #network,
 #battery {
   padding-left: 6px;
 }
-#workspaces,
+
+#workspaces-group,
 #pulseaudio.input,
 #backlight,
 #bluetooth {
