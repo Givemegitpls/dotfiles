@@ -6,16 +6,5 @@
 // To run a shell command (with variables, pipes, etc.), use spawn-sh-at-startup:
 // spawn-sh-at-startup "qs -c ~/source/qs/MyAwesomeShell"
 
-spawn-sh-at-startup "uwsm app -- /usr/lib/xdg-desktop-portal-hyprland"
-spawn-sh-at-startup "uwsm app -- /usr/lib/xdg-desktop-portal"
-spawn-sh-at-startup "uwsm app -- /usr/lib/xdg-desktop-portal-gtk"
-spawn-sh-at-startup "uwsm app -- waybar"
-spawn-sh-at-startup "uwsm app -- swww-daemon"
-spawn-sh-at-startup "uwsm app -- dunst"
-spawn-sh-at-startup "uwsm app -- hypridle"
-spawn-sh-at-startup "uwsm app -- systemd-inhibit --who='Niri config' --why='wlogout keybind' --what=handle-power-key --mode=block sleep infinity"
-spawn-sh-at-startup "uwsm app -- ~/.config/hypr/scripts/dunst/BSC.py"
-spawn-sh-at-startup "uwsm app -- wl-paste --type text --watch cliphist store"
-spawn-sh-at-startup "uwsm app -- wl-paste --type image --watch cliphist store"
-spawn-sh-at-startup "uwsm app -- noisetorch -i alsa_input.pci-0000_04_00.6.analog-stereo"
-spawn-sh-at-startup ".config/hypr/scripts/rog.sh"
+spawn-sh-at-startup "~/.config/niri/startup.sh"
+spawn-sh-at-startup "uwsm app -- bash ~/.config/waybar/toggle.sh -c ~/.config/waybar/config-universal.jsonc"

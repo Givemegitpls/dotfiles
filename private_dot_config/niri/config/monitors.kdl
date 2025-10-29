@@ -1,3 +1,10 @@
+// You can configure outputs by their name, which you can find
+// by running `niri msg outputs` while inside a niri instance.
+// The built-in laptop monitor is usually called "eDP-1".
+// Find more information on the wiki:
+// https://yalter.github.io/niri/Configuration:-Outputs
+// Remember to uncomment the node by removing "/-"!
+
 output "eDP-1" {
     // Uncomment this line to disable this output.
     // off
@@ -26,8 +33,13 @@ output "eDP-1" {
     // so to put another output directly adjacent to it on the right, set its x to 1920.
     // If the position is unset or results in an overlap, the output is instead placed
     // automatically.
-    position x=1280 y=0
+    position x=2560 y=0
 }
-output "HDMI-A-1" {
-  mode "1600x1200@85"
+output "Acer Technologies Acer B247YU 0x122166F9" {
+    focus-at-startup
+    variable-refresh-rate on-demand=true
+    mode "2560x1440@74.995003"
+    scale 1
+    position x=0 y=0
+    transform "normal"
 }

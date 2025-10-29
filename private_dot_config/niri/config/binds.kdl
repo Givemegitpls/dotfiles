@@ -13,12 +13,12 @@ binds {
     // shows a list of important hotkeys.
     Mod+Shift+Slash { show-hotkey-overlay; }
 
-    // Suggested binds for running programs: terminal, app launcher, screen locker.
+    // Suggested binds for running programs: terminal, app launcher.
     Mod+E hotkey-overlay-title="Open a Explorer: Thunar"            { spawn "thunar"; }
     Mod+Q hotkey-overlay-title="Open a Terminal: kitty"             { spawn "kitty"; }
     Mod+R hotkey-overlay-title="Run an Application: rofi"           { spawn "rofi" "-show" "drun"; }
     Mod+V hotkey-overlay-title="Run an Application: rofi clipboard" { spawn-sh "rofi -modi clipboard:/$HOME/.config/rofi/cliphist-rofi-img.sh -show clipboard -show-icon -config $HOME/.config/rofi/clipboard-config.rasi"; }
-    Super+Alt+L hotkey-overlay-title="Lock the Screen: hyprlock"    { spawn "hyprlock"; }
+    Mod+W repeat=false hotkey-overlay-title="Toggle an statusbar: waybar"{ spawn-sh "uwsm app -- bash ~/.config/waybar/toggle.sh -c ~/.config/waybar/config-universal.jsonc"; }
 
     // Use spawn-sh to run a shell command. Do this if you need pipes, multiple commands, etc.
     // Note: the entire command goes as a single argument. It's passed verbatim to `sh -c`.
@@ -246,7 +246,7 @@ binds {
     // Toggle tabbed column display mode.
     // Windows in this column will appear as vertical tabs,
     // rather than stacked on top of each other.
-    Mod+W { toggle-column-tabbed-display; }
+    Mod+Shift+W { toggle-column-tabbed-display; }
 
     // Actions to switch layouts.
     // Note: if you uncomment these, make sure you do NOT have
@@ -273,6 +273,9 @@ binds {
     // The quit action will show a confirmation dialog to avoid accidental exits.
     Mod+M { quit; }
     Ctrl+Alt+Delete { quit; }
+
+    // The lock action
+    Ctrl+Alt+L repeat=false hotkey-overlay-title="Lock the Screen: hyprlock" { spawn "uwsm" "app" "--" "hyprlock"; }
 
     // Powers off the monitors. To turn them back on, do any input like
     // moving the mouse or pressing any other key.

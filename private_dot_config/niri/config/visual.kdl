@@ -60,7 +60,7 @@ layout {
         // - CSS-like notation: "rgb(255, 127, 0)", rgba(), hsl() and a few others.
 
         // Color of the ring on the active monitor.
-        active-gradient from="#33ccffee" to="#bd93f9ee" angle=45
+        active-gradient from="#33ccffee" to="#bd93f9ee" angle=135
 
         // Color of the ring on inactive monitors.
         //
@@ -91,7 +91,7 @@ layout {
         on
 
         width 2
-        active-gradient from="#33ccffee" to="#bd93f9ee" angle=45
+        active-gradient from="#33ccffee" to="#bd93f9ee" angle=135
         inactive-color "#505050"
 
         // Color of the border around windows that request your attention.

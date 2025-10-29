@@ -1,0 +1,15 @@
+{
+  "group/workspaces-group": {
+    "orientation": "horizontal",
+    "modules": ["ext/windowcount", "ext/workspaces"],
+  },
+
+  "ext/workspaces": {
+    "format": "{icon}",
+    "on-click": "activate",
+    "format-icons": {
+      "active": "",
+      "default": "",
+    },
+  },
+}
