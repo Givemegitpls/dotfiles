@@ -20,18 +20,19 @@ def main():
     settings: Any = {}
     wlr_hash: str = ""
     while True:
-        with open("waymonman.json") as f:
+        with open(os.path.dirname(__file__) + "/waymonman.json") as f:
             settings_on_disc = json.load(f)
             current_wlr_hash = hashlib.md5(
                 subprocess.check_output(["wlr-randr"])
             ).hexdigest()
         if settings == settings_on_disc and wlr_hash == current_wlr_hash:
-            sleep(3)
-            continue
+            if ("rescan-time" in settings) and (settings.get("rescan-time") is None):
+                break
+            else:
+                sleep(settings.get("rescan-time", 5))
+                continue
         settings = settings_on_disc
         wlr_hash = current_wlr_hash
-        stdout.write(json.dumps(settings) + "\n")
-        stdout.flush()
         definite_monitors: dict[str, str] = settings.get("monitors", {})
         default_direction: Direction = settings.get(
             "default-direction", Direction.right
@@ -62,6 +63,9 @@ def main():
                     )
                 )
             setuped.append(mon)
+        wlr_output = subprocess.check_output(["wlr-randr"])
+        stdout.write(wlr_output.decode("utf-8"))
+        stdout.flush()
 
 
 if __name__ == "__main__":
