@@ -23,30 +23,30 @@ binds {
     // Use spawn-sh to run a shell command. Do this if you need pipes, multiple commands, etc.
     // Note: the entire command goes as a single argument. It's passed verbatim to `sh -c`.
     // For example, this is a standard bind to toggle the screen reader (orca).
-    Super+Alt+S allow-when-locked=true hotkey-overlay-title=null { spawn-sh "pkill orca || exec orca"; }
+    Mod+Alt+S allow-when-locked=true hotkey-overlay-title=null { spawn-sh "pkill orca || exec orca"; }
 
     // Example volume keys mappings for PipeWire & WirePlumber.
     // The allow-when-locked=true property makes them work even when the session is locked.
     // Using spawn-sh allows to pass multiple arguments together with the command.
-    XF86AudioRaiseVolume allow-when-locked=true { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1+; .config/hypr/scripts/dunst/volume.sh"; }
-    XF86AudioLowerVolume allow-when-locked=true { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1-; .config/hypr/scripts/dunst/volume.sh"; }
-    XF86AudioMute        allow-when-locked=true { spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle; .config/hypr/scripts/dunst/volumemute.sh"; }
-    XF86AudioMicMute     allow-when-locked=true { spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle; .config/hypr/scripts/dunst/micro.sh"; }
+    XF86AudioRaiseVolume allow-when-locked=true { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1+; .config/dunst/scripts/volume.sh"; }
+    XF86AudioLowerVolume allow-when-locked=true { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1-; .config/dunst/scripts/volume.sh"; }
+    XF86AudioMute        allow-when-locked=true { spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle; .config/dunst/scripts/volumemute.sh"; }
+    XF86AudioMicMute     allow-when-locked=true { spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle; .config/dunst/scripts/micro.sh"; }
 
     // Example brightness key mappings for brightnessctl.
     // You can use regular spawn with multiple arguments too (to avoid going through "sh"),
     // but you need to manually put each argument in separate "" quotes.
-    XF86MonBrightnessUp   allow-when-locked=true  { spawn-sh "brightnessctl --class=backlight set 10%+; .config/hypr/scripts/dunst/eDP-1brightness.sh"; }
-    XF86MonBrightnessDown allow-when-locked=true  { spawn-sh "brightnessctl --class=backlight set 10%-; .config/hypr/scripts/dunst/eDP-1brightness.sh"; }
+    XF86MonBrightnessUp   allow-when-locked=true  { spawn-sh "brightnessctl --class=backlight set 10%+; .config/dunst/scripts/eDP-1brightness.sh"; }
+    XF86MonBrightnessDown allow-when-locked=true  { spawn-sh "brightnessctl --class=backlight set 10%-; .config/dunst/scripts/eDP-1brightness.sh"; }
 
     XF86KbdBrightnessUp   allow-when-locked=true  { spawn-sh "brightnessctl --device='asus::kbd_backlight' set 1+"; }
     XF86KbdBrightnessDown allow-when-locked=true  { spawn-sh "brightnessctl --device='asus::kbd_backlight' set 1-"; }
 
-    Super+Alt+Up    allow-when-locked=true  { spawn-sh "ddcutil -d 1 setvcp 10 + 5; .config/hypr/scripts/dunst/brightness.sh"; }
-    Super+Alt+Down  allow-when-locked=true  { spawn-sh "ddcutil -d 1 setvcp 10 - 5; .config/hypr/scripts/dunst/brightness.sh"; }
+    Mod+Alt+Up    allow-when-locked=true  { spawn-sh "ddcutil -d 1 setvcp 10 + 5; .config/dunst/scripts/brightness.sh"; }
+    Mod+Alt+Down  allow-when-locked=true  { spawn-sh "ddcutil -d 1 setvcp 10 - 5; .config/dunst/scripts/brightness.sh"; }
 
     XF86PowerOff  allow-when-locked=true { spawn-sh "suspend"; }
-    XF86Launch4   allow-when-locked=true { spawn-sh ".config/hypr/scripts/dunst/ROGprofiler.sh"; }
+    XF86Launch4   allow-when-locked=true { spawn-sh ".config/dunst/scripts/ROGprofiler.sh"; }
 
     // Open/close the Overview: a zoomed-out view of workspaces and windows.
     // You can also move the mouse into the top-left hot corner,

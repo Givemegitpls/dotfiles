@@ -6,5 +6,5 @@ brightnessctl "$@" >/dev/null
 
 brightpercent=$(ddcutil -d 1 getvcp 10 | sed 's/^.*current value =    //' | sed 's/, max.*//')
 
-notify-send -i $HOME/.config/hypr/scripts/dunst/icons/brightness.svg -a "changeBrightness" -u low -r "$msgId" \
+notify-send -i $HOME/.config/dunst/scripts/icons/brightness.svg -a "changeBrightness" -u low -r "$msgId" \
   -h int:value:"$brightpercent" "Яркость экрана: $brightpercent%"
