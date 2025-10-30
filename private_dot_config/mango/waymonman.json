@@ -1,6 +1,6 @@
 {
   "default-direction": "right",
-  "rescan-time": 1,
+  "rescan-time": null,
   "monitors": {
     "Acer Technologies Acer B247YU 0x122166F9 (HDMI-A-1)": "--pos 0,0",
     "Najing CEC Panda FPD Technology CO. ltd 0x0050 (eDP-1)": "--pos 2560,0"
