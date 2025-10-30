@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
+import json
 import os
+import re
 import socket
 import subprocess
 from sys import argv, stdout, exit
 from threading import Timer
+from typing import Any
 
 
 def print(message: str):
@@ -15,18 +18,26 @@ class BrightnessDaemon:
     def __init__(
         self,
         service_name: str,
-        default_brightness: int,
-        step: int,
-        timegap: float,
-        image_path: str | None,
+        settings: Any,
     ):
         self.timer = None
         self.socket_path = f"/tmp/{service_name}.sock"
-        self.current_brightness = default_brightness
-        self.step = step
         self.pid = os.getpid()
-        self.timegap = timegap
-        self.image_params = f" -i {image_path}" if image_path else ""
+        self.step = settings["step"]
+        self.timegap = settings["timegap"]
+        if image_path := settings.get("image_path"):
+            self.image_params = f" -i {image_path}"
+        else:
+            self.image_params = ""
+        if value := settings.get("default_brightness"):
+            self.current_brightness = int(value)
+        elif match := re.search(
+            r"current value =    ([^,]+)",
+            subprocess.check_output(["ddcutil", "-d", "1", "getvcp", "10"]).decode(),
+        ):
+            self.current_brightness = int(match.group(1))
+        else:
+            self.current_brightness = 50
         with open("/proc/self/comm", "w") as f:
             f.write(service_name)
 
@@ -97,9 +108,10 @@ def send_command(command: str, service_name: str):
 
 if __name__ == "__main__":
     service_name = "ddcutild"
-    image = "~/.config/dunst/scripts/icons/brightness.svg"
     if subprocess.run(["pgrep", service_name]).returncode == 1:
-        BrightnessDaemon(service_name, 50, 5, 0.3, image).start()
+        with open(os.path.dirname(__file__) + "/ddcutil.json") as f:
+            settings = json.load(f)
+            BrightnessDaemon(service_name, settings).start()
     if len(argv) != 2 or argv[1] not in ["up", "down"]:
         stdout.write("Usage: brightness up|down")
         stdout.flush()
