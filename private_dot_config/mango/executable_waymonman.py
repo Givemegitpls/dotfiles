@@ -34,8 +34,8 @@ def main():
         settings = settings_on_disc
         wlr_hash = current_wlr_hash
         definite_monitors: dict[str, str] = settings.get("monitors", {})
-        default_direction: Direction = settings.get(
-            "default-direction", Direction.right
+        default_direction: Direction = getattr(
+            Direction, settings.get("default-direction", "right")
         )
         monitors = json.loads(subprocess.check_output(["wlr-randr", "--json"]))
         setuped: list[str] = []
