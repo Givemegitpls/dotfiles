@@ -9,6 +9,6 @@
     "smooth-scrolling-threshold": 3, // This value was tested using a trackpad, it should be lowered if using a mouse.
     "on-scroll-down": "playerctl next",
     "on-scroll-up": "playerctl previous",
-    "exec": "$HOME/.config/waybar/modules/mediaplayer.py 2> /dev/null", // Script in resources/custom_modules folder
+    "exec": "~/.config/waybar/modules/mediaplayer.py 2> /dev/null", // Script in resources/custom_modules folder
   },
 }

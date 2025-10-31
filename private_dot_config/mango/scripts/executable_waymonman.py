@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
+from dataclasses import dataclass
 from enum import StrEnum
-import hashlib
 import json
 import os
 import subprocess
@@ -16,44 +16,52 @@ class Direction(StrEnum):
     below = "--below"
 
 
+@dataclass(slots=True)
+class monitor:
+    name: str
+    description: str
+
+
 def main():
     settings: Any = {}
-    wlr_hash: str = ""
+    monitors: list[monitor] = []
     while True:
-        with open(os.path.dirname(__file__) + "/waymonman.json") as f:
+        with open(os.path.dirname(__file__) + "/waymonman.json", "a") as f:
             settings_on_disc = json.load(f)
-            current_wlr_hash = hashlib.md5(
-                subprocess.check_output(["wlr-randr"])
-            ).hexdigest()
-        if settings == settings_on_disc and wlr_hash == current_wlr_hash:
+        current_monitors: Any = []
+        for mon in json.loads(subprocess.check_output(["wlr-randr", "--json"])):
+            current_monitors.append(
+                monitor(name=mon["name"], description=mon["description"])
+            )
+
+        if settings == settings_on_disc and monitors == current_monitors:
             if ("rescan-time" in settings) and (settings.get("rescan-time") is None):
                 break
             else:
                 sleep(settings.get("rescan-time", 5))
                 continue
         settings = settings_on_disc
-        wlr_hash = current_wlr_hash
+        monitors = current_monitors
         definite_monitors: dict[str, str] = settings.get("monitors", {})
         default_direction: Direction = getattr(
             Direction, settings.get("default-direction", "right")
         )
-        monitors = json.loads(subprocess.check_output(["wlr-randr", "--json"]))
         setuped: list[str] = []
         undifinite: list[str] = []
         for mon in monitors:
-            if mon["description"] in definite_monitors:
+            if mon.description in definite_monitors:
                 os.system(
                     " ".join(
                         [
                             "wlr-randr --output",
-                            mon["name"],
-                            definite_monitors[mon["description"]],
+                            mon.name,
+                            definite_monitors[mon.description],
                         ]
                     )
                 )
-                setuped.append(mon["name"])
+                setuped.append(mon.name)
             else:
-                undifinite.append(mon["name"])
+                undifinite.append(mon.name)
 
         for mon in undifinite:
             if setuped:

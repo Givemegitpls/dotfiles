@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
+import subprocess
 import gi
 
 gi.require_version("Playerctl", "2.0")
 from gi.repository import Playerctl, GLib
 from gi.repository.Playerctl import Player
-import psutil
-import setproctitle
 import argparse
 import logging
 import sys
@@ -204,13 +203,9 @@ def main():
     player.run()
 
 
-app_name = "WaybarPlayerctlBridge"
-for proc in psutil.process_iter(["pid", "name"]):
-    if proc.name() == app_name and proc.pid != os.getpid():
-        print(proc)
-        os.kill(proc.pid, 9)
-
 if __name__ == "__main__":
-    setproctitle.setproctitle(app_name)
-    list_of_procs = []
+    service_name = "WaybarPlayerctl"
+    subprocess.run(["pkill", service_name])
+    with open("/proc/self/comm", "w") as f:
+        f.write(service_name)
     main()

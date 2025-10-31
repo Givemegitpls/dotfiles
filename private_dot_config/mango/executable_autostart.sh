@@ -1,5 +1,5 @@
 uwsm finalize
-uwsm app -- ~/.config/mango/waymonman.py &
+uwsm app -- ~/.config/mango/scripts/waymonman.py &
 uwsm app -- ~/.config/waybar/toggle.sh -c ~/.config/waybar/config-universal.jsonc &
 uwsm app -- swww-daemon &
 uwsm app -- hypridle &

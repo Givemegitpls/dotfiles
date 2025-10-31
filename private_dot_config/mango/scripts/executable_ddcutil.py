@@ -33,7 +33,9 @@ class BrightnessDaemon:
             self.current_brightness = int(value)
         elif match := re.search(
             r"current value =    ([^,]+)",
-            subprocess.check_output(["ddcutil", "-d", "1", "getvcp", "10"]).decode(),
+            subprocess.run(
+                ["ddcutil", "-d", "1", "getvcp", "10"], text=True, capture_output=True
+            ).stdout,
         ):
             self.current_brightness = int(match.group(1))
         else:
@@ -108,13 +110,12 @@ def send_command(command: str, service_name: str):
 
 if __name__ == "__main__":
     service_name = "ddcutild"
+    if len(argv) == 2 and argv[1] in ["up", "down"]:
+        send_command(argv[1], service_name)
     if subprocess.run(["pgrep", service_name]).returncode == 1:
         with open(os.path.dirname(__file__) + "/ddcutil.json") as f:
             settings = json.load(f)
             BrightnessDaemon(service_name, settings).start()
-    if len(argv) != 2 or argv[1] not in ["up", "down"]:
-        stdout.write("Usage: brightness up|down")
-        stdout.flush()
-        exit(1)
-
-    send_command(argv[1], service_name)
+    stdout.write("Usage: brightness up|down")
+    stdout.flush()
+    exit(1)
