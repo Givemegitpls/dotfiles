@@ -26,7 +26,7 @@ def main():
     settings: Any = {}
     monitors: list[monitor] = []
     while True:
-        with open(os.path.dirname(__file__) + "/waymonman.json", "a") as f:
+        with open(os.path.dirname(__file__) + "/waymonman.json") as f:
             settings_on_disc = json.load(f)
         current_monitors: Any = []
         for mon in json.loads(subprocess.check_output(["wlr-randr", "--json"])):
