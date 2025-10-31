@@ -7,6 +7,7 @@
     "tray",
     "group/pulseaudio-group",
     "group/network-group",
+    "group/power-group",
     "clock",
   ],
   "include": [
@@ -14,6 +15,7 @@
     "~/.config/waybar/modules/network.jsonc",
     "~/.config/waybar/modules/tray.jsonc",
     "~/.config/waybar/modules/pulseaudio.jsonc",
+    "~/.config/waybar/modules/power.jsonc",
     "~/.config/waybar/modules/mediaplayer.jsonc",
     "~/.config/waybar/modules/language.jsonc",
     "~/.config/waybar/modules/clock.jsonc",
