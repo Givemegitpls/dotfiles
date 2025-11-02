@@ -3,6 +3,7 @@
   "rescan-time": 1,
   "monitors": {
     "Acer Technologies Acer B247YU 0x122166F9 (HDMI-A-1)": "--pos 0,0",
-    "Najing CEC Panda FPD Technology CO. ltd 0x0050 (eDP-1)": "--pos 2560,0"
+    "Najing CEC Panda FPD Technology CO. ltd 0x0050 (eDP-1)": "--pos 2560,0",
+    "Mitsubishi Electric Corporation DPro930SB 4200401YB (HDMI-A-1)": "--pos 1160,0 --mode 1400x1050@84.959999"
   }
 }
