@@ -101,14 +101,10 @@
         "outbound": "direct"
       },
       {
-        "process_name": [
-          "neovim",
-          "git",
-          "chrome",
-          "electron",
-          "firefox",
-          "Telegram"
-        ],
+        "process_path_regex": ["(?i)*webcord*"]
+      },
+      {
+        "process_name": ["neovim", "git", "chrome", "Telegram"],
         "outbound": "proxy"
       },
       {

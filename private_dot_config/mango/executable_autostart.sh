@@ -1,5 +1,5 @@
 uwsm finalize
-uwsm app -- dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=wlroots &
+uwsm app -- dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=mango &
 uwsm app -- swww-daemon &
 uwsm app -- hypridle &
 uwsm app -- dunst &
