@@ -11,19 +11,19 @@ menu_content() {
 
 handle_selection() {
   case x"$@" in
-  x"Lock session")
+  x"󰌾 Lock session")
     coproc (uwsm app -- hyprlock >/dev/null 2>&1)
     ;;
-  x"Suspend")
+  x"󰒲 Suspend")
     systemctl suspend
     ;;
-  x"Shutdown")
+  x" Shutdown")
     shutdown now
     ;;
-  x"Reboot")
+  x" Reboot")
     reboot
     ;;
-  x"Cancel")
+  x"󰜺 Cancel")
     exit 0
     ;;
   esac
