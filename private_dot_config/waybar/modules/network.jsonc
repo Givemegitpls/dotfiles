@@ -19,6 +19,6 @@
     "format-disconnected": "󰖪 ",
     "tooltip-format-wifi": "{essid}",
     "tooltip-format-ethernet": "{ipaddr}",
-    "on-click": "networkmanager_dmenu",
+    "on-click": "$HOME/.config/rofi/network-manager.sh",
   },
 }
