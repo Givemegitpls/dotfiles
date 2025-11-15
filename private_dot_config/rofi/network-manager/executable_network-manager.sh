@@ -89,5 +89,6 @@ if [ ! -z "$@" ]; then
   dir=$(dirname "$0")
   coproc (manage_wifi "$@")
 else
+  notify-send "Scaning Networks" "Please wait"
   list_wifi
 fi
