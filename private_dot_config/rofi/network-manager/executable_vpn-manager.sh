@@ -21,7 +21,7 @@ esac
 
 # Добавляем sing-box
 active="\0active\x1f"
-if sudo systemctl status sing-box >/dev/null 2>&1; then
+if systemctl status sing-box >/dev/null 2>&1; then
   active+="0,"
   echo " Stop sing-box"
 else
