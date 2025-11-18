@@ -15,6 +15,27 @@ local function shorten_path(path)
 	end
 end
 
+local function check_poetry(path, workspace)
+	local match = vim.fn.glob(path.join(workspace, "poetry.lock"))
+	if match ~= "" then
+		vim.api.nvim_set_current_dir(workspace)
+		local venv = vim.fn.trim(vim.fn.system("poetry  env info -p 2> /dev/null"))
+		if venv ~= "" then
+			return path.join(venv, "bin", "python")
+		end
+	end
+	return ""
+end
+
+local function check_venv(path, workspace)
+	local match = vim.fn.glob(path.join(workspace, ".venv"))
+	if match ~= "" then
+		vim.api.nvim_set_current_dir(workspace)
+		return path.join(match, "bin", "python")
+	end
+	return ""
+end
+
 function export.get_python_path()
 	local util = require("lspconfig/util")
 	local path = util.path
@@ -26,18 +47,18 @@ function export.get_python_path()
 	end
 
 	-- Find and use virtualenv via poetry in workspace directory.
-	while workspace ~= "" do
-		if workspace ~= "" then
-			local match = vim.fn.glob(path.join(workspace, "poetry.lock"))
-			if match ~= "" then
-				vim.api.nvim_set_current_dir(workspace)
-				local venv = vim.fn.trim(vim.fn.system("poetry  env info -p 2> /dev/null"))
-				if venv ~= "" then
-					return path.join(venv, "bin", "python")
-				end
+	if workspace ~= "" then
+		while workspace ~= "" do
+			local poetry = check_poetry(path, workspace)
+			if poetry ~= "" then
+				return poetry
 			end
+			local venv = check_venv(path, workspace)
+			if venv ~= "" then
+				return venv
+			end
+			workspace = shorten_path(workspace)
 		end
-		workspace = shorten_path(workspace)
 	end
 
 	-- Fallback to system Python.
