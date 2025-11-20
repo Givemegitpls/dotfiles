@@ -8,7 +8,7 @@
     "format": "{icon}",
     "format-icons": ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂂", "󰁹"],
     "format-charging": "󰂄",
-    "on-click": "$HOME/.config/hypr/scripts/dunst/ROGprofiler.sh",
+    "on-click": "$HOME/.config/dunst/scripts/ROGprofiler.sh ",
     "tooltip-format": "{capacity}% {timeTo}",
   },
   "backlight": {
