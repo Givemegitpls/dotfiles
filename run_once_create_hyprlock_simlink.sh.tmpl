@@ -1,8 +1,6 @@
 {{  if eq .chezmoi.osRelease.id "arch" -}}
 #!/bin/sh
-path=$HOME/.local/share/chezmoi/
 if [ ! -f "$path.chezmoiignore" ]; then
-  cd $path
-  echo -e ".config/hypr/Wallpaper/" >".chezmoiignore"
+  ln -s $HOME/.config/swww/wallpaper/kotamota.png $HOME/.config/swww/wallpaper/hyprlock.png
 fi
 {{ end -}}
