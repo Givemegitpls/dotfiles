@@ -6,6 +6,8 @@
   "ext/workspaces": {
     "format": "{icon}",
     "on-click": "activate",
+    "on-scroll-down": "mmsg -d viewtoright,0",
+    "on-scroll-up": "mmsg -d viewtoleft,0",
     "format-icons": {
       "active": "",
       "default": "",
