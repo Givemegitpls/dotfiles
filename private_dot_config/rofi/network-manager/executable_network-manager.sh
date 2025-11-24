@@ -5,9 +5,23 @@
 SIGNAL_ICONS=("󰤟 " "󰤢 " "󰤥 " "󰤨 ")
 SECURED_SIGNAL_ICONS=("󰤡 " "󰤤 " "󰤧 " "󰤪 ")
 
+main_menu_options() {
+  local wifi_device=$(nmcli d | grep "wifi " | sed "s/ .*//")
+  local wifi_device=$(nmcli -t -f GENERAL device show $wifi_device | grep CONNECTION | cut -d: -f2)
+  local device_status=$(nmcli -t -f GENERAL device show $wifi_device | grep STATE | cut -d: -f2) # TODO: add signal icon
+  if [ ! -z wifi_device ]; then
+    echo $wifi_device
+  fi
+  echo "Rescan"
+}
+
 list_wifi() {
+  local ssids=()
+  local formatted_list=()
+  local active_ssid=""
+  local wifi_device=$(nmcli d | grep "wifi " | sed "s/ .*//")
   local counter=0
-  local active="\0active\x1f"
+  local active_options=""
 
   while IFS=: read -r in_use signal security ssid; do
     if [ -z "$ssid" ]; then continue; fi # Пропускаем сети без SSID
@@ -28,11 +42,15 @@ list_wifi() {
     # Добавляем иконку подключения, если сеть активна
     local formatted="$signal_icon $ssid"
     if [[ "$in_use" =~ \* ]]; then
-      active+="$counter,"
+      active_ssid="$ssid"
+      active_options+="-a $counter"
     fi
-    echo "$formatted"
+    ssids+=("$ssid")
+    formatted_ssids+="$formatted\n"
+    let counter++
   done <<<"$(nmcli -t -f IN-USE,SIGNAL,SECURITY,SSID dev wifi)"
-  echo -en "$active\n"
+  local chosen_option=$(echo -e "$formatted_ssids" | rofi -dmenu -i $active_options -selected-row 1 -p "Wi-Fi SSID: ")
+  manage_wifi "$chosen_option"
 }
 
 manage_wifi() {
@@ -53,7 +71,6 @@ manage_wifi() {
       chosen_id=$(echo "$chosen_id" | sed "s/$icon //")
     done
     # Проверяем состояние выбранной сети
-    local device_status=$(nmcli -t -f GENERAL device show $wifi_device | grep STATE | cut -d: -f2)
     local active_ssid=$(nmcli -t -f GENERAL device show $wifi_device | grep CONNECTION | cut -d: -f2)
 
     # Определяем действие в зависимости от состояния сети
@@ -85,10 +102,13 @@ manage_wifi() {
   fi
 }
 
-if [ ! -z "$@" ]; then
+if [ -z "$@" ]; then
+  main_menu_options
+elif [ "$@" == "Rescan" ]; then
+  notify-send "Scaning Networks" "Please wait"
+  dir=$(dirname "$0")
+  coproc (list_wifi)
+else
   dir=$(dirname "$0")
   coproc (manage_wifi "$@")
-else
-  notify-send "Scaning Networks" "Please wait"
-  list_wifi
 fi
