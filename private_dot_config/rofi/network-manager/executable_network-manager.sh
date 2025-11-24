@@ -5,14 +5,35 @@
 SIGNAL_ICONS=("󰤟 " "󰤢 " "󰤥 " "󰤨 ")
 SECURED_SIGNAL_ICONS=("󰤡 " "󰤤 " "󰤧 " "󰤪 ")
 
+get_signal_icon() {
+  local signal_icon
+  local signal="$1"
+  local security="$2"
+  local signal_level=$((signal / 25))
+  if [[ $signal_level > 3 ]]; then
+    signal_level=3
+  fi
+  if [[ "$signal_level" -lt "${#SIGNAL_ICONS[@]}" ]]; then
+    signal_icon="${SIGNAL_ICONS[$signal_level]}"
+  fi
+
+  if [[ "$security" =~ WPA || "$security" =~ WEP ]]; then
+    signal_icon="${SECURED_SIGNAL_ICONS[$signal_level]}"
+  fi
+  echo $signal_icon
+}
+
 main_menu_options() {
   local wifi_device=$(nmcli d | grep "wifi " | sed "s/ .*//")
-  local wifi_device=$(nmcli -t -f GENERAL device show $wifi_device | grep CONNECTION | cut -d: -f2)
-  local device_status=$(nmcli -t -f GENERAL device show $wifi_device | grep STATE | cut -d: -f2) # TODO: add signal icon
-  if [ ! -z wifi_device ]; then
-    echo $wifi_device
+  local ssid=$(nmcli -t -f GENERAL device show $wifi_device | grep CONNECTION | cut -d: -f2)
+  local signal=$(nmcli -t -f GENERAL device show wlp1s0 | grep STATE | cut -d: -f2 | sed "s/ .*//")
+  local security=$(nmcli connection show Frankenstein | grep "key-mgmt" | cut -d: -f2 | tr a-z A-Z)
+  local signal_icon=$(get_signal_icon $signal $security)
+  if [ ! -z $ssid ]; then
+    echo -en "\0active\x1f0\n"
+    echo "$signal_icon $ssid"
   fi
-  echo "Rescan"
+  echo " Rescan"
 }
 
 list_wifi() {
@@ -26,18 +47,7 @@ list_wifi() {
   while IFS=: read -r in_use signal security ssid; do
     if [ -z "$ssid" ]; then continue; fi # Пропускаем сети без SSID
 
-    local signal_icon
-    local signal_level=$((signal / 25))
-    if [[ $signal_level > 3 ]]; then
-      signal_level=3
-    fi
-    if [[ "$signal_level" -lt "${#SIGNAL_ICONS[@]}" ]]; then
-      signal_icon="${SIGNAL_ICONS[$signal_level]}"
-    fi
-
-    if [[ "$security" =~ WPA || "$security" =~ WEP ]]; then
-      signal_icon="${SECURED_SIGNAL_ICONS[$signal_level]}"
-    fi
+    local signal_icon=$(get_signal_icon $signal $security)
 
     # Добавляем иконку подключения, если сеть активна
     local formatted="$signal_icon $ssid"
@@ -104,7 +114,7 @@ manage_wifi() {
 
 if [ -z "$@" ]; then
   main_menu_options
-elif [ "$@" == "Rescan" ]; then
+elif [ "$@" == " Rescan" ]; then
   notify-send "Scaning Networks" "Please wait"
   dir=$(dirname "$0")
   coproc (list_wifi)
