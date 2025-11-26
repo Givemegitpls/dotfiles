@@ -2,8 +2,8 @@
 # Thanks for idea and source, DIMFLIX
 # Github: https://github.com/DIMFLIX-OFFICIAL
 
-SIGNAL_ICONS=("󰤟 " "󰤢 " "󰤥 " "󰤨 ")
-SECURED_SIGNAL_ICONS=("󰤡 " "󰤤 " "󰤧 " "󰤪 ")
+SIGNAL_ICONS=("󰤟  " "󰤢  " "󰤥  " "󰤨  ")
+SECURED_SIGNAL_ICONS=("󰤡  " "󰤤  " "󰤧  " "󰤪  ")
 
 get_signal_icon() {
   local signal_icon
@@ -20,7 +20,7 @@ get_signal_icon() {
   if [[ "$security" =~ WPA || "$security" =~ WEP ]]; then
     signal_icon="${SECURED_SIGNAL_ICONS[$signal_level]}"
   fi
-  echo $signal_icon
+  echo "$signal_icon"
 }
 
 main_menu_options() {
@@ -31,9 +31,9 @@ main_menu_options() {
   local signal_icon=$(get_signal_icon $signal "$security")
   if [ ! -z "$ssid" ]; then
     echo -en "\0active\x1f0\n"
-    echo "$signal_icon $ssid"
+    echo "$signal_icon$ssid"
   fi
-  echo " Rescan"
+  echo "  Rescan"
 }
 
 list_wifi() {
@@ -74,11 +74,11 @@ manage_wifi() {
     # Удаляем значки уровня сигнала, если есть
     local chosen_id=$chosen_option
     for icon in "${SIGNAL_ICONS[@]}"; do
-      chosen_id=$(echo "$chosen_id" | sed "s/$icon //")
+      chosen_id=$(echo "$chosen_id" | sed "s/$icon//")
     done
 
     for icon in "${SECURED_SIGNAL_ICONS[@]}"; do
-      chosen_id=$(echo "$chosen_id" | sed "s/$icon //")
+      chosen_id=$(echo "$chosen_id" | sed "s/$icon//")
     done
     # Проверяем состояние выбранной сети
     local active_ssid=$(nmcli -t -f GENERAL device show $wifi_device | grep CONNECTION | cut -d: -f2)
@@ -114,7 +114,7 @@ manage_wifi() {
 
 if [ -z "$@" ]; then
   main_menu_options
-elif [ "$@" == " Rescan" ]; then
+elif [ "$@" == "  Rescan" ]; then
   notify-send "Scaning Networks" "Please wait"
   dir=$(dirname "$0")
   coproc (list_wifi)
