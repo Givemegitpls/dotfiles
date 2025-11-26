@@ -20,8 +20,8 @@
     "on-scroll-up": "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%- -l 1.0",
   },
   "pulseaudio#input": {
-    "format-source": "",
-    "format-source-muted": "",
+    "format-source": "󰍬",
+    "format-source-muted": "󰍭",
     "tooltip": false,
     "format": "{format_source}",
     "on-click": "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle",
