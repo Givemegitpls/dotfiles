@@ -3,10 +3,10 @@
 artist_offset=25
 title_offset=40
 
-artist=$(playerctl metadata artist)
-title=$(playerctl metadata title)
+artist=$(playerctl metadata artist 2>/dev/null)
+title=$(playerctl metadata title 2>/dev/null)
 
-if [ ${#title} != 0 ]; then
+if [ ! ${#title} -eq 0 ]; then
   if [ ${#artist} -gt $artist_offset ]; then
     artist=$(echo $artist | cut -c1-$artist_offset)
     artist=$(echo $artist'...')

@@ -12,7 +12,7 @@ menu_content() {
 handle_selection() {
   case x"$@" in
   x"󰌾 Lock session")
-    coproc (uwsm app -- hyprlock >/dev/null 2>&1)
+    coproc ($HOME/.config/hypr/scripts/hyprlock.sh >/dev/null 2>&1)
     ;;
   x"󰒲 Suspend")
     systemctl suspend
