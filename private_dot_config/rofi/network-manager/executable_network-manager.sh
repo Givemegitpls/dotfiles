@@ -25,11 +25,11 @@ get_signal_icon() {
 
 main_menu_options() {
   local wifi_device=$(nmcli d | grep "wifi " | sed "s/ .*//")
-  local ssid=$(nmcli -t -f GENERAL device show $wifi_device | grep CONNECTION | cut -d: -f2)
-  local signal=$(nmcli -t -f GENERAL device show wlp1s0 | grep STATE | cut -d: -f2 | sed "s/ .*//")
-  local security=$(nmcli connection show Frankenstein | grep "key-mgmt" | cut -d: -f2 | tr a-z A-Z)
-  local signal_icon=$(get_signal_icon $signal $security)
-  if [ ! -z $ssid ]; then
+  local ssid=$(nmcli -t -f GENERAL device show "$wifi_device" | grep CONNECTION | cut -d: -f2)
+  local signal=$(nmcli -t -f GENERAL device show "$wifi_device" | grep STATE | cut -d: -f2 | sed "s/ .*//")
+  local security=$(nmcli connection show "$ssid" | grep "key-mgmt" | cut -d: -f2 | tr a-z A-Z)
+  local signal_icon=$(get_signal_icon $signal "$security")
+  if [ ! -z "$ssid" ]; then
     echo -en "\0active\x1f0\n"
     echo "$signal_icon $ssid"
   fi
