@@ -1,10 +1,6 @@
 #!/usr/bin/bash
-
-target="rofi-power-menu.sh"
-RUNNING_PIDS=$(pgrep -f $target | grep -v $$)
-if [ -n "${RUNNING_PIDS}" ]; then
-  pkill -f $target
+if pkill -f rofi-power-menu.sh >/dev/null; then
   systemctl suspend
 else
-  coproc ($(dirname "$0")/$target)
+  ~/.config/rofi/rofi-power-menu.sh
 fi
