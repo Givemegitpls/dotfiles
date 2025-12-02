@@ -8,15 +8,20 @@
 }
 
 window#waybar {
-  background: rgba(32, 33, 44, 0.42);
+  background: transparent;
 }
 
 #clock,
 #tray,
 #language,
-#custom-media {
-  border: none;
+#custom-media,
+#network-group,
+#pulseaudio-group,
+#workspaces-group,
+#power-group {
+  border: 2px solid rgba(192, 202, 245, 0.5);
   border-radius: 11px;
+  background-color: rgba(32, 33, 44, 0.42);
   padding-top: 1px;
   margin-bottom: 2px;
   margin-top: 1px;
@@ -29,6 +34,9 @@ window#waybar {
 }
 
 #clock,
+#power-group,
+#network-group,
+#pulseaudio-group,
 #tray {
   margin-right: 5px;
 }
@@ -42,8 +50,8 @@ window#waybar {
 #language,
 #backlight,
 #bluetooth {
-  padding-left: 8px;
-  padding-right: 8px;
+  padding-left: 12px;
+  padding-right: 12px;
 }
 
 #workspaces button {
@@ -51,11 +59,18 @@ window#waybar {
   padding-right: 9px;
 }
 
+#windowcount {
+  padding-left: 6px;
+  padding-right: 4px;
+}
+
+#workspaces-group,
 #network,
 #battery {
   padding-left: 6px;
 }
 
+#workspaces-group,
 #pulseaudio.input,
 #backlight,
 #bluetooth {
