@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/bash
 
 menu_content() {
   echo -en "\0message\x1f Power menu\n"
