@@ -2,37 +2,65 @@
 # Thanks for idea and source, DIMFLIX
 # Github: https://github.com/DIMFLIX-OFFICIAL
 
-SIGNAL_ICONS=("󰤟 " "󰤢 " "󰤥 " "󰤨 ")
-SECURED_SIGNAL_ICONS=("󰤡 " "󰤤 " "󰤧 " "󰤪 ")
+SIGNAL_ICONS=("󰤟  " "󰤢  " "󰤥  " "󰤨  ")
+SECURED_SIGNAL_ICONS=("󰤡  " "󰤤  " "󰤧  " "󰤪  ")
+
+get_signal_icon() {
+  local signal_icon
+  local signal="$1"
+  local security="$2"
+  local signal_level=$((signal / 25))
+  if [[ $signal_level > 3 ]]; then
+    signal_level=3
+  fi
+  if [[ "$signal_level" -lt "${#SIGNAL_ICONS[@]}" ]]; then
+    signal_icon="${SIGNAL_ICONS[$signal_level]}"
+  fi
+
+  if [[ "$security" =~ WPA || "$security" =~ WEP ]]; then
+    signal_icon="${SECURED_SIGNAL_ICONS[$signal_level]}"
+  fi
+  echo "$signal_icon"
+}
+
+main_menu_options() {
+  local wifi_device=$(nmcli d | grep "wifi " | sed "s/ .*//")
+  local ssid=$(nmcli -t -f GENERAL device show "$wifi_device" | grep CONNECTION | cut -d: -f2)
+  local signal=$(nmcli -t -f GENERAL device show "$wifi_device" | grep STATE | cut -d: -f2 | sed "s/ .*//")
+  local security=$(nmcli connection show "$ssid" | grep "key-mgmt" | cut -d: -f2 | tr a-z A-Z)
+  local signal_icon=$(get_signal_icon $signal "$security")
+  if [ ! -z "$ssid" ]; then
+    echo -en "\0active\x1f0\n"
+    echo "$signal_icon$ssid"
+  fi
+  echo "  Rescan"
+}
 
 list_wifi() {
+  local ssids=()
+  local formatted_list=()
+  local active_ssid=""
+  local wifi_device=$(nmcli d | grep "wifi " | sed "s/ .*//")
   local counter=0
-  local active="\0active\x1f"
+  local active_options=""
 
   while IFS=: read -r in_use signal security ssid; do
     if [ -z "$ssid" ]; then continue; fi # Пропускаем сети без SSID
 
-    local signal_icon
-    local signal_level=$((signal / 25))
-    if [[ $signal_level > 3 ]]; then
-      signal_level=3
-    fi
-    if [[ "$signal_level" -lt "${#SIGNAL_ICONS[@]}" ]]; then
-      signal_icon="${SIGNAL_ICONS[$signal_level]}"
-    fi
-
-    if [[ "$security" =~ WPA || "$security" =~ WEP ]]; then
-      signal_icon="${SECURED_SIGNAL_ICONS[$signal_level]}"
-    fi
+    local signal_icon=$(get_signal_icon $signal $security)
 
     # Добавляем иконку подключения, если сеть активна
     local formatted="$signal_icon $ssid"
     if [[ "$in_use" =~ \* ]]; then
-      active+="$counter,"
+      active_ssid="$ssid"
+      active_options+="-a $counter"
     fi
-    echo "$formatted"
+    ssids+=("$ssid")
+    formatted_ssids+="$formatted\n"
+    let counter++
   done <<<"$(nmcli -t -f IN-USE,SIGNAL,SECURITY,SSID dev wifi)"
-  echo -en "$active\n"
+  local chosen_option=$(echo -e "$formatted_ssids" | rofi -dmenu -i $active_options -selected-row 1 -p "Wi-Fi SSID: ")
+  manage_wifi "$chosen_option"
 }
 
 manage_wifi() {
@@ -46,14 +74,13 @@ manage_wifi() {
     # Удаляем значки уровня сигнала, если есть
     local chosen_id=$chosen_option
     for icon in "${SIGNAL_ICONS[@]}"; do
-      chosen_id=$(echo "$chosen_id" | sed "s/$icon //")
+      chosen_id=$(echo "$chosen_id" | sed "s/$icon//")
     done
 
     for icon in "${SECURED_SIGNAL_ICONS[@]}"; do
-      chosen_id=$(echo "$chosen_id" | sed "s/$icon //")
+      chosen_id=$(echo "$chosen_id" | sed "s/$icon//")
     done
     # Проверяем состояние выбранной сети
-    local device_status=$(nmcli -t -f GENERAL device show $wifi_device | grep STATE | cut -d: -f2)
     local active_ssid=$(nmcli -t -f GENERAL device show $wifi_device | grep CONNECTION | cut -d: -f2)
 
     # Определяем действие в зависимости от состояния сети
@@ -85,10 +112,13 @@ manage_wifi() {
   fi
 }
 
-if [ ! -z "$@" ]; then
+if [ -z "$@" ]; then
+  main_menu_options
+elif [ "$@" == "  Rescan" ]; then
+  notify-send "Scaning Networks" "Please wait"
+  dir=$(dirname "$0")
+  coproc (list_wifi)
+else
   dir=$(dirname "$0")
   coproc (manage_wifi "$@")
-else
-  notify-send "Scaning Networks" "Please wait"
-  list_wifi
 fi

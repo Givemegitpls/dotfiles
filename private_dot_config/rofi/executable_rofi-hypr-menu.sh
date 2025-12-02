@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 menu_content() {
-  echo -en "\0message\x1fQuit mango?\n"
+  echo -en "\0message\x1fQuit hypr?\n"
   echo "No"
   echo "Yes"
 }
@@ -12,7 +12,7 @@ handle_selection() {
     exit 0
     ;;
   x"Yes")
-    mmsg -d quit
+    hyprctl dispatch exit
     ;;
   esac
 }
