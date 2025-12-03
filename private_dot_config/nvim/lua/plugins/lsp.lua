@@ -26,6 +26,7 @@ return {
 				python = { pythonPath = python_path },
 				basedpyright = {
 					analysis = {
+						diagnosticMode = "workspace",
 						typeCheckingMode = "strict",
 					},
 				},
