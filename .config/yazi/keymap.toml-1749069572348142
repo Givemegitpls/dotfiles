@@ -1,0 +1,16 @@
+# [[manager.prepend_keymap]]
+[manager]
+prepend_keymap = [
+	{on   = [ ":" ], run  = 'shell "$SHELL" --block --confirm', desc = "Open shell here"},
+	{on   = [ "q" ], run  = 'close', desc = "Close the current tab, or quit if it is last tab"},
+	{on   = [ "g","e" ], run  = 'cd /etc', desc = "Go to /etc"},
+	{on   = [ "g","r" ], run  = 'cd /', desc = "Go to /"},
+	{on   = [ "g","s" ], run  = 'cd /srv', desc = "Go to /srv"},
+	{on   = [ "g","u" ], run  = 'cd /usr', desc = "Go to /usr"},
+	{on   = [ "g","v" ], run  = 'cd /var', desc = "Go to /var"},
+	{on   = [ "v" ], run  = 'select_all --state=true', desc = "Select all files"},
+	{on   = [ "V" ], run  = 'visual_mode', desc = "Enter visual mode"},
+	{on   = [ "D", "<Enter>" ], run  = 'remove --force --permanently', desc = "Permanently delete files"},
+  {on   = [ "M"], run = "plugin mount", desc = "A mount manager for Yazi"},
+]
+

@@ -1,7 +1,0 @@
-{{  if eq .chezmoi.osRelease.id "arch" -}}
-#!/bin/sh
-if ! [ -e "$HOME/.config/yazi/plugins/mount.yazi" ]; then
-  ya pkg add yazi-rs/plugins:mount
-  ya pkg upgrade
-fi
-{{ end -}}

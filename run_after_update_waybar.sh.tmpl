@@ -1,6 +1,0 @@
-{{  if eq .machine_type "desktop" -}}
-#!/bin/sh
-if [ -e "$HOME/.config/waybar/config.jsonc" ]; then
-  sed -i '/.*"group\/power-group",/d' $HOME/.config/waybar/config.jsonc 
-fi
-{{ end -}}
