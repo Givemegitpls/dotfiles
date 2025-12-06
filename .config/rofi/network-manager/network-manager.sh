@@ -50,7 +50,7 @@ list_wifi() {
     local signal_icon=$(get_signal_icon $signal $security)
 
     # Добавляем иконку подключения, если сеть активна
-    local formatted="$signal_icon $ssid"
+    local formatted="$signal_icon$ssid"
     if [[ "$in_use" =~ \* ]]; then
       active_ssid="$ssid"
       active_options+="-a $counter"
