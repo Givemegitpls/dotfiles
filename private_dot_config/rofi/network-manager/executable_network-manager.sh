@@ -47,7 +47,7 @@ list_wifi() {
   while IFS=: read -r in_use signal security ssid; do
     if [ -z "$ssid" ]; then continue; fi # Пропускаем сети без SSID
 
-    local signal_icon=$(get_signal_icon $signal $security)
+    local signal_icon=$(get_signal_icon $signal$security)
 
     # Добавляем иконку подключения, если сеть активна
     local formatted="$signal_icon $ssid"
