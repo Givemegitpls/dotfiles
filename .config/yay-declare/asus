@@ -1,0 +1,5 @@
+asusctl
+nvidia
+power-profiles-daemon --asdeps
+supergfxctl
+switcheroo-control

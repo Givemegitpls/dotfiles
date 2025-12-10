@@ -1,0 +1,20 @@
+amd-ucode
+base
+base-devel
+btrfs-progs
+dosfstools
+efibootmgr
+exfatprogs
+gnutls --asdeps
+grub
+jack2
+linux
+linux-firmware
+linux-headers
+mesa
+networkmanager
+ntp
+pipewire-pulse
+sudo
+ufw
+wireplumber
