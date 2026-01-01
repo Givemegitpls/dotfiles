@@ -1,7 +1,10 @@
 return {
 	"nvim-treesitter/nvim-treesitter",
+	lazy = false,
+	build = ":TSUpdate",
+	branch = "main", -- Explicitly use the 'main' branch
 	config = function()
-		require("nvim-treesitter.configs").setup({
+		require("nvim-treesitter.config").setup({
 			ensure_installed = {
 				"lua",
 				"python",

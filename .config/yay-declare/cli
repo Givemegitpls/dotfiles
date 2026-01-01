@@ -12,7 +12,7 @@ fastfetch
 fd
 ffmpeg --asdeps
 imagemagick --asdeps
-kew
+waves-bin
 less
 lowfi
 man-db

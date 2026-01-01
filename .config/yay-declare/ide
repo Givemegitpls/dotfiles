@@ -16,6 +16,6 @@ ripgrep
 ruff
 shfmt
 stylua
-tree-sitter-query
+tree-sitter-query --asdeps
 ttf-jetbrains-mono-nerd
 uv

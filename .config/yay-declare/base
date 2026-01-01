@@ -6,15 +6,20 @@ dosfstools
 efibootmgr
 exfatprogs
 gnutls --asdeps
-grub
+lib32-nvidia-utils --asdeps
+lib32-vulkan-radeon --asdeps
+udiskie --asdeps
+lvm2
+nvidia-open
 jack2
 linux
 linux-firmware
 linux-headers
-mesa
+mesa --asdeps
 networkmanager
 ntp
 pipewire-pulse
 sudo
 ufw
 wireplumber
+python
