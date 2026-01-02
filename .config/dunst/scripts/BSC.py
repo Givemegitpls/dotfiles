@@ -29,7 +29,7 @@ def main(sleep_time: int, base_path: str):
                 time.sleep(sleep_time)
             os.system('notify-send -u normal -r "6896" "Battery" "Discharging"')
         elif sensors_battery(base_path).percent <= 5:
-            os.system("systemctl suspend")
+            os.system("systemctl sleep")
             time.sleep(60)
         elif sensors_battery(base_path).percent <= 15:
             os.system('notify-send -u critical -r "6896" "battery" "low battery alarm"')

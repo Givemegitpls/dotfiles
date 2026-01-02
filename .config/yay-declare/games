@@ -1,6 +1,5 @@
 boxflat-git
 gamemode
-lib32-nvidia-utils --asdeps
 # libusb-compat --asdeps
 mangohud
 portproton

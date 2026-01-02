@@ -3,7 +3,7 @@
 menu_content() {
   echo -en "\0message\x1f Power menu\n"
   echo "󰌾 Lock session"
-  echo "󰒲 Suspend"
+  echo "󰒲 Sleep"
   echo " Shutdown"
   echo " Reboot"
   echo "󰜺 Cancel"
@@ -14,8 +14,8 @@ handle_selection() {
   x"󰌾 Lock session")
     coproc ($HOME/.config/hypr/scripts/hyprlock.sh >/dev/null 2>&1)
     ;;
-  x"󰒲 Suspend")
-    systemctl suspend
+  x"󰒲 Sleep")
+    systemctl sleep
     ;;
   x" Shutdown")
     shutdown now

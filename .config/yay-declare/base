@@ -8,14 +8,14 @@ exfatprogs
 gnutls --asdeps
 lib32-nvidia-utils --asdeps
 lib32-vulkan-radeon --asdeps
-udiskie --asdeps
+udiskie
 lvm2
 nvidia-open
 jack2
 linux
 linux-firmware
 linux-headers
-mesa --asdeps
+mesa
 networkmanager
 ntp
 pipewire-pulse
