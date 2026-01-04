@@ -10,6 +10,7 @@ mpv
 nicotine+
 noisetorch
 obs-studio
-tauon-music-box
+# tauon-music-box
 thunar
+gvfs --asdeps
 timeshift

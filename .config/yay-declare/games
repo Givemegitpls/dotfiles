@@ -3,6 +3,7 @@ gamemode
 # libusb-compat --asdeps
 mangohud
 portproton
+gamescope
 steam
 xorg-xwayland --asdeps
 xpadneo-dkms-git
