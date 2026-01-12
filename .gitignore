@@ -3,3 +3,6 @@
 .config/yazi/keymap.toml-*
 .config/yazi/plugins/*
 .config/yazi/package.toml
+.config/singbox/*
+!.config/singbox/
+!.config/singbox/example.json
