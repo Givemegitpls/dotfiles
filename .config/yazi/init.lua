@@ -1,38 +1,23 @@
-function Status:name()
-	local h = cx.active.current.hovered
-	if not h then
-		return ui.Span("")
-	end
+-- install plugins
+local packages = {
+	"yazi-rs/plugins:mount",
+}
 
-	local linked = ""
-	if h.link_to ~= nil then
-		linked = " -> " .. tostring(h.link_to)
+local function install_if_not_exists(package, ya_report)
+	local pattern = string.gsub(package, "%p", "%%%1")
+
+	if ya_report:find(pattern) == nil then
+		os.execute("ya pkg add" .. " " .. package)
 	end
-	return ui.Span(" " .. h.name .. linked)
 end
 
-function Status:owner()
-	local h = cx.active.current.hovered
-	if h == nil or ya.target_family() ~= "unix" then
-		return ui.Line {}
+do
+	local command = "ya pkg list"
+	local handle = io.popen(command, "r")
+	local report = handle:read("*a")
+	local return_status = handle:close()
+
+	for _, package in ipairs(packages) do
+		install_if_not_exists(package, report)
 	end
-
-	return ui.Line {
-		ui.Span(ya.user_name(h.cha.uid) or tostring(h.cha.uid)):fg("magenta"),
-		ui.Span(":"),
-		ui.Span(ya.group_name(h.cha.gid) or tostring(h.cha.gid)):fg("magenta"),
-		ui.Span(" "),
-	}
-end
-
-function Status:render(area)
-	self.area = area
-
-	local left = ui.Line { self:mode(), self:size(), self:name() }
-	local right = ui.Line { self:owner(), self:permissions(), self:percentage(), self:position() }
-	return {
-		ui.Paragraph(area, { left }),
-		ui.Paragraph(area, { right }):align(ui.Paragraph.RIGHT),
-		table.unpack(Progress:render(area, right:width())),
-	}
 end

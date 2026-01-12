@@ -1,1 +1,5 @@
 .config/nvim/lazy-lock.json
+.config/yazi/yazi.toml-*
+.config/yazi/keymap.toml-*
+.config/yazi/plugins/*
+.config/yazi/package.toml

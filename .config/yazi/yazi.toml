@@ -1,22 +1,4 @@
 [mgr]
-sort_dir_first = true
 show_hidden = true
+show_symlink = true
 
-[opener]
-text = [
-	{ run = 'nvim "$@"', block = true },
-	{ run = 'micro "$@"', block = true },
-]
-
-[open]
-rules = [
-	{ mime = "text/*", use = "text" },
-	{ mime = "image/*", use = "image" },
-
-	# { mime = "application/json", use = "text" },
-	{ name = "*.json", use = "text" },
-	{ name = "*.txt", use = "text" },
-
-	# Multiple openers for a single rule
-	{ name = "*.html", use = [ "browser", "text" ] },
-]
