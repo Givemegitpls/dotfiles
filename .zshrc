@@ -138,11 +138,15 @@ function rp() {
 }
 
 function yazi() {
-	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
-	command /usr/bin/yazi "$@" --cwd-file="$tmp"
-	IFS= read -r -d '' cwd < "$tmp"
-	[ -n "$cwd" ] && [ "$cwd" != "$PWD" ] && builtin cd -- "$cwd"
-	rm -f -- "$tmp"
+  if [[ -n "$YAZI_LEVEL" ]]; then
+    exit
+  else
+    local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+    command /usr/bin/yazi "$@" --cwd-file="$tmp"
+    IFS= read -r -d '' cwd < "$tmp"
+    [ -n "$cwd" ] && [ "$cwd" != "$PWD" ] && builtin cd -- "$cwd"
+    rm -f -- "$tmp"
+  fi
 }
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
@@ -189,4 +193,3 @@ bindkey -M viins '\eOB' history-substring-search-down # or '^[[B'
 bindkey -M vicmd 'j' history-substring-search-up
 bindkey -M vicmd 'h' history-substring-search-down
 HISTORY_SUBSTRING_SEARCH_ENSURE_UNIQUE=1
-
