@@ -11,6 +11,7 @@ return {
 				"yaml",
 				"markdown",
 				"bash",
+				"toml",
 			},
 
 			sync_install = false,

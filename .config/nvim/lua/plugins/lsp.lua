@@ -25,5 +25,10 @@ return {
 			filetypes = { "bash", "sh" },
 		})
 		vim.lsp.enable("bashls")
+		vim.lsp.config("tombi", {
+			cmd = { "tombi", "lsp" },
+			filetypes = { "toml" },
+		})
+		vim.lsp.enable("tombi")
 	end,
 }

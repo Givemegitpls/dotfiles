@@ -26,6 +26,7 @@ return {
 			css = { "prettierd", "prettier", stop_after_first = true },
 			html = { "prettierd", "prettier", stop_after_first = true },
 			markdown = { "deno_fmt" },
+			toml = { "tombi", "format" },
 			-- go = { "goimports", "gofmt" },
 			-- typescript = { "prettierd", "prettier", stop_after_first = true },
 		},

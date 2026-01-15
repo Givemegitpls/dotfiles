@@ -1,7 +1,7 @@
 asusctl
 power-profiles-daemon --asdeps
-supergfxctl
+# supergfxctl
 switcheroo-control
 lib32-nvidia-utils --asdeps
-nvidia-open
 # nvidia-laptop-power-cfg
+nvidia-open-dkms --asdeps

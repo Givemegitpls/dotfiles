@@ -15,6 +15,7 @@ python-poetry-plugin-shell
 ripgrep
 ruff
 shfmt
+tombi
 stylua
 tree-sitter-query --asdeps
 ttf-jetbrains-mono-nerd
