@@ -2,10 +2,9 @@ android-udev
 etcher-bin
 fuseiso
 lshw
-noto-fonts-emoji
 npm
 switch-lan-play
 flatpak
 # asus
 nvidia-laptop-power-cfg
-nvidia-open-dkms --asdeps
+winboat-bin
