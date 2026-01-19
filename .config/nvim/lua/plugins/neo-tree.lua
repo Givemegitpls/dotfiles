@@ -10,6 +10,13 @@ return {
 		local command = require("neo-tree.command")
 
 		tree.setup({
+			filesystem = {
+				filtered_items = {
+					visible = true, -- Show all hidden files
+					hide_dotfiles = false,
+					hide_gitignored = true,
+				},
+			},
 			document_symbols = {
 				custom_kinds = {},
 			},

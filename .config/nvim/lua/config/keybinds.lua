@@ -10,6 +10,8 @@ vim.cmd([[
   nnoremap <C-j> <C-w>j
 ]])
 
+local opts = {}
+
 -- dap
 local dap = require("dap")
 vim.keymap.set("n", "<F5>", dap.continue, opts)
