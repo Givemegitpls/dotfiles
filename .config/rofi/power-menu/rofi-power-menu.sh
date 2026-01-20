@@ -30,7 +30,6 @@ handle_selection() {
 }
 
 if [ -n "$ROFI_RETV" ]; then
-  # ROFI_RETV=0 - show menu, ROFI_RETV=1 - selection made
   if [ "$ROFI_RETV" -eq 0 ]; then
     menu_content
   elif [ "$ROFI_RETV" -eq 1 ]; then

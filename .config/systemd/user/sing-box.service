@@ -1,0 +1,12 @@
+[Unit]
+Description=sing-box service
+
+[Service]
+ExecStart=/usr/bin/sudo /usr/bin/sing-box -c %h/.config/singbox/config.json run
+ExecReload=/bin/kill -HUP $MAINPID
+Restart=on-failure
+RestartSec=10s
+LimitNOFILE=infinity
+
+[Install]
+WantedBy=default.target

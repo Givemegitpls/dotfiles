@@ -2,11 +2,11 @@
 # Проверяем sing-box и netbird
 case x"$@" in
 x"  Stop sing-box")
-  coproc (sudo systemctl stop sing-box >/dev/null 2>&1) &
+  coproc (systemctl --user stop sing-box >/dev/null 2>&1) &
   exit 0
   ;;
 x"  Start sing-box")
-  coproc (sudo systemctl start sing-box >/dev/null 2>&1) &
+  coproc (systemctl --user start sing-box >/dev/null 2>&1) &
   exit 0
   ;;
 x"  Stop netbird")
@@ -21,7 +21,7 @@ esac
 
 # Добавляем sing-box
 active="\0active\x1f"
-if systemctl status sing-box >/dev/null 2>&1; then
+if systemctl --user status sing-box >/dev/null 2>&1; then
   active+="0,"
   echo "  Stop sing-box"
 else
