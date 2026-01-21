@@ -2,7 +2,7 @@
   "default-direction": "right",
   "rescan-time": 1,
   "monitors": {
-    "Acer Technologies Acer B247YU 0x122166F9 (HDMI-A-1)": "--pos 0,0",
+    "Acer Technologies Acer B247YU 0x122166F9 (HDMI-A-1)": "--pos 0,0 --custom-mode 2560x1440@60",
     "Najing CEC Panda FPD Technology CO. ltd 0x0050 (eDP-1)": "--right-of HDMI-A-1",
     "Mitsubishi Electric Corporation DPro930SB 4200401YB (HDMI-A-1)": "--pos 0,0 --mode 1400x1050@84.959999"
   }

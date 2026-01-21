@@ -12,7 +12,7 @@ handle_selection() {
     exit 0
     ;;
   x"Yes")
-    mmsg -d quit
+    uwsm stop
     ;;
   esac
 }
