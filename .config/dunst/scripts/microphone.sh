@@ -1,5 +1,7 @@
 #!/bin/bash
 
+wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle
+
 msgId="3378455"
 
 station=$(wpctl get-volume @DEFAULT_AUDIO_SOURCE@ | sed 's/Volume://' | tr -d [:digit:] | tr -d ' .[]')

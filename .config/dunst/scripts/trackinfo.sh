@@ -1,5 +1,7 @@
 #!/bin/bash
 
+playerctl $1
+
 sleep 0.7
 
 msgId="3378455"

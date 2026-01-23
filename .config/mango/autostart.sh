@@ -11,4 +11,4 @@ uwsm app -- wl-paste --type text --watch cliphist store &
 uwsm app -- wl-paste --type image --watch cliphist store &
 uwsm app -- systemd-inhibit --who="Mango config" --why="wlogout keybind" --what=handle-power-key --mode=block sleep infinity &
 uwsm app -- noisetorch -i &
-~/.config/mango/scripts/rog.sh
+~/.config/mango/scripts/ROGstartup.sh
