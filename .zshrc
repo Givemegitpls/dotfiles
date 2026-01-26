@@ -109,7 +109,6 @@ export PATH="$PATH:$HOME/.local/bin"
 # alias cat="bat -P"
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-# alias uwsm_start="uwsm start default"
 
 ZSH_CACHE_DIR=$HOME/.cache/oh-my-zsh
 if [[ ! -d $ZSH_CACHE_DIR ]]; then
@@ -118,9 +117,9 @@ fi
 
 source $ZSH/oh-my-zsh.sh
 
-# if uwsm check may-start; then
-#   exec uwsm start default
-# fi
+if uwsm check may-start; then
+  exec uwsm start default
+fi
 
 function yazi() {
   if [[ -n "$YAZI_LEVEL" ]]; then

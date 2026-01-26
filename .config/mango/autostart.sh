@@ -5,7 +5,6 @@ uwsm app -- hypridle &
 uwsm app -- dunst &
 uwsm app -- ~/.config/mango/scripts/waymonman.py &
 uwsm app -- ~/.config/mango/scripts/ddcutil.py &
-uwsm app -- ~/.config/dunst/scripts/BSC.py &
 uwsm app -- ~/.config/waybar/toggle.sh &
 uwsm app -- wl-paste --type text --watch cliphist store &
 uwsm app -- wl-paste --type image --watch cliphist store &
