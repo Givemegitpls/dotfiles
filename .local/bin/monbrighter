@@ -81,19 +81,20 @@ class BrightnessDaemon:
         for row in (
             subprocess.check_output(["ddcutil", "detect"]).decode("utf-8").split("\n")
         ):
-            command: list[str] = []
+            commands: list[str] = []
             if "Display " in row:
                 if (mon := row.replace("Display ", "")).isdigit():
-                    command.append(
+                    commands.append(
                         f"ddcutil -d {mon} setvcp 10 {self.current_brightness}"
                     )
-            if command:
-                subprocess.run(
-                    " & ".join(command),
-                    shell=True,
-                )
+            if commands:
+                for command in commands:
+                    subprocess.run(
+                        (f"{command} &> /dev/null & disown"),
+                        shell=True,
+                    )
 
-                print("\n".join(command))
+                print("\n".join(commands))
 
 
 def send_command(command: str, service_name: str):
@@ -110,13 +111,18 @@ def send_command(command: str, service_name: str):
 
 
 if __name__ == "__main__":
-    service_name = "ddcutild"
+    service_name = "monbrighter"
+    config_path = os.path.expanduser(f"~/.config/{service_name}/config.json")
     if len(argv) == 2 and argv[1] in ["up", "down"]:
         send_command(argv[1], service_name)
     if subprocess.run(["pgrep", service_name]).returncode == 1:
-        with open(os.path.dirname(__file__) + "/ddcutil.json") as f:
-            settings = json.load(f)
-            BrightnessDaemon(service_name, settings).start()
+        if os.path.exists(config_path):
+            with open(config_path) as f:
+                settings = json.load(f)
+        else:
+            settings = {"default_brightnes": None, "step": 5, "timegap": 0.3}
+
+        BrightnessDaemon(service_name, settings).start()
     stdout.write("Usage: brightness up|down")
     stdout.flush()
     exit(1)

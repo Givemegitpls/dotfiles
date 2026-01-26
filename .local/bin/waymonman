@@ -22,12 +22,16 @@ class monitor:
     description: str
 
 
-def main():
+def main(config_path: str):
     settings: Any = {}
     monitors: list[monitor] = []
     while True:
-        with open(os.path.dirname(__file__) + "/waymonman.json") as f:
-            settings_on_disc = json.load(f)
+        if os.path.exists(config_path):
+            with open(config_path) as f:
+                settings_on_disc = json.load(f)
+        else:
+            settings_on_disc: Any = {}
+
         current_monitors: Any = []
         for mon in json.loads(subprocess.check_output(["wlr-randr", "--json"])):
             current_monitors.append(
@@ -79,6 +83,8 @@ def main():
 
 
 if __name__ == "__main__":
+    service_name = "waymonman"
+    config_path = os.path.expanduser(f"~/.config/{service_name}/config.json")
     with open("/proc/self/comm", "w") as f:
-        f.write("waymonman")
-    main()
+        f.write(service_name)
+    main(config_path)
