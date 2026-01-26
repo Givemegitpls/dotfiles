@@ -24,15 +24,22 @@ def sensors_battery(base_path: str) -> Battery:
 def main(sleep_time: int, base_path: str):
     while True:
         if sensors_battery(base_path).power_plugged:
-            os.system('notify-send -u normal -r "6896" "Battery" "Charging"')
+            subprocess.run(
+                'notify-send -u normal -r "6896" "Battery" "Charging"', shell=True
+            )
             while sensors_battery(base_path).power_plugged:
                 time.sleep(sleep_time)
-            os.system('notify-send -u normal -r "6896" "Battery" "Discharging"')
+            subprocess.run(
+                'notify-send -u normal -r "6896" "Battery" "Discharging"', shell=True
+            )
         elif sensors_battery(base_path).percent <= 5:
-            os.system("systemctl sleep")
+            subprocess.run("systemctl sleep", shell=True)
             time.sleep(60)
         elif sensors_battery(base_path).percent <= 15:
-            os.system('notify-send -u critical -r "6896" "battery" "low battery alarm"')
+            subprocess.run(
+                'notify-send -u critical -r "6896" "battery" "low battery alarm"',
+                shell=True,
+            )
             while (
                 not sensors_battery(base_path).power_plugged
                 and sensors_battery(base_path).percent > 5

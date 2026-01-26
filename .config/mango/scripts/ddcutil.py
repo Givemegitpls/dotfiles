@@ -62,8 +62,9 @@ class BrightnessDaemon:
                 elif data == "down":
                     self.current_brightness -= self.step
                 self.current_brightness = max(min(self.current_brightness, 100), 0)
-                os.system(
-                    f'notify-send{self.image_params} -a "changeBrightness" -u low -r {self.pid} -h int:value:"{self.current_brightness}" "Яркость экрана: {self.current_brightness}%"'
+                subprocess.run(
+                    f'notify-send{self.image_params} -a "changeBrightness" -u low -r {self.pid} -h int:value:"{self.current_brightness}" "Яркость экрана: {self.current_brightness}%"',
+                    shell=True,
                 )
                 self.schedule_apply()
                 conn.send(b"OK")

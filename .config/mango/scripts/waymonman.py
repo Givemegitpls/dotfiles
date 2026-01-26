@@ -50,14 +50,15 @@ def main():
         undifinite: list[str] = []
         for mon in monitors:
             if mon.description in definite_monitors:
-                os.system(
+                subprocess.run(
                     " ".join(
                         [
                             "wlr-randr --output",
                             mon.name,
                             definite_monitors[mon.description],
                         ]
-                    )
+                    ),
+                    shell=True,
                 )
                 setuped.append(mon.name)
             else:
@@ -65,10 +66,11 @@ def main():
 
         for mon in undifinite:
             if setuped:
-                os.system(
+                subprocess.run(
                     " ".join(
                         ["wlr-randr --output", mon, default_direction, setuped[-1]]
-                    )
+                    ),
+                    shell=True,
                 )
             setuped.append(mon)
         wlr_output = subprocess.check_output(["wlr-randr"])
