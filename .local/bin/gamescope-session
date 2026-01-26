@@ -1,0 +1,25 @@
+#!/bin/bash
+#gamescope -h 1080 -w 1920 -H 1440 -W 2560 -f -F fsr --force-grab-cursor -r 60 -e -- steam -bigpicture
+#gamescope -h 1440 -w 2560 -H 1440 -W 2560 -f -F fsr --force-grab-cursor -r 75 -e -- steam -bigpicture
+#gamescope -e -- steam -bigpicture
+#gamescope -h 1080 -w 1920 -e --xwayland-count 2 -- steam -steamdeck -steamos3
+#gamescope -h 720 -w 1280 -H 1080 -W 1920 -r 120 -e --xwayland-count 2 -f -F fsr --force-grab-cursor -- steam -steamdeck -steamos3
+
+gamescope_command="gamescope -e -- steam -steamdeck -steamos3"
+
+if which switcherooctl &>/dev/null; then
+  switcheroo_report="$(switcherooctl list)"
+  device_numbers=($(echo "$switcheroo_report" | grep -oP 'Device:\s*\K\d+'))
+  echo "choose option:"
+  echo "$switcheroo_report" | sed -n '/Device:/{N;s/Device:\s*\([0-9]\+\)\n\s*Name:\s*/\1) /p}'
+  read choice
+  for i in "${device_numbers[@]}"; do
+    if [ "$i" == "$choice" ]; then
+      switcherooctl launch -g $i $gamescope_command
+      exit 0
+    fi
+  done
+  exit 1
+else
+  $gamescope_command
+fi

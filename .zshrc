@@ -92,6 +92,7 @@ plugins=(git zsh-syntax-highlighting zsh-autosuggestions zsh-vi-mode zsh-history
 # fi
 
 export EDITOR='nvim'
+export PATH="$PATH:$HOME/.local/bin"
 
 # Compilation flags
 # export ARCHFLAGS="-arch $(uname -m)"
@@ -108,6 +109,7 @@ export EDITOR='nvim'
 # alias cat="bat -P"
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
+# alias uwsm_start="uwsm start default"
 
 ZSH_CACHE_DIR=$HOME/.cache/oh-my-zsh
 if [[ ! -d $ZSH_CACHE_DIR ]]; then
@@ -116,26 +118,9 @@ fi
 
 source $ZSH/oh-my-zsh.sh
 
-if uwsm check may-start; then
-  exec uwsm start default
-fi
-
-function rp() {
-  poetry env info &> /dev/null
-  if [[ $? -eq 0 ]]; then
-    if [[ -z $1 ]]; then
-      poetry run python
-    else
-      poetry run python "$1"
-    fi
-  else
-    if [[ -z $1 ]]; then
-      python
-    else
-      python "$1"
-    fi
-  fi
-}
+# if uwsm check may-start; then
+#   exec uwsm start default
+# fi
 
 function yazi() {
   if [[ -n "$YAZI_LEVEL" ]]; then
