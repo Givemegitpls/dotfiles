@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 menu_content() {
-  echo -en "\0message\x1fQuit mango?\n"
+  echo -en "\0message\x1fQuit $XDG_CURRENT_DESKTOP?\n"
   echo "No"
   echo "Yes"
 }
