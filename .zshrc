@@ -117,8 +117,26 @@ fi
 
 source $ZSH/oh-my-zsh.sh
 
+function choose_session() {
+  clear
+  echo "choose option:\n1)uwsm\n2)gamescope"
+  read choice
+  case "$choice" in
+  "1")
+    exec uwsm start default
+    ;;
+  "2")
+    clear
+    exec gamescope-session
+    ;;
+  *)
+    choose_session
+    ;;
+  esac
+}
+
 if uwsm check may-start; then
-  exec uwsm start default
+  choose_session
 fi
 
 function yazi() {

@@ -1,2 +1,2 @@
 #!/bin/bash
-pkill waybar || exec waybar $@
+pkill -x waybar || exec waybar $@
