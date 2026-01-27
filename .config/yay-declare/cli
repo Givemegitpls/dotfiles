@@ -27,3 +27,4 @@ wget
 yay
 yazi
 zsh
+resvg --asdeps

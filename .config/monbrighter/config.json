@@ -1,5 +1,6 @@
 {
-  "image_path": "~/.config/dunst/scripts/icons/brightness.svg",
+  "image_path_up": "~/.local/share/icons/brightness-up.svg",
+  "image_path_down": "~/.local/share/icons/brightness-down.svg",
   "default_brightnes": null,
   "step": 5,
   "timegap": 0.3

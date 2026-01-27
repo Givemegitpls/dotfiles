@@ -25,10 +25,14 @@ class BrightnessDaemon:
         self.pid = os.getpid()
         self.step = settings["step"]
         self.timegap = settings["timegap"]
-        if image_path := settings.get("image_path"):
-            self.image_params = f" -i {image_path}"
+        if (image_path_up := settings.get("image_path_up")) and (
+            image_path_down := settings.get("image_path_down")
+        ):
+            self.image_params_up = f" -i {image_path_up}"
+            self.image_params_down = f" -i {image_path_down}"
         else:
-            self.image_params = ""
+            self.image_params_up = ""
+            self.image_params_down = ""
         if value := settings.get("default_brightness"):
             self.current_brightness = int(value)
         elif match := re.search(
@@ -55,15 +59,20 @@ class BrightnessDaemon:
 
         while True:
             conn, _ = self.server.accept()
+            notifier_command: str
             try:
                 data = conn.recv(1024).decode().strip()
                 if data == "up":
                     self.current_brightness += self.step
+                    notifier_command = f"notify-send{self.image_params_up}"
                 elif data == "down":
                     self.current_brightness -= self.step
+                    notifier_command = f"notify-send{self.image_params_down}"
+                else:
+                    continue
                 self.current_brightness = max(min(self.current_brightness, 100), 0)
                 subprocess.run(
-                    f'notify-send{self.image_params} -a "changeBrightness" -u low -r {self.pid} -h int:value:"{self.current_brightness}" "Яркость экрана: {self.current_brightness}%"',
+                    f'{notifier_command} -a "changeBrightness" -u low -r {self.pid} -h int:value:"{self.current_brightness}" "Яркость экрана: {self.current_brightness}%"',
                     shell=True,
                 )
                 self.schedule_apply()

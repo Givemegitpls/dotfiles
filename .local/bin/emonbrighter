@@ -1,0 +1,20 @@
+#!/bin/bash
+
+msgId="3378455"
+
+brightpercent=$(brightnessctl -m --class='backlight' | awk -F, '{print substr($4, 0, length($4)-1)}')
+
+case "$1" in
+"up")
+  brightnessctl --class='backlight' set 5%+
+
+  notify-send -i "$HOME/.local/share/icons/brightness-up.svg" -a "changeBrightness" -u low -r "$msgId" \
+    -h int:value:"$brightpercent" "Яркость экрана: $brightpercent%"
+  ;;
+"down")
+  brightnessctl --class='backlight' set 5%-
+
+  notify-send -i "$HOME/.local/share/icons/brightness-down.svg" -a "changeBrightness" -u low -r "$msgId" \
+    -h int:value:"$brightpercent" "Яркость экрана: $brightpercent%"
+  ;;
+esac

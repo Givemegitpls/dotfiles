@@ -8,7 +8,7 @@
     "format": "{icon}",
     "format-icons": ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂂", "󰁹"],
     "format-charging": "󰂄",
-    "on-click": "$HOME/.config/dunst/scripts/ROGprofiler.sh ",
+    "on-click": "$HOME/.scripts/asus/ROGprofiler.sh",
     "tooltip-format": "{capacity}% {timeTo}",
   },
   "backlight": {
@@ -18,7 +18,7 @@
     "smooth-scrolling-threshold": 1, // This value was tested using a trackpad, it should be lowered if using a mouse.
     "on-scroll-down": "brightnessctl --class='backlight' set 5%+",
     "on-scroll-up": "brightnessctl --class='backlight' set 5%-",
-    "on-click": "python $HOME/.config/swww/swww.py",
+    "on-click": "wallpaper-changer",
     "tooltip-format": "{percent}%",
   },
 }
