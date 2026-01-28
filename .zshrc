@@ -118,21 +118,24 @@ fi
 source $ZSH/oh-my-zsh.sh
 
 function choose_session() {
-  clear
-  echo "choose option:\n1)uwsm\n2)gamescope"
-  read choice
-  case "$choice" in
-  "1")
+  if which gamescope &>/dev/null; then
+    echo "choose option:\n1)uwsm\n2)gamescope"
+    read choice
+    case "$choice" in
+    "1")
+      exec uwsm start default
+      ;;
+    "2")
+      clear
+      exec gamescope-session
+      ;;
+    *)
+      choose_session
+      ;;
+    esac
+  else
     exec uwsm start default
-    ;;
-  "2")
-    clear
-    exec gamescope-session
-    ;;
-  *)
-    choose_session
-    ;;
-  esac
+  fi
 }
 
 if uwsm check may-start; then
