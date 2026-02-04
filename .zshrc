@@ -138,7 +138,7 @@ function choose_session() {
   fi
 }
 
-if uwsm check may-start; then
+if uwsm check may-start &> /dev/null; then
   choose_session
 fi
 
