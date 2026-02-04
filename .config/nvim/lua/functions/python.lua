@@ -37,7 +37,7 @@ local function check_venv(workspace)
 end
 
 function export.get_python_path()
-	workspace = vim.fn.expand("%:p")
+	local workspace = vim.fn.expand("%:p")
 	-- Use activated virtualenv.
 	if vim.env.VIRTUAL_ENV then
 		return vim.fs.joinpath(vim.env.VIRTUAL_ENV, "bin", "python")

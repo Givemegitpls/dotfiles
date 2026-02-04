@@ -4,7 +4,7 @@ return {
 	build = ":TSUpdate",
 	branch = "main", -- Explicitly use the 'main' branch
 	config = function()
-		require("nvim-treesitter.config").setup({
+		require("nvim-treesitter.config").setup({ ---@diagnostic disable-line: missing-fields
 			ensure_installed = {
 				"lua",
 				"python",

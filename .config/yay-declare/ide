@@ -1,5 +1,6 @@
 basedpyright
 bash-language-server
+lua-language-server
 deno
 git
 git-lfs
