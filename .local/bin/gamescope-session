@@ -5,7 +5,7 @@
 #gamescope -h 1080 -w 1920 -e --xwayland-count 2 -- steam -steamdeck -steamos3
 #gamescope -h 720 -w 1280 -H 1080 -W 1920 -r 120 -e --xwayland-count 2 -f -F fsr --force-grab-cursor -- steam -steamdeck -steamos3
 
-gamescope_command="gamescope -e -- steam -steamdeck -steamos3"
+gamescope_command="gamescope --mangoapp -e -- steam -steamdeck -steamos3"
 
 if which switcherooctl &>/dev/null; then
   switcheroo_report="$(switcherooctl list)"

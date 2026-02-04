@@ -59,6 +59,7 @@
       "tag": "proxy",
       "tls": {
         "enabled": true,
+        "fragment": true,
         "reality": {
           "enabled": true,
           "public_key": "changeme",
