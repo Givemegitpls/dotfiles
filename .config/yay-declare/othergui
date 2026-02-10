@@ -13,4 +13,5 @@ obs-studio
 # tauon-music-box
 thunar
 gvfs --asdeps
+gvfs-mtp --asdeps
 timeshift
