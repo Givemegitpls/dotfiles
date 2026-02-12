@@ -143,9 +143,7 @@ if uwsm check may-start &> /dev/null; then
 fi
 
 function yazi() {
-  if [[ -n "$YAZI_LEVEL" ]]; then
-    exit
-  else
+  if [[ -z "$YAZI_LEVEL" ]]; then
     local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
     command /usr/bin/yazi "$@" --cwd-file="$tmp"
     IFS= read -r -d '' cwd < "$tmp"
