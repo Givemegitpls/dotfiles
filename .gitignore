@@ -7,3 +7,4 @@
 !.config/singbox/
 !.config/singbox/example.json
 .config/systemd/default.target.wants/*
+.config/systemd/user/default.target.wants/*
