@@ -7,7 +7,6 @@ return {
 	},
 	config = function()
 		local tree = require("neo-tree")
-		local command = require("neo-tree.command")
 
 		tree.setup({
 			filesystem = {

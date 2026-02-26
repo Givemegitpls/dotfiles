@@ -10,30 +10,28 @@ vim.cmd([[
   nnoremap <C-j> <C-w>j
 ]])
 
-local opts = {}
-
 -- dap
 local dap = require("dap")
-vim.keymap.set("n", "<F5>", dap.continue, opts)
-vim.keymap.set("n", "<s-F5>", dap.stop, opts)
-vim.keymap.set("n", "<F9>", dap.toggle_breakpoint, opts)
+vim.keymap.set("n", "<leader>dr", dap.continue, { desc = "Dap run" })
+vim.keymap.set("n", "<leader>ds", dap.stop, { desc = "Dap stop" })
+vim.keymap.set("n", "<leader>db", dap.toggle_breakpoint, { desc = "Dap breakpoint" })
 
 -- fugitive
 vim.keymap.set("n", "<leader>p", "<CMD>Git pull --rebase<CR>")
 vim.keymap.set("n", "<leader>P", "<CMD>Git push<CR>")
 
 -- lsp
-vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
-vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
-vim.keymap.set("n", "<C-e>", vim.diagnostic.open_float, opts)
-vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "Go definition" })
+vim.keymap.set("n", "gr", vim.lsp.buf.references, { desc = "Go references" })
+vim.keymap.set("n", "<C-e>", vim.diagnostic.open_float, { desc = "Get diagnostic" })
+vim.keymap.set("n", "K", vim.lsp.buf.hover, { desc = "Display hover information" })
 
 -- neotree
 vim.keymap.set("n", "<F2>", "<CMD>Neotree toggle<CR>")
 
 -- telescope
 local telescope = require("telescope.builtin")
-vim.keymap.set("n", "<leader>ff", telescope.find_files, opts)
-vim.keymap.set("n", "<leader>fg", telescope.live_grep, opts)
-vim.keymap.set("n", "<leader>fb", telescope.buffers, opts)
-vim.keymap.set("n", "<leader>fy", telescope.registers, opts)
+vim.keymap.set("n", "<leader>ff", telescope.find_files, { desc = "Telescope find files" })
+vim.keymap.set("n", "<leader>fg", telescope.live_grep, { desc = "Telescope grep" })
+vim.keymap.set("n", "<leader>fb", telescope.buffers, { desc = "Telescope buffers" })
+vim.keymap.set("n", "<leader>fy", telescope.registers, { desc = "Telescope registers" })

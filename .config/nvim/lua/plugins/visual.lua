@@ -26,6 +26,10 @@ return {
 					dark = "mocha",
 				},
 				transparent_background = true,
+				float = {
+					transparent = true, -- enable transparent floating windows
+					solid = true, -- use solid styling for floating windows, see |winborder|
+				},
 			})
 
 			vim.cmd.colorscheme("catppuccin")
@@ -36,7 +40,7 @@ return {
 		"nvim-lualine/lualine.nvim",
 		dependencies = { "nvim-tree/nvim-web-devicons" },
 		config = function()
-			require("lualine").setup()
+			require("lualine").setup() ---@diagnostic disable-line: undefined-field
 		end,
 	},
 	-- git helper
@@ -86,5 +90,52 @@ return {
 				},
 			})
 		end,
+	},
+	-- Keybind helper
+	{
+		"folke/which-key.nvim",
+		event = "VeryLazy",
+		opts = {
+			-- your configuration comes here
+			-- or leave it empty to use the default settings
+			-- refer to the configuration section below
+		},
+		keys = {
+			{
+				"<leader>?",
+				function()
+					require("which-key").show({ global = false })
+				end,
+				desc = "Buffer Local Keymaps (which-key)",
+			},
+		},
+	},
+	-- New UI
+	{
+		"rcarriga/nvim-notify",
+		config = function()
+			require("notify").setup({
+				background_colour = "#000000",
+			})
+		end,
+	},
+	{
+		"folke/noice.nvim",
+		event = "VeryLazy",
+		opts = {
+			cmdline = {
+				enabled = true, -- enables the Noice cmdline UI
+				view = "cmdline",
+			},
+			-- add any options here
+		},
+		dependencies = {
+			-- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
+			"MunifTanjim/nui.nvim",
+			-- OPTIONAL:
+			--   `nvim-notify` is only needed, if you want to use the notification view.
+			--   If not available, we use `mini` as the fallback
+			"rcarriga/nvim-notify",
+		},
 	},
 }
