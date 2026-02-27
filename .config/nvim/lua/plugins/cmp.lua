@@ -7,7 +7,12 @@ return {
 	},
 	config = function()
 		local cmp = require("cmp")
+		vim.opt_local.winborder = "rounded"
 		cmp.setup({
+			window = {
+				completion = cmp.config.window.bordered(), ---@diagnostic disable-line: undefined-field
+				documentation = cmp.config.window.bordered(), ---@diagnostic disable-line: undefined-field
+			},
 			mapping = {
 				["<A-d>"] = cmp.mapping(function(fallback)
 					if cmp.visible_docs() then
