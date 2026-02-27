@@ -97,9 +97,6 @@ return {
 		event = "VeryLazy",
 		opts = {
 			preset = "helix",
-			-- your configuration comes here
-			-- or leave it empty to use the default settings
-			-- refer to the configuration section below
 		},
 		keys = {
 			{
@@ -126,19 +123,16 @@ return {
 		opts = {
 			cmdline = {
 				enabled = true, -- enables the Noice cmdline UI
-				view = "cmdline",
+				view = "cmdline", -- can be cmdline or cmdline_popup
 				format = {
 					cmdline = { pattern = "^:", icon = ":", lang = "vim" },
 				},
 			},
 			-- add any options here
+			presets = { lsp_doc_border = true },
 		},
 		dependencies = {
-			-- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
 			"MunifTanjim/nui.nvim",
-			-- OPTIONAL:
-			--   `nvim-notify` is only needed, if you want to use the notification view.
-			--   If not available, we use `mini` as the fallback
 			"rcarriga/nvim-notify",
 		},
 	},
