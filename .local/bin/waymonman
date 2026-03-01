@@ -59,7 +59,7 @@ def main(config_path: str):
                         "wlr-randr",
                         "--output",
                         mon.name,
-                        definite_monitors[mon.description],
+                        *definite_monitors[mon.description].split(" "),
                     )
                 )
                 setuped.append(mon.name)
