@@ -46,7 +46,7 @@ binds {
     Super+Alt+Down  allow-when-locked=true  { spawn-sh "monbrighter down"; }
 
     XF86PowerOff  allow-when-locked=true { spawn-sh "$HOME/.config/rofi/scripts/power-menu/rofi-power-menu-wrapper.sh"; }
-    XF86Launch4   allow-when-locked=true { spawn-sh ".config/hypr/scripts/dunst/ROGprofiler.sh"; }
+    XF86Launch4   allow-when-locked=true { spawn-sh "$HOME/.scripts/asus/ROGprofiler.sh"; }
 
     // Open/close the Overview: a zoomed-out view of workspaces and windows.
     // You can also move the mouse into the top-left hot corner,
