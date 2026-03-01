@@ -85,10 +85,13 @@ def main(config_path: str):
 if __name__ == "__main__":
     service_name = "waymonman"
 
-    config_path = os.path.join(
-        os.getenv("XDG_CONFIG_HOME", os.path.expanduser("~/.config")),
-        service_name,
-        "/config.json",
+    home = os.getenv("XDG_CONFIG_HOME", os.path.expanduser("~/.config"))
+    config_path = "/".join(
+        [
+            home,
+            service_name,
+            "config.json",
+        ]
     )
     with open("/proc/self/comm", "w") as f:
         f.write(service_name)

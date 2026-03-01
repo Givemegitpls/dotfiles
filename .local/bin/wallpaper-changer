@@ -1,10 +1,14 @@
 #!/usr/bin/python
 import os
 from random import randrange
+import subprocess
+import re
+import sys
 
-swww_output = str(os.popen("swww query").read())
-swww_output = swww_output.split(" ")
-path = swww_output[len(swww_output) - 1].replace("\n", "")
+swww_output = subprocess.check_output(["swww", "query"]).decode("utf-8")
+if not (path := re.search(r"(?<=image: ).*$", swww_output)):
+    sys.exit(1)
+path = path[0]
 current = path.split("/")
 current = current[len(current) - 1]
 
@@ -22,4 +26,4 @@ next = path.replace(current, next)
 swww_command = f"swww img {next} --transition-step 90 --transition-angle 45 --transition-type outer --transition-fps 60 --transition-pos {float(randrange(1, 9, 1)) / 10},{float(randrange(0, 10, 1)) / 10}"
 
 
-os.system(swww_command)
+subprocess.run(swww_command.split(" "))

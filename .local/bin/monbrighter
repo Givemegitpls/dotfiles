@@ -121,10 +121,14 @@ def send_command(command: str, service_name: str):
 
 if __name__ == "__main__":
     service_name = "monbrighter"
-    config_path = os.path.join(
-        os.getenv("XDG_CONFIG_HOME", os.path.expanduser("~/.config")),
-        service_name,
-        "/config.json",
+
+    home = os.getenv("XDG_CONFIG_HOME", os.path.expanduser("~/.config"))
+    config_path = "/".join(
+        [
+            home,
+            service_name,
+            "config.json",
+        ]
     )
     if len(argv) == 2 and argv[1] in ["up", "down"]:
         send_command(argv[1], service_name)
