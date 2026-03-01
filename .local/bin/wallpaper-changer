@@ -5,7 +5,7 @@ import subprocess
 import re
 import sys
 
-swww_output = subprocess.check_output(["swww", "query"]).decode("utf-8")
+swww_output = subprocess.check_output(("swww", "query")).decode("utf-8")
 if not (path := re.search(r"(?<=image: ).*$", swww_output)):
     sys.exit(1)
 path = path[0]
@@ -23,7 +23,25 @@ else:
 
 next = path.replace(current, next)
 
-swww_command = f"swww img {next} --transition-step 90 --transition-angle 45 --transition-type outer --transition-fps 60 --transition-pos {float(randrange(1, 9, 1)) / 10},{float(randrange(0, 10, 1)) / 10}"
-
-
-subprocess.run(swww_command.split(" "))
+subprocess.run(
+    [
+        "swww",
+        "img",
+        next,
+        "--transition-step",
+        "90",
+        "--transition-angle",
+        "45",
+        "--transition-type",
+        "outer",
+        "--transition-fps",
+        "60",
+        "--transition-pos",
+        ",".join(
+            (
+                str((float(randrange(1, 9, 1)) / 10)),
+                str(float(randrange(0, 10, 1)) / 10),
+            )
+        ),
+    ]
+)

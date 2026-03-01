@@ -8,6 +8,11 @@ import time
 battery_state = {"Discharging": False, "Not charging": False, "Charging": True}
 
 
+def print_stdout(message: str):
+    sys.stdout.write(message + "\n")
+    sys.stdout.flush()
+
+
 @dataclass(slots=True)
 class Battery:
     percent: int
@@ -27,19 +32,23 @@ def main(sleep_time: int, base_path: str):
             subprocess.run(
                 'notify-send -u normal -r "6896" "Battery" "Charging"', shell=True
             )
+            print_stdout("Charger has been plugged")
             while sensors_battery(base_path).power_plugged:
                 time.sleep(sleep_time)
             subprocess.run(
                 'notify-send -u normal -r "6896" "Battery" "Discharging"', shell=True
             )
+            print_stdout("Charger has been unplugged")
         elif sensors_battery(base_path).percent <= 5:
             subprocess.run("systemctl sleep", shell=True)
+            print_stdout("Trying go sleep")
             time.sleep(60)
         elif sensors_battery(base_path).percent <= 15:
             subprocess.run(
-                'notify-send -u critical -r "6896" "battery" "low battery alarm"',
+                'notify-send -u critical -r "6896" "Battery" "Low battery alarm"',
                 shell=True,
             )
+            print_stdout("Low battery alarm")
             while (
                 not sensors_battery(base_path).power_plugged
                 and sensors_battery(base_path).percent > 5
@@ -52,12 +61,10 @@ if __name__ == "__main__":
     service_name = "BSC"
     base_path = "/sys/class/power_supply/BAT0/"
     if not os.path.exists(base_path):
-        sys.stdout.write("Can't get battery info\n")
-        sys.stdout.flush()
+        print_stdout("Can't get battery info")
         sys.exit(1)
-    if subprocess.run(["pgrep", service_name]).returncode != 1:
-        sys.stdout.write("Process alredy exists\n")
-        sys.stdout.flush()
+    if subprocess.run(("pgrep", service_name)).returncode != 1:
+        print_stdout("Process alredy exists")
         sys.exit(1)
     with open("/proc/self/comm", "w") as f:
         f.write(service_name)

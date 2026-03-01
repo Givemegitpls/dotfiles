@@ -37,9 +37,9 @@ class BrightnessDaemon:
             self.current_brightness = int(value)
         elif match := re.search(
             r"current value =    ([^,]+)",
-            subprocess.run(
-                ["ddcutil", "-d", "1", "getvcp", "10"], text=True, capture_output=True
-            ).stdout,
+            subprocess.check_output(("ddcutil", "-d", "1", "getvcp", "10")).decode(
+                "utf-8"
+            ),
         ):
             self.current_brightness = int(match.group(1))
         else:
@@ -88,7 +88,7 @@ class BrightnessDaemon:
 
     def apply_brightness(self):
         for row in (
-            subprocess.check_output(["ddcutil", "detect"]).decode("utf-8").split("\n")
+            subprocess.check_output(("ddcutil", "detect")).decode("utf-8").split("\n")
         ):
             commands: list[str] = []
             if "Display " in row:
@@ -124,15 +124,15 @@ if __name__ == "__main__":
 
     home = os.getenv("XDG_CONFIG_HOME", os.path.expanduser("~/.config"))
     config_path = "/".join(
-        [
+        (
             home,
             service_name,
             "config.json",
-        ]
+        )
     )
-    if len(argv) == 2 and argv[1] in ["up", "down"]:
+    if len(argv) == 2 and argv[1] in ("up", "down"):
         send_command(argv[1], service_name)
-    if subprocess.run(["pgrep", service_name]).returncode == 1:
+    elif subprocess.run(("pgrep", service_name)).returncode == 1:
         if os.path.exists(config_path):
             with open(config_path) as f:
                 settings = json.load(f)
@@ -140,6 +140,6 @@ if __name__ == "__main__":
             settings = {"default_brightnes": None, "step": 5, "timegap": 0.3}
 
         BrightnessDaemon(service_name, settings).start()
-    stdout.write("Usage: brightness up|down")
-    stdout.flush()
+    else:
+        print("Usage: brightness up|down")
     exit(1)

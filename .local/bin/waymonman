@@ -33,7 +33,7 @@ def main(config_path: str):
             settings_on_disc: Any = {}
 
         current_monitors: Any = []
-        for mon in json.loads(subprocess.check_output(["wlr-randr", "--json"])):
+        for mon in json.loads(subprocess.check_output(("wlr-randr", "--json"))):
             current_monitors.append(
                 monitor(name=mon["name"], description=mon["description"])
             )
@@ -55,14 +55,12 @@ def main(config_path: str):
         for mon in monitors:
             if mon.description in definite_monitors:
                 subprocess.run(
-                    " ".join(
-                        [
-                            "wlr-randr --output",
-                            mon.name,
-                            definite_monitors[mon.description],
-                        ]
-                    ),
-                    shell=True,
+                    (
+                        "wlr-randr",
+                        "--output",
+                        mon.name,
+                        definite_monitors[mon.description],
+                    )
                 )
                 setuped.append(mon.name)
             else:
@@ -71,13 +69,10 @@ def main(config_path: str):
         for mon in undifinite:
             if setuped:
                 subprocess.run(
-                    " ".join(
-                        ["wlr-randr --output", mon, default_direction, setuped[-1]]
-                    ),
-                    shell=True,
+                    ("wlr-randr", "--output", mon, default_direction, setuped[-1])
                 )
             setuped.append(mon)
-        wlr_output = subprocess.check_output(["wlr-randr"])
+        wlr_output = subprocess.check_output(("wlr-randr"))
         stdout.write(wlr_output.decode("utf-8"))
         stdout.flush()
 
@@ -87,11 +82,11 @@ if __name__ == "__main__":
 
     home = os.getenv("XDG_CONFIG_HOME", os.path.expanduser("~/.config"))
     config_path = "/".join(
-        [
+        (
             home,
             service_name,
             "config.json",
-        ]
+        )
     )
     with open("/proc/self/comm", "w") as f:
         f.write(service_name)
