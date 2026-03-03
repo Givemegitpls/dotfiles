@@ -1,5 +1,5 @@
 {
-  "default-direction": "right",
+  "default-direction": "left",
   "rescan-time": 1,
   "monitors": {
     "Acer Technologies Acer B247YU 0x122166F9 (HDMI-A-1)": "--pos 0,0 --custom-mode 2560x1440@60",

@@ -21,3 +21,5 @@ sudo
 ufw
 wireplumber
 python
+qt5-wayland --asdeps
+qt6-wayland --asdeps
