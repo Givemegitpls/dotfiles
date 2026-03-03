@@ -21,9 +21,9 @@ return {
 		config = function()
 			require("catppuccin").setup({
 				flavour = "auto", -- latte, frappe, macchiato, mocha
-				background = { -- :h background
-					light = "latte",
-					dark = "mocha",
+				integrations = {
+					notify = true,
+					noice = true,
 				},
 				transparent_background = true,
 				float = {
@@ -32,7 +32,7 @@ return {
 				},
 			})
 
-			vim.cmd.colorscheme("catppuccin")
+			vim.cmd.colorscheme("catppuccin-mocha")
 		end,
 	},
 	-- statusbar
