@@ -12,9 +12,18 @@ vim.cmd([[
 
 -- dap
 local dap = require("dap")
+local dapui = require("dapui")
 vim.keymap.set("n", "<leader>dr", dap.continue, { desc = "Dap run" })
-vim.keymap.set("n", "<leader>ds", dap.stop, { desc = "Dap stop" })
+vim.keymap.set("n", "<leader>dc", dap.close, { desc = "Dap close" })
+vim.keymap.set("n", "<leader>de", dapui.eval, { desc = "Dap eval" })
+vim.keymap.set("n", "<leader>ds", function()
+	dapui.float_element("stacks")
+end, { desc = "Dap stacks" })
+vim.keymap.set("n", "<leader>dS", function()
+	dapui.float_element("scopes")
+end, { desc = "Dap scopes" })
 vim.keymap.set("n", "<leader>db", dap.toggle_breakpoint, { desc = "Dap breakpoint" })
+vim.keymap.set("n", "<leader>dB", dap.set_exception_breakpoints, { desc = "Dap exception breakpoint" })
 
 -- fugitive
 vim.keymap.set("n", "<leader>p", "<CMD>Git pull --rebase<CR>")
