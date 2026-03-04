@@ -196,3 +196,4 @@ bindkey -M viins '\eOB' history-substring-search-down # or '^[[B'
 bindkey -M vicmd 'j' history-substring-search-up
 bindkey -M vicmd 'h' history-substring-search-down
 HISTORY_SUBSTRING_SEARCH_ENSURE_UNIQUE=1
+HISTORY_SUBSTRING_SEARCH_FUZZY=1
