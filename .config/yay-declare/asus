@@ -5,3 +5,4 @@ switcheroo-control
 lib32-nvidia-utils --asdeps
 # nvidia-laptop-power-cfg
 nvidia-open-dkms
+supergfxctl

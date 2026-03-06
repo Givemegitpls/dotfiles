@@ -13,21 +13,25 @@ vim.cmd([[
 -- dap
 local dap = require("dap")
 local dapui = require("dapui")
-vim.keymap.set("n", "<leader>dr", dap.continue, { desc = "Dap run" })
-vim.keymap.set("n", "<leader>dc", dap.close, { desc = "Dap close" })
-vim.keymap.set("n", "<leader>de", dapui.eval, { desc = "Dap eval" })
-vim.keymap.set("n", "<leader>ds", function()
+local stacks = function()
 	dapui.float_element("stacks")
-end, { desc = "Dap stacks" })
-vim.keymap.set("n", "<leader>dS", function()
+end
+local scopes = function()
 	dapui.float_element("scopes")
-end, { desc = "Dap scopes" })
-vim.keymap.set("n", "<leader>db", dap.toggle_breakpoint, { desc = "Dap breakpoint" })
-vim.keymap.set("n", "<leader>dB", dap.set_exception_breakpoints, { desc = "Dap exception breakpoint" })
+end
+
+vim.keymap.set("n", "<leader>dr", dap.continue, { desc = "Debug run" })
+vim.keymap.set("n", "<leader>dR", dap.restart, { desc = "Debug restart" })
+vim.keymap.set("n", "<leader>dc", dap.close, { desc = "Debug close" })
+vim.keymap.set("n", "<leader>de", dapui.eval, { desc = "Debug eval" })
+vim.keymap.set("n", "<leader>ds", stacks, { desc = "Debug stacks" })
+vim.keymap.set("n", "<leader>dS", scopes, { desc = "Debug scopes" })
+vim.keymap.set("n", "<leader>db", dap.toggle_breakpoint, { desc = "Debug breakpoint" })
+vim.keymap.set("n", "<leader>dB", dap.set_exception_breakpoints, { desc = "Debug exception breakpoint" })
 
 -- fugitive
-vim.keymap.set("n", "<leader>p", "<CMD>Git pull --rebase<CR>")
-vim.keymap.set("n", "<leader>P", "<CMD>Git push<CR>")
+vim.keymap.set("n", "<leader>p", "<CMD>Git pull --rebase<CR>", { desc = "Git pull" })
+vim.keymap.set("n", "<leader>P", "<CMD>Git push<CR>", { desc = "Git push" })
 
 -- lsp
 vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "Go definition" })
