@@ -93,6 +93,11 @@
     ],
     "rules": [
       {
+        "port": 53,
+        "network": "udp",
+        "outbound": "direct"
+      },
+      {
         "action": "hijack-dns",
         "protocol": "dns"
       },
@@ -109,7 +114,9 @@
           "chrome",
           "chromium",
           "firefox",
-          "Telegram"
+          "Telegram",
+          "wget",
+          "lowfi"
         ],
         "outbound": "proxy"
       },
