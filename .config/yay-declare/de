@@ -1,16 +1,12 @@
 cliphist
-dunst
-grim
 hypridle
-hyprlang
+hyprlang --asdeps
 hyprlock
 hyprpicker
-libnotify --asdeps
 mangowm-git
 nwg-look
 rofi
 rofi-mixer-git
-slurp
 swww
 uwsm
 waybar
@@ -18,3 +14,11 @@ wlr-randr
 xdg-desktop-portal-gtk
 xdg-desktop-portal-wlr-git
 xfce-polkit
+
+# Screenshots
+grim
+slurp
+
+# Notifications
+dunst
+libnotify --asdeps

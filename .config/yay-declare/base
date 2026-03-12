@@ -23,3 +23,5 @@ wireplumber
 python
 qt5-wayland --asdeps
 qt6-wayland --asdeps
+ffmpeg --asdeps
+imagemagick --asdeps

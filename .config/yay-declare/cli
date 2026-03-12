@@ -1,30 +1,36 @@
-7zip
 android-tools
 bat
 battop
-beets
 bluetui
-brightnessctl
 btop
-ddcutil
 fastfetch
-fd
-ffmpeg --asdeps
-imagemagick --asdeps
-waves-bin
 less
-lowfi
 man-db
-ncdu
-oh-my-zsh-git
-playerctl
-reflector
 sing-box
-sshfs
-stow
 vim
-wget
-yay
-yazi
-zsh
 resvg --asdeps
+
+# package management
+yay
+reflector
+
+# brightness
+ddcutil
+brightnessctl
+
+# music players and utils
+lowfi         # lo-fi radio
+waves-bin
+beets
+playerctl
+
+# file management utils
+wget
+yazi          # Blazing Fast Terminal File Manager
+ncdu          # A fast, terminal-based disk space analyzer for Unix-like systems 
+fd
+ripgrep
+sshfs
+s3cmd         # A command line client for S3
+7zip
+stow          # Perfect dotfiles manager

@@ -1,9 +1,9 @@
-boxflat-git
+boxflat-git # moza software
 gamemode
-# libusb-compat --asdeps
 mangohud
 portproton
 gamescope
 steam
 xorg-xwayland --asdeps
 # xpadneo-dkms-git
+# libusb-compat --asdeps

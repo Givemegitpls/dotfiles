@@ -1,17 +1,19 @@
 blender
 chromium
-deluge-gtk
-droidcam
-eog
-file-roller
+deluge-gtk      # Torrent client
+droidcam        # Android webcam ;)
+eog             # Image previewer
 gparted
 localsend-bin
-mpv
-nicotine+
-noisetorch
+mpv             # video player
+nicotine+       # Soulseek client
 obs-studio
+thunar          # GUI file manager
+timeshift
 # tauon-music-box
-thunar
+
+# thunar add-ons
 gvfs --asdeps
 gvfs-mtp --asdeps
-timeshift
+file-roller     # Bruh archive manager
+s3fs-fuse
