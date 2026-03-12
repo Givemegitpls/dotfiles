@@ -1,0 +1,9 @@
+[Steam-Link]
+title=Steam Link
+description=Steam cloud gaming technology
+ports=27031/udp|27036/udp|27036/tcp|27037/tcp
+
+[Local-Send]
+title=Local Send
+description=App for sharing files with hotspot users
+ports=53317/tcp|53317/udp
