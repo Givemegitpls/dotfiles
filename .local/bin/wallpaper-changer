@@ -5,8 +5,8 @@ import subprocess
 import re
 import sys
 
-swww_output = subprocess.check_output(("swww", "query")).decode("utf-8")
-if not (path := re.search(r"(?<=image: ).*$", swww_output)):
+awww_output = subprocess.check_output(("awww", "query")).decode("utf-8")
+if not (path := re.search(r"(?<=image: ).*$", awww_output)):
     sys.exit(1)
 path = path[0]
 current = path.split("/")
@@ -25,7 +25,7 @@ next = path.replace(current, next)
 
 subprocess.run(
     [
-        "swww",
+        "awww",
         "img",
         next,
         "--transition-step",

@@ -1,5 +1,5 @@
 uwsm finalize
-uwsm app -- swww-daemon &
+uwsm app -- awww-daemon &
 uwsm app -- hypridle &
 uwsm app -- dunst &
 uwsm app -- waymonman &

@@ -18,8 +18,6 @@
     {
       "listen": "127.0.0.1",
       "listen_port": 2080,
-      "sniff": true,
-      "sniff_override_destination": false,
       "tag": "mixed-in",
       "type": "mixed"
     },
@@ -31,8 +29,6 @@
       "gso": false,
       "interface_name": "nekoray",
       "mtu": 1500,
-      "sniff": true,
-      "sniff_override_destination": false,
       "stack": "gvisor",
       "strict_route": true,
       "tag": "tun-in",
