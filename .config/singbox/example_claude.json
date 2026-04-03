@@ -32,7 +32,6 @@
       "auto_redirect": false,
       "auto_route": true,
       "endpoint_independent_nat": true,
-      "gso": true,
       "interface_name": "nekoray",
       "mtu": 1500,
       "stack": "gvisor",
@@ -86,10 +85,9 @@
     "rule_set": [
       {
         "tag": "geoip-ru",
-        "type": "remote",
         "format": "binary",
-        "url": "https://raw.githubusercontent.com/SagerNet/sing-geoip/rule-set/geoip-ru.srs",
-        "download_detour": "direct"
+        "type": "local",
+        "path": ".config/singbox/geoip-ru.srs"
       }
     ],
     "rules": [
