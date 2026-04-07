@@ -5,6 +5,7 @@
 .config/yazi/flavors/*
 .config/yazi/package.toml
 .config/singbox/*
+.config/mihomo/*
 !.config/singbox/
 !.config/singbox/example.json
 !.config/singbox/example_claude.json

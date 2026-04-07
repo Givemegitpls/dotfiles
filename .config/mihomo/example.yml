@@ -1,0 +1,107 @@
+mixed-port: 2080
+allow-lan: false
+mode: rule
+log-level: warning
+ipv6: false
+
+# Web UI / API (метрики, переключение нод, активные соединения)
+external-controller: 127.0.0.1:9090
+# external-ui: /usr/share/metacubexd
+
+# Sniffer заменяет sing-box "sniff" actions
+sniffer:
+  enable: true
+  override-destination: false
+  sniff:
+    HTTP:
+      ports: [80, 8080-8880]
+      override-destination: true
+    TLS:
+      ports: [443, 8443]
+    QUIC:
+      ports: [443, 8443]
+
+# DNS — DoH через прокси для всего, system resolver для .ru/.su/.xn--p1ai
+dns:
+  enable: true
+  listen: 127.0.0.1:1053
+  ipv6: false
+  enhanced-mode: redir-host
+  prefer-h3: false
+  default-nameserver:
+    - 1.1.1.1
+    - 8.8.8.8
+  nameserver:
+    - https://8.8.8.8/dns-query
+  proxy-server-nameserver:
+    - https://8.8.8.8/dns-query
+  nameserver-policy:
+    "geosite:private,cn":
+      - system
+    "+.ru,+.su,+.xn--p1ai":
+      - system
+
+# TUN — встроенный, аналог tun-in из sing-box
+tun:
+  enable: true
+  stack: gvisor
+  device: mihomo
+  mtu: 1500
+  auto-route: true
+  auto-redirect: false
+  auto-detect-interface: true
+  strict-route: true
+  dns-hijack:
+    - any:53
+    - tcp://any:53
+
+proxies:
+  - name: proxy
+    type: vless
+    server: changeme
+    port: 443
+    uuid: changeme
+    network: tcp
+    udp: true
+    tls: true
+    flow: xtls-rprx-vision
+    servername: changeme
+    client-fingerprint: chrome
+    reality-opts:
+      public-key: changeme
+      short-id: changeme
+
+proxy-groups:
+  - name: PROXY
+    type: select
+    proxies:
+      - proxy
+      - DIRECT
+
+rules:
+  # DNS из локалки наружу — напрямую (sing-box: port 53 udp -> direct)
+  - DST-PORT,53,DIRECT,udp
+
+  # Русские TLD -> direct
+  - DOMAIN-SUFFIX,ru,DIRECT
+  - DOMAIN-SUFFIX,su,DIRECT
+  - DOMAIN-SUFFIX,xn--p1ai,DIRECT
+
+  # Русские IP -> direct (заменяет geoip-ru.srs)
+  - GEOIP,private,DIRECT,no-resolve
+  - GEOIP,ru,DIRECT
+
+  # Только эти процессы туннелируются (как в sing-box process_name)
+  - PROCESS-NAME,electron,PROXY
+  - PROCESS-NAME,nvim,PROXY
+  - PROCESS-NAME,git,PROXY
+  - PROCESS-NAME,chrome,PROXY
+  - PROCESS-NAME,chromium,PROXY
+  - PROCESS-NAME,firefox,PROXY
+  - PROCESS-NAME,Telegram,PROXY
+  - PROCESS-NAME,wget,PROXY
+  - PROCESS-NAME,lowfi,PROXY
+
+  # Всё остальное — напрямую (sing-box final: direct)
+  - MATCH,DIRECT
+
