@@ -12,6 +12,12 @@
         "type": "local",
         "detour": "direct"
       }
+    ],
+    "rules": [
+      {
+        "rule_set": "geoip-ru",
+        "server": "dns-direct"
+      }
     ]
   },
   "inbounds": [
@@ -26,7 +32,6 @@
       "auto_redirect": false,
       "auto_route": true,
       "endpoint_independent_nat": true,
-      "gso": false,
       "interface_name": "nekoray",
       "mtu": 1500,
       "stack": "gvisor",
@@ -49,7 +54,6 @@
         "strategy": "prefer_ipv4"
       },
       "flow": "xtls-rprx-vision",
-      "packet_encoding": "",
       "server": "changeme",
       "server_port": 443,
       "tag": "proxy",
@@ -69,6 +73,32 @@
       },
       "type": "vless",
       "uuid": "changeme"
+    },
+    {
+      "type": "naive",
+      "tag": "naive",
+
+      "server": "changeme",
+      "server_port": 443,
+      "username": "changeme",
+      "password": "changeme",
+      "udp_over_tcp": {
+        "enabled": true,
+        "version": 2
+      },
+      "quic": false,
+      "tls": {
+        "enabled": true,
+        "server_name": "changeme"
+      }
+    },
+    {
+      "tag": "proxy",
+      "type": "urltest",
+      "outbounds": ["vless", "naive"],
+      "url": "http://cp.cloudflare.com",
+      "interval": "10m0s",
+      "tolerance": 50
     }
   ],
   "route": {
@@ -80,8 +110,8 @@
     },
     "rule_set": [
       {
-        "tag": "geoip-ru",
         "type": "remote",
+        "tag": "geoip-ru",
         "format": "binary",
         "url": "https://raw.githubusercontent.com/SagerNet/sing-geoip/rule-set/geoip-ru.srs",
         "download_detour": "proxy"
@@ -98,7 +128,27 @@
         "protocol": "dns"
       },
       {
-        "domain_keyword": [".ru", ".xn--p1ai", ".su"],
+        "inbound": "tun-in",
+        "action": "sniff",
+        "timeout": "1s"
+      },
+      {
+        "inbound": "tun-in",
+        "action": "resolve",
+        "strategy": "prefer_ipv4"
+      },
+      {
+        "inbound": "mixed-in",
+        "action": "sniff",
+        "timeout": "1s"
+      },
+      {
+        "inbound": "mixed-in",
+        "action": "resolve",
+        "strategy": "prefer_ipv4"
+      },
+      {
+        "domain_suffix": ["ru", "xn--p1ai", "su"],
         "rule_set": "geoip-ru",
         "outbound": "direct"
       },
@@ -115,26 +165,6 @@
           "lowfi"
         ],
         "outbound": "proxy"
-      },
-      {
-        "inbound": "mixed-in",
-        "action": "resolve",
-        "strategy": "prefer_ipv4"
-      },
-      {
-        "inbound": "mixed-in",
-        "action": "sniff",
-        "timeout": "1s"
-      },
-      {
-        "inbound": "tun-in",
-        "action": "resolve",
-        "strategy": "prefer_ipv4"
-      },
-      {
-        "inbound": "tun-in",
-        "action": "sniff",
-        "timeout": "1s"
       }
     ]
   }

@@ -4,10 +4,6 @@ mode: rule
 log-level: warning
 ipv6: false
 
-# Web UI / API (метрики, переключение нод, активные соединения)
-external-controller: 127.0.0.1:9090
-# external-ui: /usr/share/metacubexd
-
 # Sniffer заменяет sing-box "sniff" actions
 sniffer:
   enable: true
