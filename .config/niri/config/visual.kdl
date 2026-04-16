@@ -1,0 +1,92 @@
+// Settings that influence how windows are positioned and sized.
+// Find more information on the wiki:
+// https://yalter.github.io/niri/Configuration:-Layout
+layout {
+    gaps 5
+    center-focused-column "never"
+    preset-column-widths {
+        proportion 0.33333
+        proportion 0.5
+        proportion 0.66667
+    }
+    default-column-width { proportion 0.5; }
+    focus-ring {
+        off
+    }
+    border {
+        on
+
+        width 2
+        active-color "#333333EE"
+        inactive-color "#44444400"
+        urgent-color "#9b0000"
+    }
+    shadow {
+        on
+        draw-behind-window true
+        softness 0
+        spread 0
+        offset x=0 y=0
+        color "#00000040"
+        inactive-color "#00000040"
+    }
+    struts {
+    }
+}
+
+
+prefer-no-csd
+
+
+animations {
+}
+
+blur {
+    passes 2
+    offset 3
+    noise 0.00
+    saturation 1
+}
+
+window-rule {
+    background-effect {
+        blur true
+    }
+    geometry-corner-radius 10
+    clip-to-geometry true
+    draw-border-with-background false
+}
+
+layer-rule {
+    background-effect {
+        blur true
+        xray false
+    }
+    shadow {
+        on
+        draw-behind-window true
+        softness 0
+        spread 0
+        offset x=0 y=0
+        color "#00000040"
+        inactive-color "#00000040"
+    }
+
+}
+
+layer-rule {
+    match namespace="^waybar$"
+    background-effect {
+        blur true
+    }
+}
+
+layer-rule {
+    match namespace="^rofi$"
+    geometry-corner-radius 10
+}
+
+layer-rule {
+    match namespace="^notifications$"
+    geometry-corner-radius 10
+}
