@@ -276,7 +276,7 @@ binds {
     Ctrl+Alt+Delete { quit; }
 
     // The lock action
-    Ctrl+Alt+L repeat=false hotkey-overlay-title="Lock the Screen: hyprlock" { spawn-sh "$HOME/.config/hypr/scripts/hyprlock.sh"; }
+    Ctrl+Alt+L repeat=false hotkey-overlay-title="Lock the screen" { spawn-sh "$loginctl lock-session"; }
 
     // Powers off the monitors. To turn them back on, do any input like
     // moving the mouse or pressing any other key.

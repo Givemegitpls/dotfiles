@@ -1,3 +1,3 @@
 #!/bin/sh
 killall hyprlock
-uwsm app -- hyprlock
+$HOME/.config/hypr/scripts/hyprlock.sh
