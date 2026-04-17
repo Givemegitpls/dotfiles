@@ -11,3 +11,4 @@
 !.config/singbox/example_claude.json
 .config/systemd/default.target.wants/*
 .config/systemd/user/default.target.wants/*
+.config/niri/config/monitors.kdl
