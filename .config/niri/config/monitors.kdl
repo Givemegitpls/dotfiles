@@ -1,0 +1,14 @@
+output "eDP-1" {
+    mode "1920x1080@120.030"
+    scale 1
+    transform "normal"
+    position x=2560 y=0
+}
+output "Acer Technologies Acer B247YU 0x122166F9" {
+    focus-at-startup
+    variable-refresh-rate on-demand=true
+    mode "2560x1440@74.995003"
+    scale 1
+    position x=0 y=0
+    transform "normal"
+}
