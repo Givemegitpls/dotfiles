@@ -58,6 +58,7 @@ window-rule {
 }
 
 layer-rule {
+    geometry-corner-radius 10
     background-effect {
         blur true
         xray false
@@ -75,18 +76,22 @@ layer-rule {
 }
 
 layer-rule {
-    match namespace="^waybar$"
-    background-effect {
-        blur true
-    }
-}
-
-layer-rule {
     match namespace="^rofi$"
-    geometry-corner-radius 10
 }
 
 layer-rule {
     match namespace="^notifications$"
-    geometry-corner-radius 10
+}
+
+layer-rule {
+    geometry-corner-radius 0
+    match namespace="^waybar$"
+}
+
+layer-rule {
+    geometry-corner-radius 0
+    match namespace="^selection$"
+    background-effect {
+        blur false
+    }
 }
