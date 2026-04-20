@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-from dataclasses import dataclass
 from enum import StrEnum
 import json
 import os
@@ -16,15 +15,9 @@ class Direction(StrEnum):
     below = "--below"
 
 
-@dataclass(slots=True)
-class monitor:
-    name: str
-    description: str
-
-
 def main(config_path: str):
     settings: Any = {}
-    monitors: list[monitor] = []
+    monitors: dict[str, str] = {}
     while True:
         if os.path.exists(config_path):
             with open(config_path) as f:
@@ -32,11 +25,9 @@ def main(config_path: str):
         else:
             settings_on_disc: Any = {}
 
-        current_monitors: Any = []
+        current_monitors: dict[str, str] = {}
         for mon in json.loads(subprocess.check_output(("wlr-randr", "--json"))):
-            current_monitors.append(
-                monitor(name=mon["name"], description=mon["description"])
-            )
+            current_monitors[mon["name"]] = mon["description"]
 
         if settings == settings_on_disc and monitors == current_monitors:
             if ("rescan-time" in settings) and (settings.get("rescan-time") is None):
@@ -52,19 +43,20 @@ def main(config_path: str):
         )
         setuped: list[str] = []
         undifinite: list[str] = []
-        for mon in monitors:
-            if mon.description in definite_monitors:
+        for name in sorted(monitors.keys()):
+            desc = monitors[name]
+            if desc in definite_monitors:
                 subprocess.run(
                     (
                         "wlr-randr",
                         "--output",
-                        mon.name,
-                        *definite_monitors[mon.description].split(" "),
+                        name,
+                        *definite_monitors[desc].split(" "),
                     )
                 )
-                setuped.append(mon.name)
+                setuped.append(name)
             else:
-                undifinite.append(mon.name)
+                undifinite.append(name)
 
         for mon in undifinite:
             if setuped:
