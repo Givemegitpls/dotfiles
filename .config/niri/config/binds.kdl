@@ -30,7 +30,7 @@ binds {
     // Using spawn-sh allows to pass multiple arguments together with the command.
     XF86AudioRaiseVolume allow-when-locked=true { spawn-sh "~/.scripts/media/volume-changer.sh up"; }
     XF86AudioLowerVolume allow-when-locked=true { spawn-sh "~/.scripts/media/volume-changer.sh down"; }
-    XF86AudioMute        allow-when-locked=true { spawn-sh "~/.config/dunst/scripts/volumemute.sh"; }
+    XF86AudioMute        allow-when-locked=true { spawn-sh "~/.scripts/media/volume-mute.sh"; }
     XF86AudioMicMute     allow-when-locked=true { spawn-sh "~/.scripts/media/microphone-toggle.sh"; }
 
     // Example brightness key mappings for brightnessctl.
