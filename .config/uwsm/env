@@ -15,3 +15,4 @@ export QT_QPA_PLATFORM=wayland;xcb
 export GDK_BACKEND=wayland,x11,*
 export XDG_SESSION_TYPE=wayland
 export ELECTRON_OZONE_PLATFORM_HINT=wayland
+export PROTON_ENABLE_WAYLAND=1

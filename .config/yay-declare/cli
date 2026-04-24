@@ -6,9 +6,12 @@ btop
 fastfetch
 less
 man-db
-sing-box
 vim
 resvg --asdeps
+
+# vpn
+sing-box
+mihomo
 
 # package management
 yay

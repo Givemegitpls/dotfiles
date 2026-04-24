@@ -3,17 +3,17 @@ hypridle
 hyprlang --asdeps
 hyprlock
 hyprpicker
-mangowm-git
 nwg-look
-rofi
-rofi-mixer-git
 awww
 uwsm
 waybar
-wlr-randr
 xdg-desktop-portal-gtk
 xdg-desktop-portal-wlr-git
 xfce-polkit
+
+# Launcher
+rofi
+rofi-mixer-git
 
 # Screenshots
 grim
@@ -22,3 +22,11 @@ slurp
 # Notifications
 dunst
 libnotify --asdeps
+
+# Niri
+niri-git
+xwayland-satellite-git --asdeps
+
+# Mango
+mangowm-git
+wlr-randr
