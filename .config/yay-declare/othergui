@@ -17,3 +17,4 @@ gvfs --asdeps
 gvfs-mtp --asdeps
 file-roller     # Bruh archive manager
 s3fs-fuse
+thunar-archive-plugin --asdeps

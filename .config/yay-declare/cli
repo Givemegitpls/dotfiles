@@ -37,3 +37,6 @@ sshfs
 s3cmd         # A command line client for S3
 7zip
 stow          # Perfect dotfiles manager
+
+# AI
+opencode

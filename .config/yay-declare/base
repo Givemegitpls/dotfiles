@@ -15,6 +15,7 @@ linux-firmware
 linux-headers
 mesa
 networkmanager
+dnsmasq --asdeps
 ntp
 pipewire-pulse
 sudo
