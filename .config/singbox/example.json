@@ -56,7 +56,7 @@
       "flow": "xtls-rprx-vision",
       "server": "changeme",
       "server_port": 443,
-      "tag": "proxy",
+      "tag": "vless",
       "tls": {
         "enabled": true,
         "fragment": true,
