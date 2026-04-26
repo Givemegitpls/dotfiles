@@ -1,3 +1,5 @@
 [screencast]
+output_format = bgra
+max_fps = 30
 chooser_type=dmenu
 chooser_cmd=rofi -dmenu -p 'Select a source to share:'
