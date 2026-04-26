@@ -14,6 +14,7 @@ xfce-polkit
 # Launcher
 rofi
 rofi-mixer-git
+vicinae
 
 # Screenshots
 grim

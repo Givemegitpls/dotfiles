@@ -11,7 +11,7 @@ resvg --asdeps
 
 # vpn
 sing-box
-mihomo
+mihomo-bin
 
 # package management
 yay
