@@ -154,6 +154,10 @@
       },
       {
         "process_name": [
+          "pacman",
+          "yay",
+          "malepkg",
+          "reflector",
           "electron",
           "neovim",
           "git",
