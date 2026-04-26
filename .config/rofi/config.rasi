@@ -70,6 +70,7 @@ window {
     anchor:                      center;
     fullscreen:                  false;
     width:                       400px;
+    height:                      450px;
     x-offset:                    0px;
     y-offset:                    0px;
 
@@ -77,12 +78,11 @@ window {
     enabled:                     true;
     margin:                      0px;
     padding:                     0px;
-    border:                      2px solid;
-    border-radius:               10px;
-    border-color:                @border-color;
     cursor:                      "default";
+    border:                      0px solid;
+    border-color:                @border-color;
+    background-color:            transparent;
     /* Backgroud Colors */
-    background-color:            @background-color;
 }
 
 /*****----- Main Box -----*****/
@@ -91,11 +91,11 @@ mainbox {
     spacing:                     10px;
     margin:                      0px;
     padding:                     30px;
-    border:                      0px solid;
-    border-radius:               15px;
-    border-color:                @border-color;
-    background-color:            transparent;
     transparency:                "real";
+    background-color:            @background-color;
+    border:                      2px solid;
+    border-radius:               10px;
+    border-color:                @border-color;
     children:                    [ "inputbar", "message", "listview" ];
 }
 

@@ -9,46 +9,33 @@
 
 
 /*****----- Global Properties -----*****/
-@import                          "./config.rasi"
-@import                          "./colors.rasi"
-@import                          "./fonts.rasi"
+@import                           "./config.rasi"
+@import                           "./colors.rasi"
+@import                           "./fonts.rasi"
 
 /*****----- Configuration -----*****/
 configuration {
-    display-clipboard:		      " ";
+    display-clipboard:		        " ";
 }
 
 /*****----- Main Window -----*****/
 
-/*dummy + content-block + icon-current-entry + 2x30 spacing*/
+/*icon-current-entry + mainbox + 30 spacing + 630px margin*/
 window {
-    width:                        1260px; 
-    height:                       400px;
+    width:                        1660px;
     background-color:             transparent;
     border:                       0px solid;
     orientation:                  horizontal;
-    children:                     [icon-current-entry, content-block, dummy];
     spacing:                      30px;
-}
+    margin:                       0px 630px 0px 0px;
+    children:                     [icon-current-entry, mainbox];
 
-content-block {
-    children:                     [inputbar, message, listview];
-    border:                       2px solid;
-    border-radius:                10px;
-    spacing:                      10px;
-    size:                         400px;
-    padding:                      30px;
 }
 
 icon-current-entry {
     expand:                       false;
     horizontal-align:             0.5;
     vertical-align:               0.5;
-    size:                         400px;
-    background-color:             transparent;
-}
-
-dummy {
-    size:                         400px;
+    size:                         600px;
     background-color:             transparent;
 }
