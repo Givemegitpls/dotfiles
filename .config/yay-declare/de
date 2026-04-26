@@ -14,7 +14,6 @@ xfce-polkit
 # Launcher
 rofi
 rofi-mixer-git
-vicinae
 
 # Screenshots
 grim
@@ -23,10 +22,6 @@ slurp
 # Notifications
 dunst
 libnotify --asdeps
-
-# Niri
-niri-git
-xwayland-satellite-git --asdeps
 
 # Mango
 mangowm-git

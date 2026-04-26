@@ -1,7 +1,0 @@
-// https://yalter.github.io/niri/Configuration%3A-Gestures.html#hot-corners
-
-gestures {
-    hot-corners {
-        off
-    }
-}
