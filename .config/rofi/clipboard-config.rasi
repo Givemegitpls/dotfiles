@@ -16,12 +16,39 @@
 /*****----- Configuration -----*****/
 configuration {
     display-clipboard:		      " ";
-    show-icons:                 true;
 }
 
 /*****----- Main Window -----*****/
+
+/*dummy + content-block + icon-current-entry + 2x30 spacing*/
 window {
-    /* properties for window widget */
-    width:                       440px;
+    width:                        1260px; 
+    height:                       400px;
+    background-color:             transparent;
+    border:                       0px solid;
+    orientation:                  horizontal;
+    children:                     [icon-current-entry, content-block, dummy];
+    spacing:                      30px;
 }
 
+content-block {
+    children:                     [inputbar, message, listview];
+    border:                       2px solid;
+    border-radius:                10px;
+    spacing:                      10px;
+    size:                         400px;
+    padding:                      30px;
+}
+
+icon-current-entry {
+    expand:                       false;
+    horizontal-align:             0.5;
+    vertical-align:               0.5;
+    size:                         400px;
+    background-color:             transparent;
+}
+
+dummy {
+    size:                         400px;
+    background-color:             transparent;
+}
