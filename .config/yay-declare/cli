@@ -7,7 +7,6 @@ fastfetch
 less
 man-db
 vim
-resvg --asdeps
 
 # vpn
 sing-box
@@ -22,21 +21,22 @@ ddcutil
 brightnessctl
 
 # music players and utils
-lowfi         # lo-fi radio
+lowfi             # lo-fi radio
 waves-bin
 beets
 playerctl
 
 # file management utils
 wget
-yazi          # Blazing Fast Terminal File Manager
-ncdu          # A fast, terminal-based disk space analyzer for Unix-like systems 
+yazi              # Blazing Fast Terminal File Manager
+resvg --asdeps    # svg previewer for yazi
+ncdu              # A fast, terminal-based disk space analyzer for Unix-like systems 
 fd
 ripgrep
 sshfs
-s3cmd         # A command line client for S3
+s3cmd             # A command line client for S3
 7zip
-stow          # Perfect dotfiles manager
+stow              # Perfect dotfiles manager
 
 # AI
 opencode
