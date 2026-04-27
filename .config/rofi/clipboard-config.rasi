@@ -34,7 +34,7 @@ window {
 
 icon-current-entry {
     expand:                       false;
-    horizontal-align:             0.5;
+    horizontal-align:             1;
     vertical-align:               0.5;
     size:                         600px;
     background-color:             transparent;
