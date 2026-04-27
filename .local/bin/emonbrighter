@@ -2,19 +2,28 @@
 
 msgId="3378455"
 
-brightpercent=$(brightnessctl -m --class='backlight' | awk -F, '{print substr($4, 0, length($4)-1)}')
+icons_path=$HOME/.local/share/icons
 
 case "$1" in
 "up")
   brightnessctl --class='backlight' set 5%+
-
-  notify-send -i "$HOME/.local/share/icons/brightness-up.svg" -a "changeBrightness" -u low -r "$msgId" \
-    -h int:value:"$brightpercent" "Яркость экрана: $brightpercent%"
   ;;
 "down")
   brightnessctl --class='backlight' set 5%-
-
-  notify-send -i "$HOME/.local/share/icons/brightness-down.svg" -a "changeBrightness" -u low -r "$msgId" \
-    -h int:value:"$brightpercent" "Яркость экрана: $brightpercent%"
   ;;
 esac
+
+brightpercent=$(brightnessctl -m --class='backlight' | awk -F, '{print substr($4, 0, length($4)-1)}')
+
+if (($brightpercent > 75)); then
+  icon=$icons_path/brightness-highest.svg
+elif (($brightpercent > 50)); then
+  icon=$icons_path/brightness-high.svg
+elif (($brightpercent > 25)); then
+  icon=$icons_path/brightness-medium.svg
+else
+  icon=$icons_path/brightness-low.svg
+fi
+
+notify-send -i $icon -a "changeBrightness" -u low -r "$msgId" \
+  -h int:value:"$brightpercent" "Яркость экрана: $brightpercent%"

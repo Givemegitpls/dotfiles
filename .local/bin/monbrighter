@@ -14,6 +14,14 @@ def print(message: str):
     stdout.flush()
 
 
+icons = (
+    "brightness-low.svg",
+    "brightness-medium.svg",
+    "brightness-high.svg",
+    "brightness-highest.svg",
+)
+
+
 class BrightnessDaemon:
     def __init__(
         self,
@@ -25,23 +33,15 @@ class BrightnessDaemon:
         self.pid = os.getpid()
         self.step = settings["step"]
         self.timegap = settings["timegap"]
-        if (image_path_up := settings.get("image_path_up")) and (
-            image_path_down := settings.get("image_path_down")
-        ):
-            self.image_params_up = f" -i {image_path_up}"
-            self.image_params_down = f" -i {image_path_down}"
-        else:
-            self.image_params_up = ""
-            self.image_params_down = ""
+        self.image_path = settings.get("image_path")
         if value := settings.get("default_brightness"):
             self.current_brightness = int(value)
         elif match := re.search(
             r"current value =    ([^,]+)",
-            subprocess.check_output(("ddcutil", "-d", "1", "getvcp", "10")).decode(
-                "utf-8"
-            ),
+            subprocess.getoutput(("ddcutil", "-d", "1", "getvcp", "10")),
         ):
             self.current_brightness = int(match.group(1))
+
         else:
             self.current_brightness = 50
         with open("/proc/self/comm", "w") as f:
@@ -64,12 +64,18 @@ class BrightnessDaemon:
                 data = conn.recv(1024).decode().strip()
                 if data == "up":
                     self.current_brightness += self.step
-                    notifier_command = f"notify-send{self.image_params_up}"
                 elif data == "down":
                     self.current_brightness -= self.step
-                    notifier_command = f"notify-send{self.image_params_down}"
                 else:
                     continue
+                if self.image_path:
+                    icon_path = os.path.expanduser(os.path.expandvars(self.image_path))
+                    index = min(
+                        int(len(icons) * self.current_brightness / 100), len(icons) - 1
+                    )
+                    notifier_command = f"notify-send -i {icon_path}/{icons[index]}"
+                else:
+                    notifier_command = "notify-send "
                 self.current_brightness = max(min(self.current_brightness, 100), 0)
                 subprocess.run(
                     f'{notifier_command} -a "changeBrightness" -u low -r {self.pid} -h int:value:"{self.current_brightness}" "Яркость экрана: {self.current_brightness}%"',

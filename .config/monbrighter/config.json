@@ -1,6 +1,5 @@
 {
-  "image_path_up": "~/.local/share/icons/brightness-up.svg",
-  "image_path_down": "~/.local/share/icons/brightness-down.svg",
+  "image_path": "~/.local/share/icons",
   "default_brightnes": null,
   "step": 5,
   "timegap": 0.3
