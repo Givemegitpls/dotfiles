@@ -2,7 +2,7 @@ uwsm finalize
 uwsm app -- awww-daemon &
 uwsm app -- hypridle &
 uwsm app -- dunst &
-uwsm app -- waymonman &
+uwsm app -- monbrighter &
 uwsm app -- ~/.config/waybar/scripts/waybar_toggle.sh &
 uwsm app -- wl-paste --type text --watch cliphist store &
 uwsm app -- wl-paste --type image --watch cliphist store &
