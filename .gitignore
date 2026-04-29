@@ -12,3 +12,4 @@
 .config/systemd/default.target.wants/*
 .config/systemd/user/default.target.wants/*
 .config/niri/config/monitors.kdl
+.config/xfce4/xfconf/xfce-perchannel-xml/thunar.xml
