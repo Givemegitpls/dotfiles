@@ -21,8 +21,8 @@ ddcutil
 brightnessctl
 
 # music players and utils
+kew
 lowfi             # lo-fi radio
-waves-bin
 beets
 playerctl
 
