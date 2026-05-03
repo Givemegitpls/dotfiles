@@ -1,6 +1,7 @@
 # base
 kitty
 neovim
+tree-sitter-cli --asdeps
 tree-sitter-query --asdeps
 ttf-jetbrains-mono-nerd
 

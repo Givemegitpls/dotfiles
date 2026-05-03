@@ -1,10 +1,8 @@
 return {
-	"nvim-treesitter/nvim-treesitter",
-	lazy = false,
-	build = ":TSUpdate",
-	branch = "main", -- Explicitly use the 'main' branch
+	"romus204/tree-sitter-manager.nvim",
+	dependencies = {}, -- tree-sitter CLI must be installed system-wide
 	config = function()
-		require("nvim-treesitter.config").setup({ ---@diagnostic disable-line: missing-fields
+		require("tree-sitter-manager").setup({ ---@diagnostic disable-line: missing-fields
 			ensure_installed = {
 				"lua",
 				"python",
@@ -21,6 +19,7 @@ return {
 				enable = true,
 				additional_vim_regex_highlighting = false,
 			},
+
 			incremental_selection = {
 				enable = true,
 				disable = {},

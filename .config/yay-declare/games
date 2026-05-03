@@ -1,7 +1,6 @@
 boxflat-git # moza software
 gamemode
 mangohud
-portproton
 gamescope
 steam
 xorg-xwayland --asdeps
