@@ -30,7 +30,7 @@ esac
 active="\0active\x1f"
 
 # Добавляем mihomo
-if systemctl --user status mihomo >/dev/null 2>&1; then
+if systemctl --user is-active --quiet mihomo; then
   active+="0,"
   echo "  Stop mihomo"
 else
@@ -38,7 +38,7 @@ else
 fi
 
 # Добавляем sing-box
-if systemctl --user status sing-box >/dev/null 2>&1; then
+if systemctl --user is-active --quiet sing-box; then
   active+="1,"
   echo "  Stop sing-box"
 else
@@ -46,7 +46,11 @@ else
 fi
 
 # Добавляем netbird
-netbird_status=$(netbird status | grep "Networks" | cut -d: -f2 | sed "s/ -//")
+if systemctl --user is-active --quiet netbird; then
+  netbird_status=$(netbird status | grep "Networks" | cut -d: -f2 | sed "s/ -//")
+else
+  $netbird_status=""
+fi
 if [ -z "$netbird_status" ]; then
   echo "  Start netbird"
 else
