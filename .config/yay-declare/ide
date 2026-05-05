@@ -33,3 +33,4 @@ stylua
 jq
 deno
 prettier
+yamlfmt
