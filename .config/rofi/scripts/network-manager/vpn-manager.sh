@@ -46,7 +46,7 @@ else
 fi
 
 # Добавляем netbird
-if systemctl --user is-active --quiet netbird; then
+if systemctl is-active --quiet netbird; then
   netbird_status=$(netbird status | grep "Networks" | cut -d: -f2 | sed "s/ -//")
 else
   $netbird_status=""
