@@ -8,6 +8,9 @@ less
 man-db
 vim
 
+# pacman tools
+paccat            # Print pacman package files
+
 # vpn
 sing-box
 mihomo-bin
