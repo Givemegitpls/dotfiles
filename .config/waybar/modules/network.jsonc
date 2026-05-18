@@ -16,6 +16,7 @@
     "format-icons": ["󰤟 ", "󰤢 ", "󰤥 ", "󰤨 "],
     "format-ethernet": "󰈀 ",
     "format-disconnected": "󰤮 ",
+    "format-disabled": "{ifname} ",
     "tooltip-format-wifi": "{essid}",
     "tooltip-format-ethernet": "{ipaddr}",
     "on-click": "$HOME/.config/rofi/scripts/network-manager/entrypoint.sh",
