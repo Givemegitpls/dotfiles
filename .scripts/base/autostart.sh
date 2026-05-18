@@ -1,6 +1,6 @@
 uwsm finalize
 uwsm app -- awww-daemon &
-uwsm app -- hypridle &
+uwsm app -- swayidle -C ~/.config/swayidle/config &
 uwsm app -- dunst &
 uwsm app -- monbrighter &
 uwsm app -- ~/.config/waybar/scripts/waybar_toggle.sh &

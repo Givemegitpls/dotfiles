@@ -1,0 +1,3 @@
+before-sleep 'wlr-randr --output eDP-1 --on; brightnessctl --device="asus::kbd_backlight" set 0; loginctl lock-session'
+after-sleep '$HOME/.scripts/asus/ROGstartup.sh'
+lock 'pidof hyprlock || WALLPAPER="$(awww query | grep image | sed "s/.*image: //" | head -n 1)" foreground="rgb(255, 255, 255)" hyprlock'
