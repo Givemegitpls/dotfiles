@@ -3,6 +3,7 @@ gamemode
 mangohud
 gamescope
 steam
+protonplus
 xorg-xwayland --asdeps
 # xpadneo-dkms-git
 # libusb-compat --asdeps

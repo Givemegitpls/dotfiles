@@ -32,6 +32,7 @@ playerctl
 # file management utils
 wget
 yazi              # Blazing Fast Terminal File Manager
+jq --asdeps
 resvg --asdeps    # svg previewer for yazi
 ncdu              # A fast, terminal-based disk space analyzer for Unix-like systems 
 fd
