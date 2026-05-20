@@ -76,7 +76,7 @@ return {
 	{
 		"MeanderingProgrammer/render-markdown.nvim",
 		dependencies = { "nvim-treesitter/nvim-treesitter", "echasnovski/mini.nvim" },
-		opts = {},
+		opts = { pipe_table = { preset = "round", cell = "trimmed" } },
 	},
 	{
 		"3rd/image.nvim",

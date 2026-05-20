@@ -25,7 +25,7 @@ return {
 			jsonc = { "prettierd", "prettier", stop_after_first = true },
 			css = { "prettierd", "prettier", stop_after_first = true },
 			html = { "prettierd", "prettier", stop_after_first = true },
-			markdown = { "deno_fmt" },
+			markdown = { "mdformat", "-" },
 			toml = { "tombi", "format" },
 			yaml = { "yamlfmt", "-in" },
 			yml = { "yamlfmt", "-in" },

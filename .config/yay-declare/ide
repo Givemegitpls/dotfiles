@@ -31,6 +31,6 @@ shfmt
 tombi
 stylua
 jq
-deno
+mdformat-tables 
 prettier
 yamlfmt
