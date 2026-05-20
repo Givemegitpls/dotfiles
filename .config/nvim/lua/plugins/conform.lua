@@ -17,20 +17,19 @@ return {
 	opts = {
 		-- Define your formatters
 		formatters_by_ft = {
-			lua = { "stylua" },
-			python = { "ruff_fix", "ruff_format" },
 			javascript = { "prettierd", "prettier", stop_after_first = true },
-			sh = { "shfmt" },
-			json = { "prettierd", "prettier", stop_after_first = true },
+			typescript = { "prettierd", "prettier", stop_after_first = true },
 			jsonc = { "prettierd", "prettier", stop_after_first = true },
-			css = { "prettierd", "prettier", stop_after_first = true },
+			json = { "prettierd", "prettier", stop_after_first = true },
+			yaml = { "prettierd", "prettier", stop_after_first = true },
 			html = { "prettierd", "prettier", stop_after_first = true },
+			yml = { "prettierd", "prettier", stop_after_first = true },
+			css = { "prettierd", "prettier", stop_after_first = true },
+			python = { "ruff_fix", "ruff_format" },
 			markdown = { "mdformat", "-" },
 			toml = { "tombi", "format" },
-			yaml = { "yamlfmt", "-in" },
-			yml = { "yamlfmt", "-in" },
-			-- go = { "goimports", "gofmt" },
-			-- typescript = { "prettierd", "prettier", stop_after_first = true },
+			lua = { "stylua" },
+			sh = { "shfmt" },
 		},
 		-- Set up format-on-save
 		format_on_save = { timeout_ms = 500, lsp_fallback = true },

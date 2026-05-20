@@ -26,11 +26,9 @@ zsh
 oh-my-zsh-git
 
 # formatters
-ruff
-shfmt
-tombi
-stylua
-jq
 mdformat-tables 
 prettier
-yamlfmt
+stylua
+shfmt
+tombi
+ruff
