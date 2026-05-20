@@ -8,6 +8,12 @@ vim.cmd([[
   nnoremap <C-k> <C-w>k
   nnoremap <C-l> <C-w>l
   nnoremap <C-j> <C-w>j
+
+  cnoremap <C-h> <Left>
+  cnoremap <C-j> <Down>
+  cnoremap <C-k> <Up>
+  cnoremap <C-l> <Right>
+  cnoremap <C-p> <C-r>"
 ]])
 
 -- dap
