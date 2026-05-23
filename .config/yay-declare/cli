@@ -8,6 +8,9 @@ less
 man-db
 vim
 
+# kube
+k9s
+
 # pacman tools
 paccat            # Print pacman package files
 
