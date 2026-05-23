@@ -18,6 +18,7 @@ class Direction(StrEnum):
 def main(config_path: str):
     settings: Any = {}
     monitors: dict[str, str] = {}
+    query_for_queue: dict[str, list[str]] = {}
     while True:
         if os.path.exists(config_path):
             with open(config_path) as f:
@@ -27,25 +28,50 @@ def main(config_path: str):
 
         current_monitors: dict[str, str] = {}
         for mon in json.loads(subprocess.check_output(("wlr-randr", "--json"))):
-            current_monitors[mon["name"]] = mon["description"]
+            current_monitors[mon["description"]] = mon["name"]
 
+        definite_monitors: dict[str, str] = settings_on_disc.get("monitors", {})
+        manual_positioned: list[str] = [
+            desc for desc in definite_monitors.values() if "--pos" in desc
+        ]
+        queue: list[str] = []
+        for desc, query in definite_monitors.items():
+            if (not (Direction.right in query or Direction.left in query)) and (
+                desc not in manual_positioned
+            ):
+                continue
+            splitted_query: list[str] = query.split(" ")
+            if Direction.left in query:
+                direction = Direction.left
+                index_offset = 0
+            else:
+                index_offset = +1
+                direction = Direction.right
+            master = splitted_query[splitted_query.index(direction) + 1]
+            slave = current_monitors.get(desc)
+            if slave and (master in list(current_monitors.values())):
+                if master not in queue:
+                    queue.append(master)
+                if slave not in queue:
+                    queue.insert(queue.index(master) + index_offset, slave)
+                splitted_query.remove(direction)
+                splitted_query.remove(master)
+                query_for_queue[slave] = splitted_query
         if settings == settings_on_disc and monitors == current_monitors:
             if ("rescan-time" in settings) and (settings.get("rescan-time") is None):
                 break
             else:
                 sleep(settings.get("rescan-time", 5))
                 continue
-        settings = settings_on_disc
         monitors = current_monitors
-        definite_monitors: dict[str, str] = settings.get("monitors", {})
-        default_direction: Direction = getattr(
+        reversed: bool = Direction.left == getattr(
             Direction, settings.get("default-direction", "right")
         )
+        settings = settings_on_disc
         setuped: list[str] = []
-        undifinite: list[str] = []
-        for name in sorted(monitors.keys()):
-            desc = monitors[name]
-            if desc in definite_monitors:
+        for desc in sorted(monitors.keys(), reverse=reversed):
+            name = monitors[desc]
+            if desc in definite_monitors and name not in queue:
                 subprocess.run(
                     (
                         "wlr-randr",
@@ -56,16 +82,34 @@ def main(config_path: str):
                 )
                 setuped.append(name)
             else:
-                undifinite.append(name)
+                if name not in queue:
+                    queue.append(name)
 
-        for mon in undifinite:
-            if setuped:
-                subprocess.run(
-                    ("wlr-randr", "--output", mon, default_direction, setuped[-1])
-                )
+        process: list[list[str]] = [
+            [
+                "--output",
+                queue[0],
+                "--pos",
+                "0,0",
+                *query_for_queue.get(queue[0], []),
+            ]
+        ]
+        for mon in queue[1::]:
+            process.append(
+                [
+                    "--output",
+                    mon,
+                    str(Direction.right),
+                    queue[queue.index(mon) - 1],
+                    *query_for_queue.get(mon, ""),
+                ]
+            )
             setuped.append(mon)
-        wlr_output = subprocess.check_output(("wlr-randr"))
-        stdout.write(wlr_output.decode("utf-8"))
+        for query in process:
+            subprocess.run(["wlr-randr"] + query)
+        stdout.write(
+            " ".join(["wlr-randr"] + [" ".join(query) for query in process] + ["\n"])
+        )
         stdout.flush()
 
 
