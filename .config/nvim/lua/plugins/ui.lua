@@ -76,7 +76,23 @@ return {
 	{
 		"MeanderingProgrammer/render-markdown.nvim",
 		dependencies = { "nvim-treesitter/nvim-treesitter", "echasnovski/mini.nvim" },
-		opts = { pipe_table = { preset = "round", cell = "trimmed" } },
+
+		config = function()
+			-- disabling wrapping for better tables rendering
+			vim.api.nvim_create_autocmd("BufReadPost", {
+				pattern = "*.md",
+				callback = function()
+					vim.cmd("setlocal nowrap")
+				end,
+			})
+
+			require("render-markdown").setup({
+				pipe_table = {
+					preset = "round",
+					cell = "trimmed",
+				},
+			})
+		end,
 	},
 	{
 		"3rd/image.nvim",
