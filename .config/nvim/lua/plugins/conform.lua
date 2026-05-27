@@ -15,19 +15,22 @@ return {
 	},
 	-- Everything in opts will be passed to setup()
 	opts = {
+		formatters = {
+			mdformat_post = { command = "mdformat", args = { "--number", "--wrap", "100", "-" } },
+		},
 		-- Define your formatters
 		formatters_by_ft = {
-			javascript = { "prettierd", "prettier", stop_after_first = true },
-			typescript = { "prettierd", "prettier", stop_after_first = true },
-			jsonc = { "prettierd", "prettier", stop_after_first = true },
-			json = { "prettierd", "prettier", stop_after_first = true },
-			yaml = { "prettierd", "prettier", stop_after_first = true },
-			html = { "prettierd", "prettier", stop_after_first = true },
-			yml = { "prettierd", "prettier", stop_after_first = true },
-			css = { "prettierd", "prettier", stop_after_first = true },
+			javascript = { "prettierd" },
+			typescript = { "prettierd" },
+			jsonc = { "prettierd" },
+			json = { "prettierd" },
+			yaml = { "prettierd" },
+			html = { "prettierd" },
+			yml = { "prettierd" },
+			css = { "prettierd" },
 			python = { "ruff_fix", "ruff_format" },
-			markdown = { "mdformat", "-" },
-			toml = { "tombi", "format" },
+			markdown = { "mdformat_post" },
+			toml = { "tombi" },
 			lua = { "stylua" },
 			sh = { "shfmt" },
 		},

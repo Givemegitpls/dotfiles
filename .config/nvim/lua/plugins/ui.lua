@@ -79,14 +79,21 @@ return {
 
 		config = function()
 			-- disabling wrapping for better tables rendering
-			vim.api.nvim_create_autocmd("BufReadPost", {
-				pattern = "*.md",
+			vim.api.nvim_create_autocmd({ "ModeChanged", "BufReadPost" }, {
+				pattern = "*",
 				callback = function()
-					vim.cmd("setlocal nowrap")
+					if vim.api.nvim_get_mode().mode == "n" and vim.bo.filetype == "markdown" then
+						vim.cmd("setlocal nowrap")
+						vim.cmd("highlight @string.escape guifg=#000000")
+					else
+						vim.cmd("setlocal wrap")
+						vim.cmd("highlight @string.escape NONE")
+					end
 				end,
 			})
 
 			require("render-markdown").setup({
+				enable = false,
 				pipe_table = {
 					preset = "round",
 					cell = "trimmed",
