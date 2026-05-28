@@ -16,20 +16,23 @@ return {
 	-- Everything in opts will be passed to setup()
 	opts = {
 		formatters = {
-			mdformat_post = { command = "mdformat", args = { "--number", "--wrap", "100", "-" } },
+			md_prettier = {
+				command = "prettier",
+				args = { "--stdin-filepath", "$FILENAME", "--prose-wrap", "always", "--print-width", "80" },
+			},
 		},
 		-- Define your formatters
 		formatters_by_ft = {
-			javascript = { "prettierd" },
-			typescript = { "prettierd" },
-			jsonc = { "prettierd" },
-			json = { "prettierd" },
-			yaml = { "prettierd" },
-			html = { "prettierd" },
-			yml = { "prettierd" },
-			css = { "prettierd" },
+			javascript = { "prettier" },
+			typescript = { "prettier" },
+			jsonc = { "prettier" },
+			json = { "prettier" },
+			yaml = { "prettier" },
+			html = { "prettier" },
+			yml = { "prettier" },
+			css = { "prettier" },
+			markdown = { "md_prettier" },
 			python = { "ruff_fix", "ruff_format" },
-			markdown = { "mdformat_post" },
 			toml = { "tombi" },
 			lua = { "stylua" },
 			sh = { "shfmt" },

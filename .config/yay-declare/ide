@@ -26,7 +26,6 @@ zsh
 oh-my-zsh-git
 
 # formatters
-mdformat-tables 
 prettier
 stylua
 shfmt
