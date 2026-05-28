@@ -95,12 +95,9 @@
     {
       "type": "urltest",
       "tag": "proxy",
-      "outbounds": [
-        "vless",
-        "naive"
-      ],
+      "outbounds": ["vless", "naive"],
       "url": "http://cp.cloudflare.com",
-      "interval": "10m0s",
+      "interval": "2m0s",
       "tolerance": 50
     }
   ],
@@ -136,11 +133,7 @@
         "strategy": "prefer_ipv4"
       },
       {
-        "domain_suffix": [
-          "ru",
-          "xn--p1ai",
-          "su"
-        ],
+        "domain_suffix": ["ru", "xn--p1ai", "su"],
         "rule_set": "geoip-ru",
         "outbound": "direct"
       },
@@ -158,17 +151,17 @@
           "firefox",
           "Telegram",
           "wget",
-          "lowfi"
+          "lowfi",
+          "opencode"
         ],
         "outbound": "proxy"
       }
     ],
     "rule_set": [
       {
-        "type": "remote",
+        "type": "local",
         "tag": "geoip-ru",
-        "url": "https://raw.githubusercontent.com/SagerNet/sing-geoip/rule-set/geoip-ru.srs",
-        "download_detour": "proxy"
+        "path": ".config/singbox/geoip/geoip-ru.srs"
       }
     ],
     "final": "direct",
