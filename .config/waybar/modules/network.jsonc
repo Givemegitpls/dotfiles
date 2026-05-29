@@ -12,6 +12,8 @@
     "tooltip-format-enumerate-connected": "{device_alias}",
   },
   "network": {
+    "interface": "wlp*",
+    "format": "󰤮 ",
     "format-wifi": "{icon}",
     "format-icons": ["󰤟 ", "󰤢 ", "󰤥 ", "󰤨 "],
     "format-ethernet": "󰈀 ",
