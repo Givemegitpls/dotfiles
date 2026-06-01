@@ -42,16 +42,14 @@ on invalid config.
 
 ### MANDATORY: ruff and basedpyright
 
-`ruff` and `basedpyright` are installed system-wide and are ALWAYS available.
-You MUST run them after every Python file edit, regardless of whether the
-project lists them in `pyproject.toml`, `pyrightconfig.json`, or any other
-config file.
+Before running ruff or basedpyright, determine the correct command prefix:
 
-**After editing any `.py` file, always run:**
-
-```
-ruff check --fix <file> && ruff format <file> && basedpyright <file>
-```
+1. If `uv.lock` exists → use `uv run` prefix:
+   `uv run ruff check --fix <file> && uv run ruff format <file> && uv run basedpyright <file>`
+2. If `poetry.lock` exists → use `poetry run` prefix:
+   `poetry run ruff check --fix <file> && poetry run ruff format <file> && poetry run basedpyright <file>`
+3. Otherwise → use system tools directly:
+   `ruff check --fix <file> && ruff format <file> && basedpyright <file>`
 
 Do NOT skip these steps even if:
 
