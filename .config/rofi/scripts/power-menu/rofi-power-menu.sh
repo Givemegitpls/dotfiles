@@ -4,6 +4,7 @@ menu_content() {
   echo -en "\0message\x1f Power menu\n"
   echo "󰌾 Lock session"
   echo "󰒲 Sleep"
+  echo "󰓓 Gamescope"
   echo " Shutdown"
   echo " Reboot"
   echo "󰜺 Cancel"
@@ -16,6 +17,9 @@ handle_selection() {
     ;;
   x"󰒲 Sleep")
     systemctl sleep
+    ;;
+  x"󰓓 Gamescope")
+    steamui_switcher gamescope
     ;;
   x" Shutdown")
     shutdown now
@@ -36,5 +40,5 @@ if [ -n "$ROFI_RETV" ]; then
     handle_selection "$1"
   fi
 else
-  rofi -show quit -modi "quit:$0" -theme-str 'inputbar {enabled: false;} window {height: 310px;}'
+  rofi -show quit -modi "quit:$0" -theme-str 'inputbar {enabled: false;} window {height: 345px;}'
 fi

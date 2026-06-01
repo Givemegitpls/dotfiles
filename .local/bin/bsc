@@ -1,71 +1,228 @@
 #!/usr/bin/env python3
-from dataclasses import dataclass
+"""Battery Status Controller — asyncio daemon reacting to power supply events."""
+
+from __future__ import annotations
+
+import asyncio
+import os
+import signal
 import subprocess
 import sys
-import os
-import time
-
-battery_state = {"Discharging": False, "Not charging": False, "Charging": True}
+from dataclasses import dataclass
 
 
-def print_stdout(message: str):
-    sys.stdout.write(message + "\n")
-    sys.stdout.flush()
+BATTERY_STATE = {"Discharging": False, "Not charging": False, "Charging": True}
 
 
-@dataclass(slots=True)
+@dataclass
 class Battery:
     percent: int
     power_plugged: bool
 
 
-def sensors_battery(base_path: str) -> Battery:
-    with open(base_path + "capacity", "r") as c, open(base_path + "status", "r") as s:
-        return Battery(
-            percent=int(c.read().strip()), power_plugged=battery_state[s.read().strip()]
+def _print(message: str) -> None:
+    _ = sys.stdout.write(message + "\n")
+    _ = sys.stdout.flush()
+
+
+def _find_ac_adapter() -> str | None:
+    for entry in os.listdir("/sys/class/power_supply/"):
+        path = f"/sys/class/power_supply/{entry}/online"
+        if os.path.isfile(path):
+            return f"/sys/class/power_supply/{entry}/"
+    return None
+
+
+class BSCDaemon:
+    def __init__(self, service_name: str, battery_path: str) -> None:
+        self.service_name = service_name
+        self.battery_path = battery_path
+        self.ac_path = _find_ac_adapter()
+        self._udev_proc: asyncio.subprocess.Process | None = None
+        self._periodic_task: asyncio.Task[None] | None = None
+        self._retry_task: asyncio.Task[None] | None = None
+        self._last_plugged: bool | None = None
+        self._low_battery_notified = False
+        self._critical_battery_notified = False
+
+    def _read_battery(self) -> Battery:
+        with open(self.battery_path + "capacity") as c:
+            percent = int(c.read().strip())
+
+        if self.ac_path:
+            with open(self.ac_path + "online") as f:
+                power_plugged = f.read().strip() == "1"
+        else:
+            with open(self.battery_path + "status") as s:
+                power_plugged = BATTERY_STATE[s.read().strip()]
+
+        return Battery(percent=percent, power_plugged=power_plugged)
+
+    async def start(self) -> None:
+        try:
+            with open("/proc/self/comm", "w") as f:
+                _ = f.write(self.service_name)
+        except OSError:
+            pass
+
+        loop = asyncio.get_running_loop()
+        for sig in (signal.SIGINT, signal.SIGTERM):
+            loop.add_signal_handler(sig, self._shutdown)
+
+        await self._check_battery()
+
+        self._udev_proc = await asyncio.create_subprocess_exec(
+            "udevadm",
+            "monitor",
+            "--subsystem-match=power_supply",
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.DEVNULL,
         )
+        self._periodic_task = asyncio.create_task(self._periodic_check())
+
+        assert self._udev_proc.stdout is not None
+        try:
+            while True:
+                line = await self._udev_proc.stdout.readline()
+                if not line:
+                    break
+                decoded = line.decode(errors="ignore")
+                if "power_supply" in decoded:
+                    await self._check_battery(from_udev=True)
+        except asyncio.CancelledError:
+            pass
+        finally:
+            await self._cleanup()
+
+    def _shutdown(self) -> None:
+        if self._udev_proc and self._udev_proc.returncode is None:
+            self._udev_proc.terminate()
+        if self._periodic_task:
+            self._periodic_task.cancel()
+        if self._retry_task:
+            self._retry_task.cancel()
+
+    async def _cleanup(self) -> None:
+        if self._udev_proc and self._udev_proc.returncode is None:
+            self._udev_proc.terminate()
+            try:
+                await asyncio.wait_for(self._udev_proc.wait(), timeout=5)
+            except asyncio.TimeoutError:
+                self._udev_proc.kill()
+                await self._udev_proc.wait()
+
+    async def _periodic_check(self) -> None:
+        while True:
+            try:
+                await asyncio.sleep(10)
+                await self._check_battery()
+            except asyncio.CancelledError:
+                break
+
+    async def _check_battery(self, *, from_udev: bool = False) -> None:
+        try:
+            battery = self._read_battery()
+        except OSError as e:
+            _ = sys.stderr.write(f"Error reading battery: {e}\n")
+            return
+
+        if from_udev and battery.power_plugged == self._last_plugged:
+            # Likely a race: udev fired before sysfs updated. Retry once.
+            if self._retry_task and not self._retry_task.done():
+                self._retry_task.cancel()
+                try:
+                    await self._retry_task
+                except asyncio.CancelledError:
+                    pass
+            self._retry_task = asyncio.create_task(self._retry_check_battery())
+            return
+
+        if self._retry_task and not self._retry_task.done():
+            self._retry_task.cancel()
+            try:
+                await self._retry_task
+            except asyncio.CancelledError:
+                pass
+
+        if battery.power_plugged != self._last_plugged:
+            self._last_plugged = battery.power_plugged
+            if battery.power_plugged:
+                self._notify("Battery", "Charging")
+                _print("Charger has been plugged")
+                self._low_battery_notified = False
+                self._critical_battery_notified = False
+            else:
+                self._notify("Battery", "Discharging")
+                _print("Charger has been unplugged")
+
+        if battery.power_plugged:
+            return
+
+        if battery.percent <= 5:
+            if not self._critical_battery_notified:
+                self._critical_battery_notified = True
+                _print("Trying go sleep")
+                proc = await asyncio.create_subprocess_shell(
+                    "systemctl sleep",
+                    stdout=asyncio.subprocess.DEVNULL,
+                    stderr=asyncio.subprocess.DEVNULL,
+                )
+                _ = await proc.wait()
+            return
+
+        if battery.percent <= 15:
+            if not self._low_battery_notified:
+                self._low_battery_notified = True
+                self._notify("Battery", "Low battery alarm", urgency="critical")
+                _print("Low battery alarm")
+            return
+
+        self._low_battery_notified = False
+        self._critical_battery_notified = False
+
+    async def _retry_check_battery(self) -> None:
+        try:
+            await asyncio.sleep(1.0)
+            await self._check_battery()
+        except asyncio.CancelledError:
+            pass
+
+    def _notify(self, title: str, body: str, *, urgency: str = "normal") -> None:
+        async def _send() -> None:
+            proc = await asyncio.create_subprocess_exec(
+                "notify-send",
+                "-u",
+                urgency,
+                "-r",
+                "6896",
+                title,
+                body,
+                stdout=asyncio.subprocess.DEVNULL,
+                stderr=asyncio.subprocess.DEVNULL,
+            )
+            _ = await proc.wait()
+
+        asyncio.create_task(_send())
 
 
-def main(sleep_time: int, base_path: str):
-    while True:
-        if sensors_battery(base_path).power_plugged:
-            subprocess.run(
-                'notify-send -u normal -r "6896" "Battery" "Charging"', shell=True
-            )
-            print_stdout("Charger has been plugged")
-            while sensors_battery(base_path).power_plugged:
-                time.sleep(sleep_time)
-            subprocess.run(
-                'notify-send -u normal -r "6896" "Battery" "Discharging"', shell=True
-            )
-            print_stdout("Charger has been unplugged")
-        elif sensors_battery(base_path).percent <= 5:
-            subprocess.run("systemctl sleep", shell=True)
-            print_stdout("Trying go sleep")
-            time.sleep(60)
-        elif sensors_battery(base_path).percent <= 15:
-            subprocess.run(
-                'notify-send -u critical -r "6896" "Battery" "Low battery alarm"',
-                shell=True,
-            )
-            print_stdout("Low battery alarm")
-            while (
-                not sensors_battery(base_path).power_plugged
-                and sensors_battery(base_path).percent > 5
-            ):
-                time.sleep(sleep_time)
-        time.sleep(sleep_time)
+async def _main() -> None:
+    service_name = "BSC"
+    battery_path = "/sys/class/power_supply/BAT0/"
+
+    if not os.path.exists(battery_path):
+        _print("Can't get battery info")
+        sys.exit(1)
+
+    if (
+        subprocess.run(["pgrep", "-x", service_name], capture_output=True).returncode
+        != 1
+    ):
+        _print("Process already exists")
+        sys.exit(1)
+
+    daemon = BSCDaemon(service_name, battery_path)
+    await daemon.start()
 
 
 if __name__ == "__main__":
-    service_name = "BSC"
-    base_path = "/sys/class/power_supply/BAT0/"
-    if not os.path.exists(base_path):
-        print_stdout("Can't get battery info")
-        sys.exit(1)
-    if subprocess.run(("pgrep", service_name)).returncode != 1:
-        print_stdout("Process alredy exists")
-        sys.exit(1)
-    with open("/proc/self/comm", "w") as f:
-        f.write(service_name)
-    main(2, base_path)
+    asyncio.run(_main())

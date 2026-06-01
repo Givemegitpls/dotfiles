@@ -1,20 +1,19 @@
 #!/usr/bin/env python3
+"""Monitor Brightness Daemon — asyncio client/server to adjust DDC/CI brightness."""
+
+from __future__ import annotations
+
+import asyncio
 import json
 import os
 import re
-import socket
+import signal
 import subprocess
-from sys import argv, stdout, exit
-from threading import Timer
+import sys
 from typing import Any
 
 
-def print(message: str):
-    stdout.write(message + "\n")
-    stdout.flush()
-
-
-icons = (
+ICONS = (
     "brightness-low.svg",
     "brightness-medium.svg",
     "brightness-high.svg",
@@ -22,130 +21,191 @@ icons = (
 )
 
 
+def _print(message: str) -> None:
+    _ = sys.stdout.write(message + "\n")
+    _ = sys.stdout.flush()
+
+
 class BrightnessDaemon:
-    def __init__(
-        self,
-        service_name: str,
-        settings: Any,
-    ):
-        self.timer = None
+    def __init__(self, service_name: str, settings: dict[str, Any]) -> None:
+        self.service_name = service_name
         self.socket_path = f"/tmp/{service_name}.sock"
-        self.pid = os.getpid()
-        self.step = settings["step"]
-        self.timegap = settings["timegap"]
-        self.image_path = settings.get("image_path")
-        if value := settings.get("default_brightness"):
-            self.current_brightness = int(value)
-        elif match := re.search(
-            r"current value =    ([^,]+)",
-            subprocess.getoutput(("ddcutil", "-d", "1", "getvcp", "10")),
-        ):
-            self.current_brightness = int(match.group(1))
+        self._server: asyncio.AbstractServer | None = None
+        self._pid = os.getpid()
+        self.step: int = settings.get("step", 5)
+        self.timegap: float = settings.get("timegap", 0.3)
+        self.image_path: str | None = settings.get("image_path")
+        default = settings.get("default_brightness")
+        self.current_brightness: int = int(default) if default else 50
+        self._debounce_task: asyncio.Task[None] | None = None
 
-        else:
-            self.current_brightness = 50
-        with open("/proc/self/comm", "w") as f:
-            f.write(service_name)
-
-    def start(self):
+    async def start(self) -> None:
+        if self.current_brightness == 50:
+            await self._detect_brightness()
         try:
             os.unlink(self.socket_path)
         except FileNotFoundError:
             pass
-        self.server = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
-        self.server.bind(self.socket_path)
-        self.server.listen(1)
-        os.chmod(self.socket_path, 666)  # доступ для всех
-
-        while True:
-            conn, _ = self.server.accept()
-            notifier_command: str
+        self._server = await asyncio.start_unix_server(
+            self._handle_client, self.socket_path
+        )
+        loop = asyncio.get_running_loop()
+        for sig in (signal.SIGINT, signal.SIGTERM):
+            loop.add_signal_handler(sig, self._server.close)
+        try:
+            async with self._server:
+                await self._server.serve_forever()
+        finally:
+            if self._debounce_task:
+                self._debounce_task.cancel()
+                try:
+                    await self._debounce_task
+                except asyncio.CancelledError:
+                    pass
             try:
-                data = conn.recv(1024).decode().strip()
-                if data == "up":
-                    self.current_brightness += self.step
-                elif data == "down":
-                    self.current_brightness -= self.step
-                else:
-                    continue
-                if self.image_path:
-                    icon_path = os.path.expanduser(os.path.expandvars(self.image_path))
-                    index = min(
-                        int(len(icons) * self.current_brightness / 100), len(icons) - 1
-                    )
-                    notifier_command = f"notify-send -i {icon_path}/{icons[index]}"
-                else:
-                    notifier_command = "notify-send "
-                self.current_brightness = max(min(self.current_brightness, 100), 0)
-                subprocess.run(
-                    f'{notifier_command} -a "changeBrightness" -u low -r {self.pid} -h int:value:"{self.current_brightness}" "Яркость экрана: {self.current_brightness}%"',
-                    shell=True,
-                )
-                self.schedule_apply()
-                conn.send(b"OK")
-            finally:
-                conn.close()
+                os.unlink(self.socket_path)
+            except FileNotFoundError:
+                pass
 
-    def schedule_apply(self):
-        if self.timer:
-            self.timer.cancel()
-        self.timer = Timer(self.timegap, self.apply_brightness)  # агрегация 300ms
-        self.timer.start()
+    async def _handle_client(
+        self, reader: asyncio.StreamReader, writer: asyncio.StreamWriter
+    ) -> None:
+        data = (await reader.read(1024)).decode().strip()
+        if data == "up":
+            self.current_brightness += self.step
+        elif data == "down":
+            self.current_brightness -= self.step
+        else:
+            writer.write(b"ERROR")
+            await writer.drain()
+            writer.close()
+            await writer.wait_closed()
+            return
 
-    def apply_brightness(self):
-        for row in (
-            subprocess.check_output(("ddcutil", "detect")).decode("utf-8").split("\n")
+        self.current_brightness = max(min(self.current_brightness, 100), 0)
+        await self._show_notification()
+        self._schedule_apply()
+        writer.write(b"OK")
+        await writer.drain()
+        writer.close()
+        await writer.wait_closed()
+
+    async def _detect_brightness(self) -> None:
+        proc = await asyncio.create_subprocess_exec(
+            "ddcutil",
+            "-d",
+            "1",
+            "getvcp",
+            "10",
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.DEVNULL,
+        )
+        stdout, _ = await proc.communicate()
+        if match := re.search(
+            r"current value =    ([^,]+)", stdout.decode(errors="ignore")
         ):
-            commands: list[str] = []
+            self.current_brightness = int(match.group(1))
+
+    async def _show_notification(self) -> None:
+        if self.image_path:
+            icon_path = os.path.expanduser(os.path.expandvars(self.image_path))
+            index = min(int(len(ICONS) * self.current_brightness / 100), len(ICONS) - 1)
+            icon = os.path.join(icon_path, ICONS[index])
+            cmd = (
+                f'notify-send -i {icon} -a "changeBrightness" -u low -r {self._pid} '
+                f'-h int:value:"{self.current_brightness}" '
+                f'"Яркость экрана: {self.current_brightness}%"'
+            )
+        else:
+            cmd = (
+                f"notify-send -u low -r {self._pid} "
+                f'-h int:value:"{self.current_brightness}" '
+                f'"Яркость экрана: {self.current_brightness}%"'
+            )
+        proc = await asyncio.create_subprocess_shell(
+            cmd,
+            stdout=asyncio.subprocess.DEVNULL,
+            stderr=asyncio.subprocess.DEVNULL,
+        )
+        _ = await proc.wait()
+
+    def _schedule_apply(self) -> None:
+        if self._debounce_task:
+            self._debounce_task.cancel()
+        self._debounce_task = asyncio.create_task(self._apply_after_gap())
+
+    async def _apply_after_gap(self) -> None:
+        try:
+            await asyncio.sleep(self.timegap)
+            await self._apply_brightness()
+        except asyncio.CancelledError:
+            pass
+
+    async def _apply_brightness(self) -> None:
+        proc = await asyncio.create_subprocess_exec(
+            "ddcutil",
+            "detect",
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.DEVNULL,
+        )
+        stdout, _ = await proc.communicate()
+        commands: list[str] = []
+        for row in stdout.decode(errors="ignore").split("\n"):
             if "Display " in row:
-                if (mon := row.replace("Display ", "")).isdigit():
+                mon = row.replace("Display ", "").strip()
+                if mon.isdigit():
                     commands.append(
                         f"ddcutil -d {mon} setvcp 10 {self.current_brightness}"
                     )
-            if commands:
-                for command in commands:
-                    subprocess.run(
-                        (f"{command} &> /dev/null & disown"),
-                        shell=True,
-                    )
+        if commands:
+            for command in commands:
+                proc = await asyncio.create_subprocess_shell(
+                    command,
+                    stdout=asyncio.subprocess.DEVNULL,
+                    stderr=asyncio.subprocess.DEVNULL,
+                )
+                _ = await proc.wait()
+            _print("\n".join(commands))
 
-                print("\n".join(commands))
 
-
-def send_command(command: str, service_name: str):
-    sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
-    try:
-        sock.connect(f"/tmp/{service_name}.sock")
-        sock.send(command.encode())
-        response = sock.recv(1024)
-        print(response.decode())
-    except Exception as e:
-        print(f"Error: {e}")
-    finally:
-        sock.close()
+async def send_command(command: str, service_name: str) -> None:
+    reader, writer = await asyncio.open_unix_connection(f"/tmp/{service_name}.sock")
+    writer.write(command.encode())
+    await writer.drain()
+    response = (await reader.read(1024)).decode()
+    _print(response)
+    writer.close()
+    await writer.wait_closed()
 
 
 if __name__ == "__main__":
     service_name = "monbrighter"
-
     home = os.getenv("XDG_CONFIG_HOME", os.path.expanduser("~/.config"))
-    config_path = "/".join(
-        (
-            home,
-            service_name,
-            "config.json",
-        )
-    )
-    if len(argv) == 2 and argv[1] in ("up", "down"):
-        send_command(argv[1], service_name)
-    elif subprocess.run(("pgrep", service_name)).returncode == 1:
+    config_path = os.path.join(home, service_name, "config.json")
+
+    if len(sys.argv) == 2 and sys.argv[1] in ("up", "down"):
+        asyncio.run(send_command(sys.argv[1], service_name))
+    elif (
+        subprocess.run(["pgrep", "-x", service_name], capture_output=True).returncode
+        == 1
+    ):
         if os.path.exists(config_path):
             with open(config_path) as f:
-                settings = json.load(f)
+                settings: dict[str, Any] = json.load(f)
         else:
-            settings = {"default_brightnes": None, "step": 5, "timegap": 0.3}
-
-        BrightnessDaemon(service_name, settings).start()
+            settings = {
+                "default_brightness": None,
+                "step": 5,
+                "timegap": 0.3,
+                "image_path": None,
+            }
+        try:
+            with open("/proc/self/comm", "w") as f:
+                _ = f.write(service_name)
+        except OSError:
+            pass
+        daemon = BrightnessDaemon(service_name, settings)
+        asyncio.run(daemon.start())
     else:
-        print("Usage: brightness up|down")
-    exit(1)
+        _print("Usage: brightness up|down")
+        sys.exit(1)
