@@ -1,99 +1,100 @@
-# Global OpenCode Config
+# OpenCode Configuration Guide
 
-## Plugin development
+This document explains the architecture of this opencode configuration.
+It is intended for AI agents that need to modify, extend, or troubleshoot the opencode setup.
 
-`@opencode-ai/plugin` exports three entry points:
+## Golden Rule
 
-| Import                     | Purpose          |
-| -------------------------- | ---------------- |
-| `@opencode-ai/plugin`      | Main plugin API  |
-| `@opencode-ai/plugin/tool` | Tool definitions |
-| `@opencode-ai/plugin/tui`  | TUI components   |
+`config.json` is **auto-generated**. Never edit it by hand. Always edit `base.json` or `provider.json`, then run `merge-config.sh`.
 
-Plugin dependencies: `effect` (4.0.0-beta), `zod` (4.x). Peer deps
-`@opentui/core` and `@opentui/solid` are optional (TUI only).
+## Architecture
 
-## Config reference
+The configuration is split into three layers:
 
-The authoritative schema is at <https://opencode.ai/config.json>. If unsure
-about a field shape, fetch that URL rather than guessing — opencode hard-fails
-on invalid config.
+| File           | Purpose                                         | Editable by hand |
+|----------------|-------------------------------------------------|------------------|
+| `base.json`    | Shared settings: LSP, compaction, agent prompts & permissions | Yes |
+| `provider.json`| Provider-specific: baseURL, models, agent mapping            | Yes |
+| `config.json`  | Merged output consumed by opencode                           | **No** |
+| `merge-config.sh` | Bash script that merges `base.json` + `provider.json` into `config.json` | Yes |
 
-## Python conventions
+### `base.json`
 
-- **Package manager**: prefer `uv`. If a project uses `poetry` (has
-  `poetry.lock`), use `poetry` instead. Never mix both in one project.
-- **Type checking**: `basedpyright` in strict mode
-  (`"typeCheckingMode": "strict"` in pyrightconfig.json). All public functions
-  must have full type annotations. No `Any`, no `# type: ignore` without
-  explanation.
-- **Linting/formatting**: `ruff check --fix` for linting, `ruff format` for
-  formatting. Follow ruff's defaults.
-- **Testing**: `pytest`. Look for `pyproject.toml` → `[tool.pytest.ini_options]`
-  for project-specific config.
-- **Debugger**: `debugpy` is available if needed for attaching to running
-  processes.
-- **Pre-commit**: if `.pre-commit-config.yaml` exists, respect its hooks
-  (typically ruff + basedpyright). Suggest adding one if missing.
-- **Virtual env**: always check for `.venv/` or `uv sync` status before running
-  Python. Use `uv run` to ensure correct environment.
-- **Dependencies**: check `pyproject.toml` before adding new deps. Use
-  `uv add <pkg>` (or `poetry add <pkg>`).
+Contains everything that is **provider-independent**:
+- `$schema`, `default_agent`
+- `lsp` (e.g. `basedpyright-langserver`)
+- `compaction` settings
+- `agent` definitions with `system_prompt` and `permission`
+  - **Important:** `base.json` agents do **not** contain the `model` field.
 
-### MANDATORY: ruff and basedpyright
+### `provider.json`
 
-Before running ruff or basedpyright, determine the correct command prefix:
+Contains everything that changes between devices (home vs office):
+- `provider_name` — internal key for the provider block
+- `provider_display` — human-readable name
+- `npm` — npm package name for the provider
+- `baseURL` — API endpoint
+- `models` — full model definitions (name, limits, thinking, etc.)
+- `agent_mapping` — maps agent names to model keys (without provider prefix)
+  - Example: `"build": "kimi-k2.5-go"` becomes `model: "provider_name/kimi-k2.5-go"` in the merged `config.json`
 
-1. If `uv.lock` exists → use `uv run` prefix:
-   `uv run ruff check --fix <file> && uv run ruff format <file> && uv run basedpyright <file>`
-2. If `poetry.lock` exists → use `poetry run` prefix:
-   `poetry run ruff check --fix <file> && poetry run ruff format <file> && poetry run basedpyright <file>`
-3. Otherwise → use system tools directly:
-   `ruff check --fix <file> && ruff format <file> && basedpyright <file>`
+## How To
 
-Do NOT skip these steps even if:
+### Add a new agent
 
-- The project has no `[tool.ruff]` or `[tool.pyright]` section in
-  `pyproject.toml`
-- No `pyrightconfig.json` exists (create one with `"typeCheckingMode": "strict"`
-  if missing)
-- The project uses a different linter or type checker
-- You think the edit is trivial
+1. Edit `base.json`:
+   - Add an entry under `"agent"` with `system_prompt` and `permission`.
+   - Do **not** add a `model` field.
+2. Edit `provider.json`:
+   - Add the agent to `"agent_mapping"` pointing to an existing model key.
+3. Run `./merge-config.sh` to regenerate `config.json`.
 
-These tools are non-negotiable quality gates. Fix all errors they report before
-considering the edit complete.
+### Add a new model
 
-## Preferred CLI tools
+1. Edit `provider.json`:
+   - Add the model definition under `"models"`.
+2. If needed, update `"agent_mapping"` to use the new model.
+3. Run `./merge-config.sh`.
 
-- Use `rg` (ripgrep) instead of `grep` for searching file contents
-- Use `fd` instead of `find` for locating files by name/pattern
-- Use `ls` only when `fd` isn't suitable (e.g., listing directory contents
-  without pattern matching)
+### Change an agent's model
 
-## CI (GitLab)
+1. Edit `provider.json` → `"agent_mapping"`.
+2. Change the value for the agent.
+3. Run `./merge-config.sh`.
 
-For GitLab CI pipelines in APS projects, load the **ci** skill — it covers CI
-components registry (`git.apsolutions.ru/aps/Internal/common/ci-components`),
-image-build, release, docs, and pipeline conventions.
+### Add a new skill
 
-Key points:
+1. Create a directory: `skills/<skill-name>/`
+2. Write `SKILL.md` inside it with the skill definition.
+3. Symlink the skill into `~/.config/opencode/skills/`:
+   ```bash
+   ln -s /path/to/your/skills/<skill-name> ~/.config/opencode/skills/<skill-name>
+   ```
 
-- Components: `image-build`, `release`, `docs`, `push_archrepo_golang`,
-  `python-linters`
-- Base images: use `harbor.apsolutions.ru/dockerhub/` mirror prefix
-- Always pin component versions to a specific tag from the ci-components repo
+## What is shared vs per-device
 
-## Scope and secrets
+- **Shared** (same on all devices, lives in dotfiles):
+  - `base.json`
+  - `merge-config.sh`
+  - `skills/` (symlinked to dotfiles)
+  - This `AGENTS.md`
 
-- NEVER read `.env` or `.env.*` files without explicit user approval — they
-  contain secrets
-- Stay within the project directory where opencode was opened. Avoid reading or
-  writing outside the worktree unless explicitly asked
-- If you need context from outside (e.g., global config), ask the user first
+- **Per-device** (do not commit to shared repo):
+  - `provider.json`
+  - `config.json` (already ignored via `.gitignore`)
 
-## Git safety
+## Context for modifications
 
-- NEVER `git push` without explicit user approval
-- NEVER `git checkout`/`git switch`/`git rebase` without explicit user approval
-- These are gated by permission system (ask), but also never suggest running
-  them automatically
+When editing any of these files, keep the following context in mind:
+- The user works mainly with **Python backend** code (FastAPI, plain Python). Flask and Django are not used.
+- Projects are often **legacy or poorly typed**; skills for gradual typing and safe refactoring exist.
+- Package managers vary per project: **uv** or **poetry**. The configuration accounts for both.
+- `rg` (ripgrep) and `fd` are available for codebase navigation.
+
+## Quick validation
+
+After any change to `base.json` or `provider.json`, run:
+```bash
+~/.config/opencode/merge-config.sh
+```
+The script validates the generated JSON and prints a confirmation line.

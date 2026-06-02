@@ -50,3 +50,13 @@ description: "Use when writing or editing Python code. Enforces strict typing wi
 - local
 - Blank line between each group
 - Use `TYPE_CHECKING` block for type-only imports
+
+## Migrating from legacy to strict typing
+
+- Phase 1 — public APIs: annotate all function signatures in modules imported by others
+- Phase 2 — internal modules: annotate leaf modules (no dependents) first, work upward
+- Phase 3 — replace `Any` markers: for each `# TODO(type):` comment, investigate the real type
+- When `Any` is unavoidable, prefer `object` for truly dynamic values and narrow with `isinstance`
+- Use `typing.cast` only when the runtime type is guaranteed but the checker cannot infer it
+- Add `basedpyright` / `pyright` to dev dependencies after Phase 1 is complete
+- Run type checker after each phase: `uv run basedpyright` or `poetry run basedpyright`

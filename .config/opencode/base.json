@@ -1,0 +1,135 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "default_agent": "plan",
+  "lsp": {
+    "python": {
+      "command": ["basedpyright-langserver", "--stdio"],
+      "extensions": [".py", ".pyi"]
+    }
+  },
+  "agent": {
+    "build": {
+      "system_prompt": "You are a careful Python backend developer. When refactoring poorly typed or legacy code:\n1. First write a 3-step plan, then execute step-by-step.\n2. Run tests after each step.\n3. Never change runtime behavior just to satisfy the type checker.\n4. If a type is unclear, use `Any` with a `# TODO(type): <reason>` marker instead of guessing.\n5. Prefer `Protocol` and dependency injection over concrete imports.\n6. Use `pathlib`, f-strings, and `from __future__ import annotations` in new or modified code.\n7. Detect the package manager (`uv` vs `poetry`) and use the appropriate run commands.",
+      "permission": {
+        "edit": "allow",
+        "read": {
+          "**/.env": "ask",
+          "**/.env.*": "ask",
+          "*": "allow"
+        },
+        "external_directory": "ask",
+        "bash": {
+          "git commit*": "deny",
+          "git push*": "deny",
+          "git reset*": "deny",
+          "git rebase*": "deny",
+          "git cherry-pick*": "deny",
+          "git revert*": "deny",
+          "*": "ask"
+        }
+      }
+    },
+    "plan": {
+      "system_prompt": "You are a planning specialist for Python backend projects. Break every task into small, testable steps. For refactoring tasks, prefer:\n1. Identify the smallest surface that can be changed safely.\n2. Ensure there is a test or smoke-test before changes begin.\n3. List dependencies and potential side effects for each step.\n4. Recommend the order: type annotation → extraction → inversion of dependencies → cleanup.",
+      "permission": {
+        "edit": "deny",
+        "read": {
+          "**/.env": "ask",
+          "**/.env.*": "ask",
+          "*": "allow"
+        },
+        "external_directory": "ask"
+      }
+    },
+    "explore": {
+      "permission": {
+        "edit": "deny",
+        "read": {
+          "**/.env": "ask",
+          "**/.env.*": "ask",
+          "*": "allow"
+        },
+        "external_directory": "ask"
+      }
+    },
+    "architect": {
+      "permission": {
+        "edit": "deny",
+        "read": {
+          "**/.env": "ask",
+          "**/.env.*": "ask",
+          "*": "allow"
+        },
+        "external_directory": "ask"
+      }
+    },
+    "general": {
+      "permission": {
+        "edit": "ask",
+        "read": {
+          "**/.env": "ask",
+          "**/.env.*": "ask",
+          "*": "allow"
+        },
+        "external_directory": "ask",
+        "bash": {
+          "git commit*": "deny",
+          "git push*": "deny",
+          "git reset*": "deny",
+          "git rebase*": "deny",
+          "git cherry-pick*": "deny",
+          "git revert*": "deny",
+          "*": "ask"
+        }
+      }
+    },
+    "title": {
+      "permission": {
+        "edit": "deny",
+        "bash": {
+          "git commit*": "deny",
+          "git push*": "deny",
+          "git reset*": "deny",
+          "git rebase*": "deny",
+          "git cherry-pick*": "deny",
+          "git revert*": "deny",
+          "*": "deny"
+        }
+      }
+    },
+    "summary": {
+      "permission": {
+        "edit": "deny",
+        "bash": {
+          "git commit*": "deny",
+          "git push*": "deny",
+          "git reset*": "deny",
+          "git rebase*": "deny",
+          "git cherry-pick*": "deny",
+          "git revert*": "deny",
+          "*": "deny"
+        }
+      }
+    },
+    "compaction": {
+      "permission": {
+        "edit": "deny",
+        "bash": {
+          "git commit*": "deny",
+          "git push*": "deny",
+          "git reset*": "deny",
+          "git rebase*": "deny",
+          "git cherry-pick*": "deny",
+          "git revert*": "deny",
+          "*": "deny"
+        }
+      }
+    }
+  },
+  "compaction": {
+    "auto": true,
+    "tail_turns": 5,
+    "prune": true
+  },
+  "command": {}
+}
