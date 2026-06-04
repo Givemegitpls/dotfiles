@@ -91,6 +91,17 @@ When editing any of these files, keep the following context in mind:
 - Package managers vary per project: **uv** or **poetry**. The configuration accounts for both.
 - `rg` (ripgrep) and `fd` are available for codebase navigation.
 
+## Plan Mode Behavior
+
+The following agents are strictly read-only and must NEVER modify files or execute commands:
+- `plan`, `explore`, `title`, `summary`, `compaction`
+
+### Transition rules
+1. `plan` agent collects requirements and produces a structured plan.
+2. The user must explicitly approve the plan (e.g., "execute", "go ahead", "implement").
+3. Only then may the `build` or `general` agent execute the plan.
+4. If a user asks a read-only agent to write code, the agent must refuse and wait for explicit approval.
+
 ## Quick validation
 
 After any change to `base.json` or `provider.json`, run:

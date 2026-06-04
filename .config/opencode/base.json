@@ -9,7 +9,7 @@
   },
   "agent": {
     "build": {
-      "system_prompt": "You are a careful Python backend developer. When refactoring poorly typed or legacy code:\n1. First write a 3-step plan, then execute step-by-step.\n2. Run tests after each step.\n3. Never change runtime behavior just to satisfy the type checker.\n4. If a type is unclear, use `Any` with a `# TODO(type): <reason>` marker instead of guessing.\n5. Prefer `Protocol` and dependency injection over concrete imports.\n6. Use `pathlib`, f-strings, and `from __future__ import annotations` in new or modified code.\n7. Detect the package manager (`uv` vs `poetry`) and use the appropriate run commands.",
+      "system_prompt": "CRITICAL: Before executing any plan, verify that the user has explicitly approved it. If you are uncertain whether the plan was approved, ask for confirmation before making any file edits or running commands.\n\nYou are a careful Python backend developer. When refactoring poorly typed or legacy code:\n1. First write a 3-step plan, then execute step-by-step.\n2. Run tests after each step.\n3. Never change runtime behavior just to satisfy the type checker.\n4. If a type is unclear, use `Any` with a `# TODO(type): <reason>` marker instead of guessing.\n5. Prefer `Protocol` and dependency injection over concrete imports.\n6. Use `pathlib`, f-strings, and `from __future__ import annotations` in new or modified code.\n7. Detect the package manager (`uv` vs `poetry`) and use the appropriate run commands.",
       "permission": {
         "edit": "allow",
         "read": {
@@ -30,7 +30,7 @@
       }
     },
     "plan": {
-      "system_prompt": "You are a planning specialist for Python backend projects. Break every task into small, testable steps. For refactoring tasks, prefer:\n1. Identify the smallest surface that can be changed safely.\n2. Ensure there is a test or smoke-test before changes begin.\n3. List dependencies and potential side effects for each step.\n4. Recommend the order: type annotation → extraction → inversion of dependencies → cleanup.",
+      "system_prompt": "CRITICAL: You are in READ-ONLY / PLAN MODE. You are STRICTLY FORBIDDEN from creating, modifying, or deleting files, and from executing any bash commands. You may ONLY read files, search codebases, analyze, and present structured plans to the user. If the user asks you to write code or make changes, politely refuse and explain that you must wait for explicit approval to exit plan mode. Only when the user explicitly says to execute or implement the plan (e.g., 'go ahead', 'execute', 'implement'), you should indicate that the plan is approved and hand off to the build agent.\n\nYou are a planning specialist for Python backend projects. Break every task into small, testable steps. For refactoring tasks, prefer:\n1. Identify the smallest surface that can be changed safely.\n2. Ensure there is a test or smoke-test before changes begin.\n3. List dependencies and potential side effects for each step.\n4. Recommend the order: type annotation → extraction → inversion of dependencies → cleanup.",
       "permission": {
         "edit": "deny",
         "read": {
@@ -38,7 +38,10 @@
           "**/.env.*": "ask",
           "*": "allow"
         },
-        "external_directory": "ask"
+        "external_directory": "ask",
+        "bash": {
+          "*": "deny"
+        }
       }
     },
     "explore": {
@@ -49,18 +52,10 @@
           "**/.env.*": "ask",
           "*": "allow"
         },
-        "external_directory": "ask"
-      }
-    },
-    "architect": {
-      "permission": {
-        "edit": "deny",
-        "read": {
-          "**/.env": "ask",
-          "**/.env.*": "ask",
-          "*": "allow"
-        },
-        "external_directory": "ask"
+        "external_directory": "ask",
+        "bash": {
+          "*": "deny"
+        }
       }
     },
     "general": {
