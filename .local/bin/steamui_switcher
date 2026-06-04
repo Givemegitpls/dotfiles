@@ -40,6 +40,7 @@ class Daemon:
         self.process: asyncio.subprocess.Process | None = None
         self._server: asyncio.AbstractServer | None = None
         self._monitor_task: asyncio.Task[None] | None = None
+        self._volume_proc: asyncio.subprocess.Process | None = None
 
     async def start(self):
         try:
@@ -55,8 +56,11 @@ class Daemon:
             self.handle_client, self.socket_path
         )
         await self.switch_to("uwsm")
-        async with self._server:
-            await self._server.serve_forever()
+        try:
+            async with self._server:
+                await self._server.serve_forever()
+        finally:
+            await self.stop_current()
 
     async def handle_client(
         self, reader: asyncio.StreamReader, writer: asyncio.StreamWriter
@@ -95,6 +99,17 @@ class Daemon:
         )
         self.current_session = name
         self._monitor_task = asyncio.create_task(self._monitor_process())
+        if name == "gamescope":
+            daemon_path = os.path.join(os.path.dirname(__file__), "gamescope-volume-daemon")
+            try:
+                self._volume_proc = await asyncio.create_subprocess_exec(
+                    sys.executable,
+                    daemon_path,
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL,
+                )
+            except Exception as e:
+                _ = sys.stderr.write(f"Failed to start volume daemon: {e}\n")
 
     async def _monitor_process(self) -> None:
         assert self.process is not None
@@ -134,6 +149,14 @@ class Daemon:
             except asyncio.TimeoutError:
                 self.process.kill()
                 _ = await self.process.wait()
+        if self._volume_proc and self._volume_proc.returncode is None:
+            self._volume_proc.terminate()
+            try:
+                _ = await asyncio.wait_for(self._volume_proc.wait(), timeout=3)
+            except asyncio.TimeoutError:
+                self._volume_proc.kill()
+                _ = await self._volume_proc.wait()
+            self._volume_proc = None
         self.current_session = None
         self.process = None
 

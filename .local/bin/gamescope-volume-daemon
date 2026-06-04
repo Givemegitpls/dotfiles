@@ -1,0 +1,164 @@
+#!/usr/bin/env python3
+"""Gamescope Volume Daemon — adjusts system volume via evdev in gamescope sessions."""
+
+from __future__ import annotations
+
+import asyncio
+import ctypes
+import errno
+import os
+import signal
+import sys
+from typing import final
+
+import evdev
+
+
+def _set_pdeathsig(sig: int) -> None:
+    """Ask the kernel to deliver a signal when the parent dies."""
+    try:
+        libc = ctypes.CDLL("libc.so.6")
+        libc.prctl(1, sig)  # PR_SET_PDEATHSIG = 1
+    except Exception:
+        pass
+
+
+@final
+class VolumeDaemon:
+    def __init__(self, service_name: str) -> None:
+        self.service_name = service_name
+        self._devices: list[evdev.InputDevice] = []
+        self._read_tasks: list[asyncio.Task[None]] = []
+        self._shutdown_event = asyncio.Event()
+
+    async def start(self) -> None:
+        try:
+            with open("/proc/self/comm", "w") as f:
+                _ = f.write(self.service_name)
+        except OSError:
+            pass
+
+        _set_pdeathsig(signal.SIGTERM)
+
+        loop = asyncio.get_running_loop()
+        for sig in (signal.SIGINT, signal.SIGTERM):
+            loop.add_signal_handler(sig, self._shutdown)
+
+        for path in evdev.list_devices():
+            try:
+                device = evdev.InputDevice(path)
+                caps = device.capabilities()
+                if evdev.ecodes.EV_KEY in caps:
+                    self._devices.append(device)
+                    self._read_tasks.append(
+                        asyncio.create_task(self._read_device(device))
+                    )
+            except (OSError, PermissionError):
+                continue
+
+        if not self._read_tasks:
+            _ = sys.stderr.write("No input devices with keys found\n")
+            return
+
+        try:
+            await self._shutdown_event.wait()
+        except asyncio.CancelledError:
+            pass
+        finally:
+            await self._cleanup()
+
+    def _shutdown(self) -> None:
+        self._shutdown_event.set()
+        for task in self._read_tasks:
+            task.cancel()
+
+    async def _cleanup(self) -> None:
+        for task in self._read_tasks:
+            if not task.done():
+                task.cancel()
+                try:
+                    await task
+                except asyncio.CancelledError:
+                    pass
+        for device in self._devices:
+            try:
+                device.close()
+            except Exception:
+                pass
+
+    async def _read_device(self, device: evdev.InputDevice) -> None:
+        try:
+            async for event in device.async_read_loop():
+                if event.type == evdev.ecodes.EV_KEY and event.value == 1:
+                    code = event.code
+                    if code == evdev.ecodes.KEY_VOLUMEUP:
+                        await self._set_volume("5%+")
+                    elif code == evdev.ecodes.KEY_VOLUMEDOWN:
+                        await self._set_volume("5%-")
+                    elif code == evdev.ecodes.KEY_MUTE:
+                        await self._toggle_mute()
+        except asyncio.CancelledError:
+            raise
+        except OSError as e:
+            if e.errno != errno.ENODEV:
+                _ = sys.stderr.write(f"evdev error on {device.path}: {e}\n")
+        except Exception as e:
+            _ = sys.stderr.write(f"Unexpected error on {device.path}: {e}\n")
+
+    async def _set_volume(self, delta: str) -> None:
+        limit = "1.0" if delta.endswith("+") else "0.0"
+        proc = await asyncio.create_subprocess_exec(
+            "wpctl",
+            "set-volume",
+            "@DEFAULT_AUDIO_SINK@",
+            delta,
+            "-l",
+            limit,
+            stdout=asyncio.subprocess.DEVNULL,
+            stderr=asyncio.subprocess.DEVNULL,
+        )
+        _ = await proc.wait()
+
+    async def _toggle_mute(self) -> None:
+        proc = await asyncio.create_subprocess_exec(
+            "wpctl",
+            "set-mute",
+            "@DEFAULT_AUDIO_SINK@",
+            "toggle",
+            stdout=asyncio.subprocess.DEVNULL,
+            stderr=asyncio.subprocess.DEVNULL,
+        )
+        _ = await proc.wait()
+
+
+async def _main() -> None:
+    service_name = "gamescope-volume-daemon"
+    pidfile = f"/tmp/{service_name}.pid"
+
+    if os.path.exists(pidfile):
+        with open(pidfile) as f:
+            old_pid = f.read().strip()
+        if old_pid.isdigit():
+            try:
+                os.kill(int(old_pid), 0)
+                _ = sys.stdout.write("Process already exists\n")
+                sys.exit(1)
+            except (OSError, ProcessLookupError):
+                pass
+        os.unlink(pidfile)
+
+    with open(pidfile, "w") as f:
+        _ = f.write(str(os.getpid()))
+
+    try:
+        daemon = VolumeDaemon(service_name)
+        await daemon.start()
+    finally:
+        try:
+            os.unlink(pidfile)
+        except FileNotFoundError:
+            pass
+
+
+if __name__ == "__main__":
+    asyncio.run(_main())
