@@ -14,8 +14,8 @@
 .config/niri/config/monitors.kdl
 .config/xfce4/xfconf/xfce-perchannel-xml/thunar.xml
 .config/opencode/*
-!.config/opencode/themes/*
-!.config/opencode/skills/*
+!.config/opencode/themes
+!.config/opencode/skills
 !.config/opencode/AGENTS.md
 !.config/opencode/merge-config.sh
 !.config/opencode/provider_example.json
