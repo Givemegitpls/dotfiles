@@ -14,11 +14,11 @@ return {
 		"Wansmer/langmapper.nvim",
 		lazy = false,
 		priority = 1, -- High priority is needed if you will use `autoremap()`
-		-- check ui.lua/which-key
 
-		-- config = function()
-		-- 	require("langmapper").setup({--[[ your config ]]
-		-- 	})
-		-- end,
+		-- You should check ui.lua/which-key
+		config = function()
+			require("langmapper").setup({--[[ your config ]]
+			})
+		end,
 	},
 }

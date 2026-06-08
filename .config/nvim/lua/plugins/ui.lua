@@ -126,17 +126,14 @@ return {
 		opts = {
 			preset = "helix",
 		},
-		-- setup deduplicated binds
 		config = function(_, opts)
-			local lmu = require("langmapper.utils")
-			local wk_state = require("which-key.state")
-			local check_orig = wk_state.check
-
-			wk_state.check = function(state, key)
-				if key ~= nil then
-					key = lmu.translate_keycode(key, "default", "ru")
-				end
-				return check_orig(state, key)
+			local translate_key = require("langmapper.utils").translate_keycode
+			-- don't show mappings translated by langmapper.nvim. Show entry if func returns true
+			opts.filter = function(mapping)
+				return mapping.lhs
+					and mapping.lhs == translate_key(mapping.lhs, "default", "ru")
+					and mapping.desc
+					and mapping.desc:find("LM") == nil
 			end
 			require("which-key").setup(opts)
 		end,
