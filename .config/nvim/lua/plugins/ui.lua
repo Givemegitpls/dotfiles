@@ -126,15 +126,20 @@ return {
 		opts = {
 			preset = "helix",
 		},
-		keys = {
-			{
-				"<leader>?",
-				function()
-					require("which-key").show({ global = false })
-				end,
-				desc = "Buffer Local Keymaps (which-key)",
-			},
-		},
+		-- setup deduplicated binds
+		config = function(_, opts)
+			local lmu = require("langmapper.utils")
+			local wk_state = require("which-key.state")
+			local check_orig = wk_state.check
+
+			wk_state.check = function(state, key)
+				if key ~= nil then
+					key = lmu.translate_keycode(key, "default", "ru")
+				end
+				return check_orig(state, key)
+			end
+			require("which-key").setup(opts)
+		end,
 	},
 	-- New UI
 	{
