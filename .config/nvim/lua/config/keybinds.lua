@@ -16,16 +16,38 @@ vim.cmd([[
   cnoremap <C-p> <C-r>"
 ]])
 
--- dap
+-- dap functions
 local dap = require("dap")
 local dapui = require("dapui")
 local stacks = function()
 	dapui.float_element("stacks")
 end
+
 local scopes = function()
 	dapui.float_element("scopes")
 end
 
+-- fugitive functions
+local telescope = require("telescope.builtin")
+local actions = require("telescope.actions")
+local action_state = require("telescope.actions.state")
+local fugitive_commits = function()
+	telescope.git_commits({
+		prompt_title = "Select File (Returns Path)",
+		attach_mappings = function(prompt_bufnr, map)
+			map({ "i", "n" }, "<CR>", function()
+				local selection = action_state.get_selected_entry()
+				actions.close(prompt_bufnr)
+				local selected = selection.value
+
+				vim.cmd("Gvdiffsplit " .. selected .. " | wincmd L")
+			end)
+			return true -- Keep other default mappings working
+		end,
+	})
+end
+
+-- dap
 vim.keymap.set("n", "<leader>dr", dap.continue, { desc = "Debug run" })
 vim.keymap.set("n", "<leader>dR", dap.restart, { desc = "Debug restart" })
 vim.keymap.set("n", "<leader>dc", dap.close, { desc = "Debug close" })
@@ -36,8 +58,9 @@ vim.keymap.set("n", "<leader>db", dap.toggle_breakpoint, { desc = "Debug breakpo
 vim.keymap.set("n", "<leader>dB", dap.set_exception_breakpoints, { desc = "Debug exception breakpoint" })
 
 -- fugitive
-vim.keymap.set("n", "<leader>p", "<CMD>Git pull --rebase<CR>", { desc = "Git pull" })
-vim.keymap.set("n", "<leader>P", "<CMD>Git push<CR>", { desc = "Git push" })
+vim.keymap.set("n", "<leader>gp", "<CMD>Git pull --rebase<CR>", { desc = "Git pull" })
+vim.keymap.set("n", "<leader>gP", "<CMD>Git push<CR>", { desc = "Git push" })
+vim.keymap.set("n", "<leader>gc", fugitive_commits, { desc = "Git diff" })
 
 -- lsp
 vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "Go definition" })
@@ -49,7 +72,6 @@ vim.keymap.set("n", "K", vim.lsp.buf.hover, { desc = "Display hover information"
 vim.keymap.set("n", "<F2>", "<CMD>Neotree toggle<CR>")
 
 -- telescope
-local telescope = require("telescope.builtin")
 vim.keymap.set("n", "<leader>ff", telescope.find_files, { desc = "Telescope find files" })
 vim.keymap.set("n", "<leader>fg", telescope.live_grep, { desc = "Telescope grep" })
 vim.keymap.set("n", "<leader>fb", telescope.buffers, { desc = "Telescope buffers" })
