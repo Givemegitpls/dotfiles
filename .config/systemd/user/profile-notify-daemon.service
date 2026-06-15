@@ -1,0 +1,12 @@
+[Unit]
+Description=ASUS Power Profile Change Notification Daemon
+After=dbus.service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 %h/.local/bin/profile-notify-daemon
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=default.target

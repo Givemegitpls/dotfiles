@@ -8,7 +8,7 @@
     "format": "{icon}",
     "format-icons": ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂂", "󰁹"],
     "format-charging": "󰂄",
-    "on-click": "$HOME/.scripts/asus/ROGprofiler.sh",
+    "on-click": "asusctl profile next",
     "tooltip-format": "{capacity}% {timeTo}",
   },
   "backlight": {

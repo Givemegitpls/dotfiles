@@ -1,0 +1,133 @@
+#!/usr/bin/env python3
+"""
+WARNING: It is absolutely vibecoded tool
+
+Watch ASUS power profile sysfs via inotify and send notification on change.
+
+Uses kernel inotify (via ctypes) to avoid polling. The kernel driver
+asus-nb-wmi updates the sysfs file when Fn+F5 is pressed, which triggers
+an inotify MODIFY event.
+"""
+
+import ctypes
+import os
+import select
+import struct
+import subprocess
+import sys
+
+NOTIF_ID = "3378455"
+ICON_PATH = os.path.expanduser("~/.local/share/icons/performance.svg")
+PROFILE_PATH = (
+    "/sys/devices/platform/asus-nb-wmi/platform-profile/platform-profile-0/profile"
+)
+
+# inotify constants
+IN_MODIFY = 0x00000002
+
+
+def _setup_inotify():
+    libc = ctypes.CDLL("libc.so.6", use_errno=True)
+    libc.inotify_init.restype = ctypes.c_int
+    libc.inotify_init.argtypes = []
+    libc.inotify_add_watch.restype = ctypes.c_int
+    libc.inotify_add_watch.argtypes = [ctypes.c_int, ctypes.c_char_p, ctypes.c_uint32]
+    return libc
+
+
+def _read_profile() -> str:
+    try:
+        with open(PROFILE_PATH, "r") as f:
+            return f.read().strip()
+    except Exception as e:
+        print(f"Failed to read profile: {e}", file=sys.stderr)
+        return "Unknown"
+
+
+def _send_notification(profile: str) -> None:
+    try:
+        subprocess.run(
+            [
+                "notify-send",
+                "-i",
+                ICON_PATH,
+                "-u",
+                "low",
+                "-r",
+                NOTIF_ID,
+                "Power profile",
+                profile,
+            ],
+            check=False,
+            timeout=10,
+        )
+    except Exception as e:
+        print(f"Failed to send notification: {e}", file=sys.stderr)
+
+
+def _wait_for_modify(libc, fd, timeout=None):
+    """Block until an inotify event arrives, or timeout seconds pass.
+    Returns True if an event was received, False on timeout.
+    """
+    if timeout is None:
+        ready, _, _ = select.select([fd], [], [])
+    else:
+        ready, _, _ = select.select([fd], [], [], timeout)
+    if not ready:
+        return False
+    buf = os.read(fd, 4096)
+    if not buf:
+        return False
+    # Parse inotify_event structs
+    i = 0
+    while i < len(buf):
+        if len(buf) - i < 16:
+            break
+        wd, mask, cookie, name_len = struct.unpack_from("iIII", buf, i)
+        i += 16
+        i += name_len  # skip name
+        if mask & IN_MODIFY:
+            return True
+    return False
+
+
+def main():
+    libc = _setup_inotify()
+    fd = libc.inotify_init()
+    if fd < 0:
+        print(
+            f"inotify_init failed: {os.strerror(ctypes.get_errno())}", file=sys.stderr
+        )
+        sys.exit(1)
+
+    path_bytes = PROFILE_PATH.encode("utf-8")
+    wd = libc.inotify_add_watch(fd, path_bytes, IN_MODIFY)
+    if wd < 0:
+        print(
+            f"inotify_add_watch failed: {os.strerror(ctypes.get_errno())}",
+            file=sys.stderr,
+        )
+        os.close(fd)
+        sys.exit(1)
+
+    last_profile = _read_profile()
+    print(
+        f"profile-notify-daemon: inotify watch active, current profile: {last_profile}"
+    )
+
+    try:
+        while True:
+            if _wait_for_modify(libc, fd):
+                current = _read_profile()
+                if current != last_profile:
+                    print(f"Profile changed: {current}")
+                    _send_notification(current.title())
+                    last_profile = current
+    except KeyboardInterrupt:
+        pass
+    finally:
+        os.close(fd)
+
+
+if __name__ == "__main__":
+    main()

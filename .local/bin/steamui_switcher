@@ -22,7 +22,7 @@ class Session:
 
 @final
 class Gamescope(Session):
-    start_command: str = "gamescope --mangoapp -e -- steam -steamdeck -steamos3"
+    start_command: str = "gamescope_drm_allow_dynamic_modes_for_external_display=1 gamescope --mangoapp -e -- steam -steamdeck -steamos3"
     stop_command: str = "steam -shutdown"
 
 
@@ -100,7 +100,9 @@ class Daemon:
         self.current_session = name
         self._monitor_task = asyncio.create_task(self._monitor_process())
         if name == "gamescope":
-            daemon_path = os.path.join(os.path.dirname(__file__), "gamescope-volume-daemon")
+            daemon_path = os.path.join(
+                os.path.dirname(__file__), "gamescope-volume-daemon"
+            )
             try:
                 self._volume_proc = await asyncio.create_subprocess_exec(
                     sys.executable,
