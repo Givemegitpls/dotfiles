@@ -141,7 +141,7 @@
         "process_name": [
           "pacman",
           "yay",
-          "malepkg",
+          "makepkg",
           "reflector",
           "electron",
           "neovim",
