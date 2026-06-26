@@ -13,31 +13,16 @@ if [[ ! -f "provider.json" ]]; then
     exit 1
 fi
 
-PROVIDER_NAME=$(jq -r '.provider_name' provider.json)
-PROVIDER_DISPLAY=$(jq -r '.provider_display' provider.json)
-NPM=$(jq -r '.npm' provider.json)
-BASEURL=$(jq -r '.baseURL' provider.json)
-MODELS=$(jq '.models' provider.json)
+PROVIDER_NAME=$(jq -r '.provider | keys[0]' provider.json)
+PROVIDER=$(jq '.provider' provider.json)
 MAPPING=$(jq '.agent_mapping' provider.json)
 
 jq --arg provider_name "$PROVIDER_NAME" \
-   --arg provider_display "$PROVIDER_DISPLAY" \
-   --arg npm "$NPM" \
-   --arg baseURL "$BASEURL" \
-   --argjson models "$MODELS" \
+   --argjson provider "$PROVIDER" \
    --argjson mapping "$MAPPING" \
    '
     . + {
-      "provider": {
-        ($provider_name): {
-          "npm": $npm,
-          "name": $provider_display,
-          "options": {
-            "baseURL": $baseURL
-          },
-          "models": $models
-        }
-      }
+      "provider": $provider
     } |
     .agent = (
       .agent | with_entries(

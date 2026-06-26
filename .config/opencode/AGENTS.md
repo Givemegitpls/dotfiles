@@ -14,7 +14,7 @@ The configuration is split into three layers:
 | File           | Purpose                                         | Editable by hand |
 |----------------|-------------------------------------------------|------------------|
 | `base.json`    | Shared settings: LSP, compaction, agent prompts & permissions | Yes |
-| `provider.json`| Provider-specific: baseURL, models, agent mapping            | Yes |
+| `provider.json`| Provider-specific: providers, models, agent mapping            | Yes |
 | `config.json`  | Merged output consumed by opencode                           | **No** |
 | `merge-config.sh` | Bash script that merges `base.json` + `provider.json` into `config.json` | Yes |
 
@@ -30,13 +30,14 @@ Contains everything that is **provider-independent**:
 ### `provider.json`
 
 Contains everything that changes between devices (home vs office):
-- `provider_name` — internal key for the provider block
-- `provider_display` — human-readable name
-- `npm` — npm package name for the provider
-- `baseURL` — API endpoint
-- `models` — full model definitions (name, limits, thinking, etc.)
-- `agent_mapping` — maps agent names to model keys (without provider prefix)
-  - Example: `"build": "kimi-k2.5-go"` becomes `model: "provider_name/kimi-k2.5-go"` in the merged `config.json`
+- `provider` — object where each key is a provider name and value is the provider definition
+  - `npm` — npm package name for the provider
+  - `name` — human-readable display name
+  - `options` — provider-specific settings (e.g. `baseURL`)
+  - `models` — full model definitions (name, limits, thinking, etc.)
+- `agent_mapping` — maps agent names to model keys (without the provider prefix)
+  - The provider name is auto-prefixed by `merge-config.sh`
+  - Example: `"build": "opencode-go/kimi-k2.7-code-go"` becomes `model: "litellm/opencode-go/kimi-k2.7-code-go"` in the merged `config.json`
 
 ## How To
 
@@ -46,20 +47,27 @@ Contains everything that changes between devices (home vs office):
    - Add an entry under `"agent"` with `system_prompt` and `permission`.
    - Do **not** add a `model` field.
 2. Edit `provider.json`:
-   - Add the agent to `"agent_mapping"` pointing to an existing model key.
+   - Add the agent to `"agent_mapping"` pointing to an existing model key (without provider prefix).
 3. Run `./merge-config.sh` to regenerate `config.json`.
 
 ### Add a new model
 
 1. Edit `provider.json`:
-   - Add the model definition under `"models"`.
-2. If needed, update `"agent_mapping"` to use the new model.
+   - Add the model definition under the appropriate `"provider".<name>."models"`.
+2. If needed, update `"agent_mapping"` to use the new model (without provider prefix).
 3. Run `./merge-config.sh`.
 
 ### Change an agent's model
 
 1. Edit `provider.json` → `"agent_mapping"`.
-2. Change the value for the agent.
+2. Change the value for the agent to another model key (without provider prefix).
+3. Run `./merge-config.sh`.
+
+### Add a new provider
+
+1. Edit `provider.json`:
+   - Add a new entry under `"provider"` with `npm`, `name`, `options`, and `models`.
+2. Update `"agent_mapping"` to reference models from the new provider (without provider prefix).
 3. Run `./merge-config.sh`.
 
 ### Add a new skill
