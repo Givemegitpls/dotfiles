@@ -29,11 +29,36 @@ description: "Use when working with poorly typed or legacy Python code. Covers g
 
 ## Package manager awareness
 
-- Before adding type stubs or dev dependencies, detect manager:
-  - `uv.lock` → `uv add --dev types-<pkg>` or `uv add --dev basedpyright`
-  - `poetry.lock` → `poetry add --group dev types-<pkg>` or `poetry add --dev basedpyright`
-  - `requirements.txt` → warn user and suggest migrating to `uv` or `poetry`
-- Run type checker after each batch of annotations: `uv run basedpyright` or `poetry run basedpyright`
+Detect the manager by lockfile, not by guessing:
+- `uv.lock` → uv
+- `poetry.lock` → poetry
+- neither + only `requirements.txt` → warn the user and suggest migrating to uv
+
+### CRITICAL: never use pip to add project dependencies
+
+`pip install` / `uv pip install` must NEVER be used to add dependencies to a project.
+They manage a bare environment without updating `pyproject.toml`, so the dependency
+is invisible to the lockfile and will be lost on the next `uv sync`.
+
+Correct commands (verified against `uv add --help` and `poetry add --help`):
+
+| Action                  | uv                          | poetry                        |
+|-------------------------|-----------------------------|-------------------------------|
+| Add runtime dep         | `uv add <pkg>`              | `poetry add <pkg>`            |
+| Add dev dep             | `uv add --dev <pkg>`        | `poetry add --group dev <pkg>`|
+| Add to a named group    | `uv add --group <g> <pkg>`  | `poetry add --group <g> <pkg>`|
+| Add optional/extra dep  | `uv add --optional <e> <p>` | `poetry add <pkg>` (edit toml)|
+| Add editable local path | `uv add --editable <path>`  | `poetry add --editable <path>`|
+| Remove a dep            | `uv remove <pkg>`           | `poetry remove <pkg>`         |
+| Sync env from lockfile  | `uv sync`                   | `poetry sync` / `poetry install`|
+| Run a command in env    | `uv run <cmd>`              | `poetry run <cmd>`            |
+
+`uv pip <subcommand>` is a low-level pip-compatible interface for environments
+WITHOUT project metadata. Do not reach for it in normal project work.
+
+Run the type checker after each batch of annotations. With uv: `uv run basedpyright`
+(or the native `uv check`, which runs Astral's `ty` type checker). With poetry:
+`poetry run basedpyright`.
 
 ## Testing legacy changes
 

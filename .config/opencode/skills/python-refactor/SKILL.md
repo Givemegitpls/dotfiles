@@ -16,7 +16,7 @@ description: "Use when refactoring Python code safely. Covers extract method/cla
 
 - **Extract method**: identify a block with clear inputs/outputs, create `def _<name>(...)`, replace block with call
 - **Extract class**: group related methods and state, create new class, inject via constructor
-- **Extract module**: move cohesive functions/classes to new file, update imports, run `ruff check --fix`
+- **Extract module**: move cohesive functions/classes to new file, update imports, run `uv run ruff check --fix` (or `poetry run ruff check --fix`)
 - After extraction, verify no circular imports were introduced
 
 ## Dependency inversion
@@ -28,7 +28,7 @@ description: "Use when refactoring Python code safely. Covers extract method/cla
 
 ## Replace magic values
 
-- Find magic strings/numbers with `rg '"[^"]*"' --type py` or `rg '\b\d+\b' --type py` in target file
+- Find magic strings/numbers in a target file: `rg '"[^"]{3,}"' path/to/file.py` (quoted strings 3+ chars) or `rg '\b\d{2,}\b' path/to/file.py` (multi-digit numbers). Drop `--type py` when passing a file path — it's only needed for project-wide searches.
 - Extract to module-level `CONSTANT_NAME: Final[<type>] = <value>`
 - If value used across modules, create `constants.py` or `config.py`
 
@@ -41,7 +41,7 @@ description: "Use when refactoring Python code safely. Covers extract method/cla
 ## Package manager awareness
 
 - When moving files, update package metadata if needed (`pyproject.toml` `[tool.setuptools.packages.find]` etc.)
-- Run `uv sync` or `poetry install` after structural changes to ensure imports resolve
+- Run `uv sync` or `poetry sync` (not `pip install`) after structural changes to ensure imports resolve from the lockfile
 
 ## Rollback rule
 

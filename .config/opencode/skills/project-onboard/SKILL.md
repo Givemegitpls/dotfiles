@@ -8,7 +8,7 @@ description: "Use when first opening an unfamiliar Python project. Quick analysi
 ## Step 1: Identify project type and package manager
 
 - Check for `pyproject.toml`, `setup.cfg`, `setup.py`, `requirements.txt`
-- Determine package manager: `uv.lock` → uv, `poetry.lock` → poetry, `uv.pip` → uv pip, `requirements.txt` → warn and suggest migrating to uv or poetry
+- Determine package manager by lockfile: `uv.lock` → uv, `poetry.lock` → poetry. If only `requirements.txt` exists, warn the user and suggest migrating to uv. Do NOT infer the manager from the presence of `uv pip` or `pip` — those are subcommands, not detection signals.
 - Check Python version requirement in `pyproject.toml` → `[project] requires-python`
 - For backend projects: identify framework (FastAPI, Django, Flask) from dependencies; FastAPI is common
 
@@ -34,7 +34,7 @@ description: "Use when first opening an unfamiliar Python project. Quick analysi
 
 ## Step 5: Verify environment
 
-- Check `.venv/` exists, suggest `uv sync` (uv) or `poetry install` (poetry) if not
+- Check `.venv/` exists, suggest `uv sync` (uv) or `poetry sync` (poetry) if not
 - Verify `uv run python -c "import <main_pkg>"` or `poetry run python -c "import <main_pkg>"` works
 - Run `uv run pytest --co -q` or `poetry run pytest --co -q` to list collected tests
 - For backend/FastAPI: note if lifespan, routers, or `Depends()` patterns exist

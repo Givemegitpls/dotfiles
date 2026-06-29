@@ -19,10 +19,27 @@ description: "Use when writing or editing Python code. Enforces strict typing wi
 - Use `typing.Protocol` for structural subtyping
 - Use `typing.overload` for multiple call signatures
 
+## Running linters and type checkers
+
+CRITICAL: Always run `ruff` and `basedpyright` inside the project's virtual
+environment — never as global binaries. Global versions are likely out of sync
+with the lockfile and may produce false errors or miss configured rules.
+
+Prefix every invocation with the project's package manager:
+
+| Tool       | uv project                  | poetry project                  |
+|------------|-----------------------------|---------------------------------|
+| ruff check | `uv run ruff check --fix`   | `poetry run ruff check --fix`   |
+| ruff format| `uv run ruff format`        | `poetry run ruff format`        |
+| basedpyright | `uv run basedpyright`     | `poetry run basedpyright`       |
+
+Native uv shortcuts (run inside the venv automatically): `uv format` (wraps
+Ruff) and `uv check` (runs Astral's `ty`, not basedpyright).
+
 ## Ruff rules
 
-- Run `ruff check --fix` after edits
-- Run `ruff format` after edits
+- Run `uv run ruff check --fix` (or `poetry run ruff check --fix`) after edits
+- Run `uv run ruff format` (or `poetry run ruff format`, or `uv format`) after edits
 - Key enabled rule groups: E, F, I, N, UP, ANN, B, A, SIM, TCH, RUF
 
 ## Modern Python
@@ -58,5 +75,5 @@ description: "Use when writing or editing Python code. Enforces strict typing wi
 - Phase 3 — replace `Any` markers: for each `# TODO(type):` comment, investigate the real type
 - When `Any` is unavoidable, prefer `object` for truly dynamic values and narrow with `isinstance`
 - Use `typing.cast` only when the runtime type is guaranteed but the checker cannot infer it
-- Add `basedpyright` / `pyright` to dev dependencies after Phase 1 is complete
-- Run type checker after each phase: `uv run basedpyright` or `poetry run basedpyright`
+- Add `basedpyright` to dev dependencies after Phase 1 is complete: `uv add --dev basedpyright` or `poetry add --group dev basedpyright`
+- Run type checker after each phase — see "Running linters and type checkers" above

@@ -16,7 +16,8 @@ description: "Use when committing, creating PRs, or managing git history. Conven
 ## Pre-commit
 
 - If `.pre-commit-config.yaml` exists, hooks run automatically
-- If missing, suggest adding one with: `ruff check --fix`, `ruff format`, `basedpyright`
+- If missing, suggest adding one with: `ruff check --fix`, `ruff format`, `basedpyright` (all configured to run via `uv run` or `poetry run` inside the hook definitions)
+- `pre-commit` is not installed globally; add it as a dev dependency first: `uv add --dev pre-commit`
 - Run `uv run pre-commit run --all-files` to check manually
 
 ## Branching
@@ -28,8 +29,8 @@ description: "Use when committing, creating PRs, or managing git history. Conven
 
 ## Before committing
 
-1. `ruff check --fix && ruff format`
-2. `basedpyright`
+1. `uv run ruff check --fix && uv run ruff format` (or `poetry run ...`)
+2. `uv run basedpyright` (or `poetry run basedpyright`)
 3. `uv run pytest`
 4. Review `git diff --staged`
 

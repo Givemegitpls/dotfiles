@@ -12,6 +12,12 @@ description: "Use when writing tests for Python code. Covers pytest conventions,
 - `uv run pytest --tb=short` for concise tracebacks
 - Look for `pyproject.toml` → `[tool.pytest.ini_options]` for project config
 
+## Installing test dependencies
+
+Never use `pip install` to add test deps — they will not be recorded in `pyproject.toml`.
+- Add a test tool: `uv add --dev pytest` / `poetry add --group dev pytest`
+- Add a test group (uv): `uv add --group test pytest pytest-cov`
+
 ## Test structure
 
 - Mirror source structure: `src/module.py` → `tests/test_module.py`
