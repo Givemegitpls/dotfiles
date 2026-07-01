@@ -17,8 +17,7 @@ return {
 	opts = {
 		formatters = {
 			md_prettier = {
-				command = "prettier",
-				args = { "--stdin-filepath", "$FILENAME", "--prose-wrap", "always", "--print-width", "80" },
+				format = require("functions.md_prettier").format,
 			},
 		},
 		-- Define your formatters
