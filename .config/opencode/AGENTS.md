@@ -1,95 +1,9 @@
 # OpenCode Configuration Guide
 
-This document explains the architecture of this opencode configuration.
-It is intended for AI agents that need to modify, extend, or troubleshoot the opencode setup.
-
-## Golden Rule
-
-`config.json` is **auto-generated**. Never edit it by hand. Always edit `base.json` or `provider.json`, then run `merge-config.sh`.
-
-## Architecture
-
-The configuration is split into three layers:
-
-| File           | Purpose                                         | Editable by hand |
-|----------------|-------------------------------------------------|------------------|
-| `base.json`    | Shared settings: LSP, compaction, agent prompts & permissions | Yes |
-| `provider.json`| Provider-specific: providers, models, agent mapping            | Yes |
-| `config.json`  | Merged output consumed by opencode                           | **No** |
-| `merge-config.sh` | Bash script that merges `base.json` + `provider.json` into `config.json` | Yes |
-
-### `base.json`
-
-Contains everything that is **provider-independent**:
-- `$schema`, `default_agent`
-- `lsp` (e.g. `basedpyright-langserver`)
-- `compaction` settings
-- `agent` definitions with `system_prompt` and `permission`
-  - **Important:** `base.json` agents do **not** contain the `model` field.
-
-### `provider.json`
-
-Contains everything that changes between devices (home vs office):
-- `provider` — object where each key is a provider name and value is the provider definition
-  - `npm` — npm package name for the provider
-  - `name` — human-readable display name
-  - `options` — provider-specific settings (e.g. `baseURL`)
-  - `models` — full model definitions (name, limits, thinking, etc.)
-- `agent_mapping` — maps agent names to model keys (without the provider prefix)
-  - The provider name is auto-prefixed by `merge-config.sh`
-  - Example: `"build": "opencode-go/kimi-k2.7-code-go"` becomes `model: "litellm/opencode-go/kimi-k2.7-code-go"` in the merged `config.json`
-
-## How To
-
-### Add a new agent
-
-1. Edit `base.json`:
-   - Add an entry under `"agent"` with `system_prompt` and `permission`.
-   - Do **not** add a `model` field.
-2. Edit `provider.json`:
-   - Add the agent to `"agent_mapping"` pointing to an existing model key (without provider prefix).
-3. Run `./merge-config.sh` to regenerate `config.json`.
-
-### Add a new model
-
-1. Edit `provider.json`:
-   - Add the model definition under the appropriate `"provider".<name>."models"`.
-2. If needed, update `"agent_mapping"` to use the new model (without provider prefix).
-3. Run `./merge-config.sh`.
-
-### Change an agent's model
-
-1. Edit `provider.json` → `"agent_mapping"`.
-2. Change the value for the agent to another model key (without provider prefix).
-3. Run `./merge-config.sh`.
-
-### Add a new provider
-
-1. Edit `provider.json`:
-   - Add a new entry under `"provider"` with `npm`, `name`, `options`, and `models`.
-2. Update `"agent_mapping"` to reference models from the new provider (without provider prefix).
-3. Run `./merge-config.sh`.
-
-### Add a new skill
-
-1. Create a directory: `skills/<skill-name>/`
-2. Write `SKILL.md` inside it with the skill definition.
-3. Symlink the skill into `~/.config/opencode/skills/`:
-   ```bash
-   ln -s /path/to/your/skills/<skill-name> ~/.config/opencode/skills/<skill-name>
-   ```
-
-## What is shared vs per-device
-
-- **Shared** (same on all devices, lives in dotfiles):
-  - `base.json`
-  - `merge-config.sh`
-  - `skills/` (symlinked to dotfiles)
-  - This `AGENTS.md`
-
-- **Per-device** (do not commit to shared repo):
-  - `provider.json`
-  - `config.json` (already ignored via `.gitignore`)
+This document provides global behaviour rules for all opencode sessions.
+For opencode config editing (agents, models, providers, skills, permissions),
+use the `customize-opencode` skill — it contains detailed architecture docs,
+how-to guides, and file locations.
 
 ## Context for modifications
 
@@ -99,21 +13,30 @@ When editing any of these files, keep the following context in mind:
 - Package managers vary per project: **uv** or **poetry**. The configuration accounts for both.
 - `rg` (ripgrep) and `fd` are available for codebase navigation.
 
-## Plan Mode Behavior
+## Build Agent Behavior
 
-The following agents are strictly read-only and must NEVER modify files or execute commands:
-- `plan`, `explore`, `title`, `summary`, `compaction`
+`build` is the primary agent for all user interaction. For any non-trivial task
+(anything beyond reading, searching, or answering a question):
 
-### Transition rules
-1. `plan` agent collects requirements and produces a structured plan.
-2. The user must explicitly approve the plan (e.g., "execute", "go ahead", "implement").
-3. Only then may the `build` or `general` agent execute the plan.
-4. If a user asks a read-only agent to write code, the agent must refuse and wait for explicit approval.
+1. **Produce a structured plan** — steps, affected files, risks.
+2. **Call the `question` tool** with options «Одобряю» / «Отмена» and wait.
+3. **Do NOT edit files, write files, or run commands** until the user explicitly approves.
+4. After approval, execute the plan.
 
-## Quick validation
+Trivial tasks (reading files, searching code, factual answers) need no plan.
 
-After any change to `base.json` or `provider.json`, run:
-```bash
-~/.config/opencode/merge-config.sh
-```
-The script validates the generated JSON and prints a confirmation line.
+Read-only agents (`explore`, `title`, `summary`, `compaction`) must NEVER
+modify files or execute commands. `general` is a subagent for delegating
+parallel work; it asks for permission on edits and bash.
+
+## Python Development Guidelines
+
+You are a careful Python backend developer. When working with Python code:
+
+1. Break work into small, testable steps and run tests after each step.
+2. Never change runtime behavior just to satisfy the type checker.
+3. If a type is unclear, use `Any` with a `# TODO(type): <reason>` marker instead of guessing.
+4. Prefer `Protocol` and dependency injection over concrete imports.
+5. Use `pathlib`, f-strings, and `from __future__ import annotations` in new or modified code.
+6. Detect the package manager (`uv` vs `poetry`) and use the appropriate run commands.
+7. Use `ruff check --fix` for linting, `ruff format` for formatting, `basedpyright` for type checking.
