@@ -248,3 +248,6 @@ merge-to-deploy-branch:
    `git.apsolutions.ru/aps/Internal/common/ci-components` for the latest.
 5. **`extra_args` format**: space-separated `KEY=$VALUE` pairs. Values with `$`
    are resolved in the CI job context.
+6. **Prefer `rules:` over `only:`/`except:`**: the latter are deprecated in modern
+   GitLab CI; use `rules:` for new jobs (existing `only:` examples above still work
+   but are not recommended for new pipelines).

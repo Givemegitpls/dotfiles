@@ -5,6 +5,14 @@ description: "Use when committing, creating PRs, or managing git history. Conven
 
 # Git Workflow
 
+## Agent git policy
+
+The agent may run ONLY `git diff` and `git diff --staged` (read-only review). All
+other git operations — `add`, `commit`, `push`, `checkout`, `switch`, `rebase`,
+`merge`, `stash`, `reset`, `revert`, `cherry-pick` — are denied by the permission
+system and must be performed by the user. When a commit is needed, the agent
+prepares the message and the change summary; the user runs the git command.
+
 ## Commits
 
 - Conventional commits format: `type(scope): description`
@@ -15,10 +23,10 @@ description: "Use when committing, creating PRs, or managing git history. Conven
 
 ## Pre-commit
 
-- If `.pre-commit-config.yaml` exists, hooks run automatically
-- If missing, suggest adding one with: `ruff check --fix`, `ruff format`, `basedpyright` (all configured to run via `uv run` or `poetry run` inside the hook definitions)
-- `pre-commit` is not installed globally; add it as a dev dependency first: `uv add --dev pre-commit`
-- Run `uv run pre-commit run --all-files` to check manually
+- If `.pre-commit-config.yaml` exists, hooks run automatically on the user's machine
+- If missing, suggest adding one with: `ruff check --fix`, `ruff format`, `basedpyright` (run via `uv run`/`poetry run` inside hook definitions)
+- `pre-commit` is not installed globally; add it as a dev dependency: `uv add --dev pre-commit`
+- Manual check (user runs): `uv run pre-commit run --all-files`
 
 ## Branching
 
@@ -26,16 +34,24 @@ description: "Use when committing, creating PRs, or managing git history. Conven
 - Feature branches: `feat/<short-description>`
 - Fix branches: `fix/<short-description>`
 - Rebase preferred over merge commits
+- Branch creation/switching is done by the user; the agent never switches branches
 
-## Before committing
+## Before the user commits
+
+The agent prepares:
 
 1. `uv run ruff check --fix && uv run ruff format` (or `poetry run ...`)
 2. `uv run basedpyright` (or `poetry run basedpyright`)
 3. `uv run pytest`
-4. Review `git diff --staged`
+4. Review staged changes: `git diff --staged` (agent-run, the only git command allowed)
+
+The agent then suggests a conventional-commit message; the user stages
+(`git add`) and commits (`git commit`) themselves.
 
 ## Safety rules
 
-- NEVER `git push` without explicit user approval
-- NEVER `git checkout`/`git switch`/`git rebase` without explicit user approval
-- These are gated by permission system (ask), but also never suggest running them automatically
+- The agent is blocked from all git commands except `git diff`/`git diff --staged`.
+- Never suggest the agent run `git push`, `git checkout`, `git switch`, `git rebase`,
+  `git merge`, `git stash`, `git reset`, `git revert`, or `git cherry-pick`
+  automatically — propose them as commands for the user to run.
+- `git push` always requires explicit user action.

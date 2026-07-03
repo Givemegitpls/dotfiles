@@ -20,5 +20,4 @@
 !.config/opencode/merge-config.sh
 !.config/opencode/provider_example.json
 !.config/opencode/base.json
-!.config/opencode/opencode.jsonc
 !.config/opencode/tui.json

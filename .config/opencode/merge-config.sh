@@ -35,7 +35,32 @@ jq --arg provider_name "$PROVIDER_NAME" \
         end
       )
     )
-    ' base.json > config.json
+    ' base.json > opencode.json
 
-python3 -c "import json; json.load(open('config.json')); print('config.json: valid JSON')"
-echo "config.json generated successfully."
+python3 -c "import json; json.load(open('opencode.json')); print('opencode.json: valid JSON')"
+echo "opencode.json generated successfully."
+
+MEMORY_DIR="$HOME/.local/share/opencode/memory"
+mkdir -p "$MEMORY_DIR"
+
+PERSONALITY="$MEMORY_DIR/PERSONALITY.md"
+if [[ ! -f "$PERSONALITY" ]]; then
+    cat > "$PERSONALITY" <<'EOF'
+# Personality
+
+<!-- Agent-maintained notes on manner, style, and behavioral preferences.
+     Loaded into the system prompt at session start. Edit sparingly. -->
+EOF
+    echo "Created $PERSONALITY"
+fi
+
+USER_MEM="$MEMORY_DIR/USER.md"
+if [[ ! -f "$USER_MEM" ]]; then
+    cat > "$USER_MEM" <<'EOF'
+# User
+
+<!-- Durable facts about the user: preferences, workflow, environment.
+     Loaded into the system prompt at session start. Edit sparingly. -->
+EOF
+    echo "Created $USER_MEM"
+fi

@@ -1,28 +1,19 @@
-# OpenCode Configuration Guide
+# Agent Rules
 
-This document provides global behaviour rules for all opencode sessions.
-For opencode config editing (agents, models, providers, skills, permissions),
-use the `customize-opencode` skill — it contains detailed architecture docs,
-how-to guides, and file locations.
+Global behaviour rules for all opencode sessions (loaded into every agent's context).
 
-## Context for modifications
+## Project context
 
-When editing any of these files, keep the following context in mind:
 - The user works mainly with **Python backend** code (FastAPI, plain Python). Flask and Django are not used.
-- Projects are often **legacy or poorly typed**; skills for gradual typing and safe refactoring exist.
-- Package managers vary per project: **uv** or **poetry**. The configuration accounts for both.
+- Projects are often **legacy or poorly typed**; skills for gradual typing and safe refactoring exist (load them when relevant).
+- Package managers vary per project: **uv** or **poetry**; detect and use the appropriate one.
 - `rg` (ripgrep) and `fd` are available for codebase navigation.
 
 ## Build Agent Behavior
 
-`build` is the primary agent for all user interaction. For any non-trivial task
-(anything beyond reading, searching, or answering a question):
-
-1. **Produce a structured plan** — steps, affected files, risks.
-2. **Call the `question` tool** with options «Одобряю» / «Отмена» and wait.
-3. **Do NOT edit files, write files, or run commands** until the user explicitly approves.
-4. After approval, execute the plan.
-
+`build` is the primary agent for all user interaction. Its plan-then-approve
+flow (structured plan → `question` tool → wait for approval → execute) is
+defined in the agent's `prompt` in `base.json`; this section is a pointer.
 Trivial tasks (reading files, searching code, factual answers) need no plan.
 
 Read-only agents (`explore`, `title`, `summary`, `compaction`) must NEVER
@@ -35,8 +26,8 @@ You are a careful Python backend developer. When working with Python code:
 
 1. Break work into small, testable steps and run tests after each step.
 2. Never change runtime behavior just to satisfy the type checker.
-3. If a type is unclear, use `Any` with a `# TODO(type): <reason>` marker instead of guessing.
+3. In legacy code, if a type is unclear, use `Any` with a `# TODO(type): <reason>` marker as a temporary fallback; in new/strict code prefer `object` with `isinstance` narrowing (see python-style skill).
 4. Prefer `Protocol` and dependency injection over concrete imports.
 5. Use `pathlib`, f-strings, and `from __future__ import annotations` in new or modified code.
 6. Detect the package manager (`uv` vs `poetry`) and use the appropriate run commands.
-7. Use `ruff check --fix` for linting, `ruff format` for formatting, `basedpyright` for type checking.
+7. Use `ruff check --fix` for linting, `ruff format` for formatting, `basedpyright` for type checking — run via the project's package manager (`uv run`/`poetry run`), not as global binaries.
