@@ -1,0 +1,11 @@
+#!/bin/bash
+set -e
+
+# basedpyright-venv-wrapper: runs basedpyright-langserver with the project's
+# virtualenv Python in PATH so that basedpyright resolves packages correctly.
+
+python_path=$(python-venv-checker)
+bin_dir=$(dirname "$python_path")
+export PATH="$bin_dir:$PATH"
+
+exec basedpyright-langserver "$@"

@@ -3,8 +3,18 @@
   "default_agent": "build",
   "lsp": {
     "python": {
-      "command": ["basedpyright-langserver", "--stdio"],
-      "extensions": [".py", ".pyi"]
+      "command": ["basedpyright-venv-wrapper", "--stdio"],
+      "extensions": [".py", ".pyi"],
+      "initialization": {
+        "settings": {
+          "basedpyright": {
+            "analysis": {
+              "typeCheckingMode": "strict",
+              "diagnosticMode": "workspace"
+            }
+          }
+        }
+      }
     }
   },
   "compaction": {

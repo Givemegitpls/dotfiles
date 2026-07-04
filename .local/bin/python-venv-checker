@@ -1,0 +1,55 @@
+#!/bin/bash
+set -e
+
+# python-venv-checker: resolves the Python interpreter for the current project.
+# Searches upwards for poetry venv (via poetry itself, including ~/.cache/pypoetry),
+# .venv/venv directories, and falls back to system python.
+# Optional argument: starting directory (default: $PWD).
+
+start_dir="${1:-$PWD}"
+cd "$start_dir"
+
+# 1. Activated virtualenv
+if [ -n "${VIRTUAL_ENV:-}" ]; then
+    echo "$VIRTUAL_ENV/bin/python"
+    exit 0
+fi
+
+# 2. Search upwards
+dir="$PWD"
+while true; do
+    # Poetry — ask poetry itself where the venv is (handles global cache dirs).
+    if { [ -f "$dir/pyproject.toml" ] || [ -f "$dir/poetry.lock" ]; } && command -v poetry >/dev/null 2>&1; then
+        venv_path=$(cd "$dir" && poetry env info -p 2>/dev/null || true)
+        if [ -n "$venv_path" ] && [ -x "$venv_path/bin/python" ]; then
+            echo "$venv_path/bin/python"
+            exit 0
+        fi
+    fi
+
+    # uv / standard .venv
+    if [ -x "$dir/.venv/bin/python" ]; then
+        echo "$dir/.venv/bin/python"
+        exit 0
+    fi
+
+    # legacy venv
+    if [ -x "$dir/venv/bin/python" ]; then
+        echo "$dir/venv/bin/python"
+        exit 0
+    fi
+
+    parent=$(dirname "$dir")
+    if [ "$parent" = "$dir" ]; then
+        break
+    fi
+    dir="$parent"
+done
+
+# 3. Fallback
+python_path=$(command -v python3 || command -v python || true)
+if [ -n "$python_path" ]; then
+    echo "$python_path"
+else
+    echo "python"
+fi
