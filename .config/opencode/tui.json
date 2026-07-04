@@ -3,6 +3,6 @@
   "theme": "catppuccin-macchiato-transparent",
   "keybinds": {
     "app_exit": "ctrl+q,ctrl+d",
-    "session_interrupt": "ctrl+c,esc"
+    "session_interrupt": "ctrl+c"
   }
 }

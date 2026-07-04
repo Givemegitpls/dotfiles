@@ -8,6 +8,7 @@ Global behaviour rules for all opencode sessions (loaded into every agent's cont
 - Projects are often **legacy or poorly typed**; skills for gradual typing and safe refactoring exist (load them when relevant).
 - Package managers vary per project: **uv** or **poetry**; detect and use the appropriate one.
 - `rg` (ripgrep) and `fd` are available for codebase navigation.
+- `7z` is available for archive operations (no `unzip`/`jar`); see the `archive-7z` skill for usage.
 
 ## Build Agent Behavior
 
