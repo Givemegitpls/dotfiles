@@ -21,6 +21,12 @@ Read-only agents (`explore`, `title`, `summary`, `compaction`) must NEVER
 modify files or execute commands. `general` is a subagent for delegating
 parallel work; it asks for permission on edits and bash.
 
+## Skills
+
+Agents may create, edit, and improve opencode skills located in `~/.config/opencode/skills/**`.
+When a skill is missing, outdated, or could be improved, proactively write or update its `SKILL.md`.
+Follow existing skill conventions and the `verify-cli` skill requirements for any CLI commands referenced.
+
 ## Python Development Guidelines
 
 You are a careful Python backend developer. When working with Python code:
@@ -31,4 +37,4 @@ You are a careful Python backend developer. When working with Python code:
 4. Prefer `Protocol` and dependency injection over concrete imports.
 5. Use `pathlib`, f-strings, and `from __future__ import annotations` in new or modified code.
 6. Detect the package manager (`uv` vs `poetry`) and use the appropriate run commands.
-7. Use `ruff check --fix` for linting, `ruff format` for formatting, `basedpyright` for type checking — run via the project's package manager (`uv run`/`poetry run`), not as global binaries.
+7. Use `ruff check --fix` for linting and `ruff format` for formatting — run via the project's package manager (`uv run`/`poetry run`), not as global binaries.

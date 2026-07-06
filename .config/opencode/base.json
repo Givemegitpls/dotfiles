@@ -40,7 +40,8 @@
         "bash": {
           "*": "ask",
           "git *": "deny",
-          "git diff*": "allow"
+          "git diff*": "allow",
+          "sudo*": "deny"
         }
       }
     },
@@ -54,11 +55,15 @@
           "**/.env.*": "ask",
           "*": "allow"
         },
-        "external_directory": "ask",
+        "external_directory": {
+          "*": "ask",
+          "~/.config/opencode/skills/**": "allow"
+        },
         "bash": {
           "*": "ask",
           "git *": "deny",
-          "git diff*": "allow"
+          "git diff*": "allow",
+          "sudo*": "deny"
         }
       }
     },
@@ -78,17 +83,24 @@
     },
     "general": {
       "permission": {
-        "edit": "ask",
+        "edit": {
+          "~/.config/opencode/skills/**": "allow",
+          "*": "ask"
+        },
         "read": {
           "**/.env": "ask",
           "**/.env.*": "ask",
           "*": "allow"
         },
-        "external_directory": "ask",
+        "external_directory": {
+          "*": "ask",
+          "~/.config/opencode/skills/**": "allow"
+        },
         "bash": {
           "*": "ask",
           "git *": "deny",
-          "git diff*": "allow"
+          "git diff*": "allow",
+          "sudo*": "deny"
         }
       }
     },
@@ -102,6 +114,7 @@
           "git rebase*": "deny",
           "git cherry-pick*": "deny",
           "git revert*": "deny",
+          "sudo*": "deny",
           "*": "deny"
         }
       }
@@ -116,6 +129,7 @@
           "git rebase*": "deny",
           "git cherry-pick*": "deny",
           "git revert*": "deny",
+          "sudo*": "deny",
           "*": "deny"
         }
       }
@@ -130,6 +144,7 @@
           "git rebase*": "deny",
           "git cherry-pick*": "deny",
           "git revert*": "deny",
+          "sudo*": "deny",
           "*": "deny"
         }
       }
