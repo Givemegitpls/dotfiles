@@ -41,7 +41,8 @@
           "*": "ask",
           "git *": "deny",
           "git diff*": "allow",
-          "sudo*": "deny"
+          "sudo*": "deny",
+          "pip*": "deny"
         }
       }
     },
@@ -63,7 +64,8 @@
           "*": "ask",
           "git *": "deny",
           "git diff*": "allow",
-          "sudo*": "deny"
+          "sudo*": "deny",
+          "pip*": "deny"
         }
       }
     },
@@ -76,9 +78,7 @@
           "*": "allow"
         },
         "external_directory": "ask",
-        "bash": {
-          "*": "deny"
-        }
+        "bash": "deny"
       }
     },
     "general": {
@@ -100,23 +100,15 @@
           "*": "ask",
           "git *": "deny",
           "git diff*": "allow",
-          "sudo*": "deny"
+          "sudo*": "deny",
+          "pip*": "deny"
         }
       }
     },
     "title": {
       "permission": {
         "edit": "deny",
-        "bash": {
-          "git commit*": "deny",
-          "git push*": "deny",
-          "git reset*": "deny",
-          "git rebase*": "deny",
-          "git cherry-pick*": "deny",
-          "git revert*": "deny",
-          "sudo*": "deny",
-          "*": "deny"
-        }
+        "bash": "deny"
       }
     },
     "summary": {
@@ -130,23 +122,15 @@
           "git cherry-pick*": "deny",
           "git revert*": "deny",
           "sudo*": "deny",
-          "*": "deny"
+          "*": "deny",
+          "pip*": "deny"
         }
       }
     },
     "compaction": {
       "permission": {
         "edit": "deny",
-        "bash": {
-          "git commit*": "deny",
-          "git push*": "deny",
-          "git reset*": "deny",
-          "git rebase*": "deny",
-          "git cherry-pick*": "deny",
-          "git revert*": "deny",
-          "sudo*": "deny",
-          "*": "deny"
-        }
+        "bash": "deny"
       }
     }
   }
