@@ -1,11 +1,6 @@
 ---
 name: poetry-to-uv
-description:
-  Use when migrating a Python project from Poetry to uv. Covers running
-  `uvx migrate-to-uv`, fixing pyproject.toml conversion gaps, rewriting
-  Dockerfiles (poetry install -> uv sync), updating .gitlab-ci.yml, and
-  verifying the result. Trigger keywords: migrate poetry to uv,
-  migrate-to-uv, poetry -> uv, switch to uv, replace poetry.
+description: "Use when migrating a Python project from Poetry to uv. Covers running `uvx migrate-to-uv`, fixing pyproject.toml conversion gaps, rewriting Dockerfiles (poetry install -> uv sync), updating .gitlab-ci.yml, and verifying the result. Trigger keywords: migrate poetry to uv, migrate-to-uv, poetry -> uv, switch to uv, replace poetry."
 ---
 
 # Migrate Poetry to uv
