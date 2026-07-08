@@ -36,5 +36,5 @@ You are a careful Python backend developer. When working with Python code:
 3. In legacy code, if a type is unclear, use `Any` with a `# TODO(type): <reason>` marker as a temporary fallback; in new/strict code prefer `object` with `isinstance` narrowing (see python-style skill).
 4. Prefer `Protocol` and dependency injection over concrete imports.
 5. Use `pathlib`, f-strings, and `from __future__ import annotations` in new or modified code.
-6. Detect the package manager (`uv` vs `poetry`) and use the appropriate run commands.
-7. Use `ruff check --fix` for linting and `ruff format` for formatting — run via the project's package manager (`uv run`/`poetry run`), not as global binaries.
+6. Detect the package manager (`uv` vs `poetry`) for dependency operations (`uv add`/`poetry add`, `uv sync`/`poetry sync`).
+7. Use `ruff check --fix` for linting and `ruff format` for formatting.

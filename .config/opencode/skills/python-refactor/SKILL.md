@@ -7,7 +7,7 @@ description: "Use when refactoring Python code safely. Covers extract method/cla
 
 ## Safety first
 
-- Run existing tests before starting: `uv run pytest` or `poetry run pytest`
+- Run existing tests before starting: `pytest`
 - If no tests exist, write a minimal smoke test that exercises the target code
 - Make one logical change per step; run tests after each step
 - If tests fail, revert and rethink before proceeding
@@ -16,7 +16,7 @@ description: "Use when refactoring Python code safely. Covers extract method/cla
 
 - **Extract method**: identify a block with clear inputs/outputs, create `def _<name>(...)`, replace block with call
 - **Extract class**: group related methods and state, create new class, inject via constructor
-- **Extract module**: move cohesive functions/classes to new file, update imports, run `uv run ruff check --fix` (or `poetry run ruff check --fix`)
+- **Extract module**: move cohesive functions/classes to new file, update imports, run `ruff check --fix`
 - After extraction, verify no circular imports were introduced
 
 ## Dependency inversion
@@ -34,7 +34,7 @@ description: "Use when refactoring Python code safely. Covers extract method/cla
 
 ## Testing during refactor
 
-- After each extraction, run `uv run pytest -x` or `poetry run pytest -x`
+- After each extraction, run `pytest -x`
 - Use `pytest --tb=short` for concise tracebacks
 - If a test requires mocking after refactor, prefer `mocker.spy()` over full mocks
 

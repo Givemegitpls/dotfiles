@@ -24,9 +24,9 @@ prepares the message and the change summary; the user runs the git command.
 ## Pre-commit
 
 - If `.pre-commit-config.yaml` exists, hooks run automatically on the user's machine
-- If missing, suggest adding one with: `ruff check --fix`, `ruff format`, `basedpyright` (run via `uv run`/`poetry run` inside hook definitions)
+- If missing, suggest adding one with: `ruff check --fix`, `ruff format`, `basedpyright`
 - `pre-commit` is not installed globally; add it as a dev dependency: `uv add --dev pre-commit`
-- Manual check (user runs): `uv run pre-commit run --all-files`
+- Manual check (user runs): `pre-commit run --all-files`
 
 ## Branching
 
@@ -40,9 +40,9 @@ prepares the message and the change summary; the user runs the git command.
 
 The agent prepares:
 
-1. `uv run ruff check --fix && uv run ruff format` (or `poetry run ...`)
-2. `uv run basedpyright` (or `poetry run basedpyright`)
-3. `uv run pytest`
+1. `ruff check --fix && ruff format`
+2. `basedpyright`
+3. `pytest`
 4. Review staged changes: `git diff --staged` (agent-run, the only git command allowed)
 
 The agent then suggests a conventional-commit message; the user stages

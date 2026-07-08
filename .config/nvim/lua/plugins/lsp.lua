@@ -1,16 +1,10 @@
 return {
 	"neovim/nvim-lspconfig",
 	config = function()
-		local python_utils = require("functions.python")
-		local python_path = python_utils.get_python_path()
-
-		vim.lsp.config("ruff", {
-			settings = { interpreter = python_path },
-		})
+		vim.lsp.config("ruff", {})
 		vim.lsp.enable("ruff")
 		vim.lsp.config("basedpyright", {
 			settings = {
-				python = { pythonPath = python_path },
 				basedpyright = {
 					analysis = {
 						diagnosticMode = "workspace",

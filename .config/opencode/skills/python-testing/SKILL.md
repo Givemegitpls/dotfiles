@@ -1,15 +1,15 @@
 ---
 name: python-testing
-description: "Use when writing tests for Python code. Covers pytest conventions, fixtures, mocking, strict type-checked tests, and uv-based test running."
+description: "Use when writing tests for Python code. Covers pytest conventions, fixtures, mocking, strict type-checked tests."
 ---
 
 # Python Testing
 
 ## Running tests
 
-- `uv run pytest` (or `pytest` if inside activated venv)
-- `uv run pytest -x` to stop on first failure
-- `uv run pytest --tb=short` for concise tracebacks
+- `pytest` (or `python -m pytest`)
+- `pytest -x` to stop on first failure
+- `pytest --tb=short` for concise tracebacks
 - Look for `pyproject.toml` → `[tool.pytest.ini_options]` for project config
 
 ## Installing test dependencies
@@ -47,7 +47,7 @@ Never use `pip install` to add test deps — they will not be recorded in `pypro
 
 ## Coverage
 
-- `uv run pytest --cov` if `pytest-cov` installed
+- `pytest --cov` if `pytest-cov` installed
 - Target high coverage for new code
 - Use `--cov-fail-under` in CI
 

@@ -21,25 +21,14 @@ description: "Use when writing or editing Python code. Enforces strict typing wi
 
 ## Running linters and type checkers
 
-CRITICAL: Always run `ruff` and `basedpyright` inside the project's virtual
-environment — never as global binaries. Global versions are likely out of sync
-with the lockfile and may produce false errors or miss configured rules.
-
-Prefix every invocation with the project's package manager:
-
-| Tool       | uv project                  | poetry project                  |
-|------------|-----------------------------|---------------------------------|
-| ruff check | `uv run ruff check --fix`   | `poetry run ruff check --fix`   |
-| ruff format| `uv run ruff format`        | `poetry run ruff format`        |
-| basedpyright | `uv run basedpyright`     | `poetry run basedpyright`       |
-
-Native uv shortcuts (run inside the venv automatically): `uv format` (wraps
-Ruff) and `uv check` (runs Astral's `ty`, not basedpyright).
+- `ruff check --fix` — lint and auto-fix
+- `ruff format` — format
+- `basedpyright` — type check (also runs continuously via LSP)
 
 ## Ruff rules
 
-- Run `uv run ruff check --fix` (or `poetry run ruff check --fix`) after edits
-- Run `uv run ruff format` (or `poetry run ruff format`, or `uv format`) after edits
+- Run `ruff check --fix` after edits
+- Run `ruff format` after edits
 - Key enabled rule groups: E, F, I, N, UP, ANN, B, A, SIM, TCH, RUF
 
 ## Modern Python

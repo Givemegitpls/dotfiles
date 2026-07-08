@@ -35,8 +35,8 @@ description: "Use when first opening an unfamiliar Python project. Quick analysi
 ## Step 5: Verify environment
 
 - Check `.venv/` exists, suggest `uv sync` (uv) or `poetry sync` (poetry) if not
-- Verify `uv run python -c "import <main_pkg>"` or `poetry run python -c "import <main_pkg>"` works
-- Run `uv run pytest --co -q` or `poetry run pytest --co -q` to list collected tests
+- Verify `python -c "import <main_pkg>"` works
+- Run `pytest --co -q` to list collected tests
 - For backend/FastAPI: note if lifespan, routers, or `Depends()` patterns exist
 
 ## Output format

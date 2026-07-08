@@ -9,7 +9,7 @@
       "disabled": true
     },
     "python": {
-      "command": ["basedpyright-venv-wrapper", "--stdio"],
+      "command": ["basedpyright-langserver", "--stdio"],
       "extensions": [".py", ".pyi"],
       "initialization": {
         "settings": {

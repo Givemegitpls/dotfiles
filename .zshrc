@@ -92,7 +92,7 @@ plugins=(git zsh-syntax-highlighting zsh-autosuggestions zsh-vi-mode zsh-history
 # fi
 
 export EDITOR='nvim'
-export PATH="$PATH:$HOME/.local/bin:$HOME/apps"
+export PATH="$HOME/.local/bin:$HOME/apps:$PATH"
 
 # Compilation flags
 # export ARCHFLAGS="-arch $(uname -m)"

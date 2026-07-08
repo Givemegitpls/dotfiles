@@ -48,17 +48,13 @@ Correct commands (verified against `uv add --help` and `poetry add --help`):
 | Add dev dep             | `uv add --dev <pkg>`        | `poetry add --group dev <pkg>`|
 | Add to a named group    | `uv add --group <g> <pkg>`  | `poetry add --group <g> <pkg>`|
 | Add optional/extra dep  | `uv add --optional <e> <p>` | `poetry add <pkg>` (edit toml)|
-| Add editable local path | `uv add --editable <path>`  | `poetry add --editable <path>`|
 | Remove a dep            | `uv remove <pkg>`           | `poetry remove <pkg>`         |
 | Sync env from lockfile  | `uv sync`                   | `poetry sync` / `poetry install`|
-| Run a command in env    | `uv run <cmd>`              | `poetry run <cmd>`            |
 
 `uv pip <subcommand>` is a low-level pip-compatible interface for environments
 WITHOUT project metadata. Do not reach for it in normal project work.
 
-Run the type checker after each batch of annotations. With uv: `uv run basedpyright`
-(or the native `uv check`, which runs Astral's `ty` type checker). With poetry:
-`poetry run basedpyright`.
+Run the type checker after each batch of annotations: `basedpyright`.
 
 ## Testing legacy changes
 

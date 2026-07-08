@@ -39,10 +39,7 @@ return {
 		},
 
 		config = function()
-			local python_utils = require("functions.python")
-			local python_path = python_utils.get_python_path()
-
-			require("dap-python").setup(python_path)
+			require("dap-python").setup()
 
 			local dap = require("dap")
 			table.insert(dap.configurations.python, 1, {
@@ -51,7 +48,6 @@ return {
 				name = "file (project root)",
 				program = "${file}",
 				console = "integratedTerminal",
-				pythonPath = python_path,
 				cwd = vim.fn.getcwd(),
 				args = {},
 			})

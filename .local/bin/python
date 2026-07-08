@@ -1,0 +1,6 @@
+#!/bin/bash
+# python: runs the project venv python (resolved by python-venv-checker),
+# forwarding all args. Requires ~/.local/bin BEFORE /usr/bin in PATH.
+# CAUTION: python-venv-checker must never invoke `python` (recursion);
+# it hardcodes /usr/bin/python as fallback.
+exec "$(python-venv-checker)" "$@"
