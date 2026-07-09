@@ -16,6 +16,7 @@ paccat            # Print pacman package files
 
 # vpn
 sing-box
+mihomo-bin
 
 # package management
 yay
