@@ -52,7 +52,7 @@ tun:
     - tcp://any:53
 
 proxies:
-  - name: proxy
+  - name: vless
     type: vless
     server: changeme
     port: 443
@@ -66,13 +66,28 @@ proxies:
     reality-opts:
       public-key: changeme
       short-id: changeme
+  - name: wg
+    type: wireguard
+    server: host
+    port: port
+    ip: your_ip
+    public-key: pbk
+    private-key: pvk
+    pre-shared-key: psk
+    udp: true
+  - name: naive
+    type: socks5
+    server: 127.0.0.1
+    port: 1080
+    udp: true
 
 proxy-groups:
   - name: PROXY
     type: select
     proxies:
-      - proxy
-      - DIRECT
+      - wg
+      - vless
+      - naive
 
 rules:
   # DNS из локалки наружу — напрямую (sing-box: port 53 udp -> direct)
@@ -86,8 +101,14 @@ rules:
   # Русские IP -> direct (заменяет geoip-ru.srs)
   - GEOIP,private,DIRECT,no-resolve
   - GEOIP,ru,DIRECT
+  - GEOSITE,category-ru,DIRECT
+  - GEOIP,LAN,DIRECT
 
   # Только эти процессы туннелируются (как в sing-box process_name)
+  - PROCESS-NAME,pacman,PROXY
+  - PROCESS-NAME,yay,PROXY
+  - PROCESS-NAME,makepkg,PROXY
+  - PROCESS-NAME,reflector,PROXY
   - PROCESS-NAME,electron,PROXY
   - PROCESS-NAME,nvim,PROXY
   - PROCESS-NAME,git,PROXY
@@ -97,7 +118,7 @@ rules:
   - PROCESS-NAME,Telegram,PROXY
   - PROCESS-NAME,wget,PROXY
   - PROCESS-NAME,lowfi,PROXY
+  - PROCESS-NAME,go,PROXY
 
   # Всё остальное — напрямую (sing-box final: direct)
   - MATCH,DIRECT
-
