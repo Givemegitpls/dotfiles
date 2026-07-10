@@ -21,11 +21,44 @@ Read-only agents (`explore`, `title`, `summary`, `compaction`) must NEVER
 modify files or execute commands. `general` is a subagent for delegating
 parallel work; it asks for permission on edits and bash.
 
-## Skills
+## Skills — proactive creation (MANDATORY for build and general)
 
-Agents may create, edit, and improve opencode skills located in `~/.config/opencode/skills/**`.
-When a skill is missing, outdated, or could be improved, proactively write or update its `SKILL.md`.
-Follow existing skill conventions and the `verify-cli` skill requirements for any CLI commands referenced.
+Creating and maintaining skills is a core responsibility, not optional. When
+you invest time figuring something out, capture that knowledge so future
+sessions don't repeat the work.
+
+Create a new skill when ALL are true:
+- You debugged or researched a non-obvious process (build, test, deploy, CI).
+- The same investigation could recur in future sessions.
+- No existing skill already covers it.
+
+Update an existing skill when:
+- Its commands or steps are wrong, outdated, or incomplete.
+- Its description doesn't match when it should trigger.
+- You discovered a step it's missing.
+
+Triggers that should prompt action:
+- You ran the same multi-step investigation more than once in a session.
+- A user explained a workflow or convention you didn't know about.
+- You encountered a task matching a skill's description, but the skill was outdated or incomplete.
+- You figured out project-specific conventions not documented elsewhere.
+
+Steps:
+1. Check `~/.config/opencode/skills/` (global) AND `.opencode/skills/` (project) for an existing match.
+2. If creating a NEW skill, ask the user via `question` tool: save globally (`~/.config/opencode/skills/<name>/`) or for this project only (`.opencode/skills/<name>/`)? Default recommendation: global for general-purpose workflows, project for project-specific conventions.
+3. Create `<name>/SKILL.md` — frontmatter: `name`, `description` (front-load trigger keywords).
+4. Verify every CLI command against actual `--help` or `man` output (see `verify-cli` skill).
+5. Follow conventions of existing skills in the directory.
+
+## Memory files — durable knowledge (build and general)
+
+`~/.local/share/opencode/memory/PERSONALITY.md` and `USER.md` are loaded into
+the system prompt at session start. Append durable, non-sensitive facts you
+learn during a session (detailed trigger rules live in the `build` agent
+prompt). Read-only agents must not write to these files.
+
+NEVER write secrets, API keys, tokens, internal URLs/hostnames, PII, or
+NDA-bound info. If unsure whether a fact is sensitive, do not write it down.
 
 ## Python Development Guidelines
 
