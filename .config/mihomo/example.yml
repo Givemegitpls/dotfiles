@@ -86,11 +86,16 @@ proxies:
 
 proxy-groups:
   - name: PROXY
-    type: select
+    type: fallback
     proxies:
       - wg
       - vless
       - naive
+    url: https://cp.cloudflare.com
+    interval: 300
+    timeout: 5000
+    lazy: true
+    expected-status: 204
 
 rules:
   # DNS из локалки наружу — напрямую (sing-box: port 53 udp -> direct)
