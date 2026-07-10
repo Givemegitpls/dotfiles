@@ -58,6 +58,11 @@
           "git describe*": "allow",
           "git remote -v*": "allow",
           "git config --get*": "allow",
+          "git branch --show-current": "allow",
+          "head *": "allow",
+          "tail *": "allow",
+          "fd *": "allow",
+          "rg *": "allow",
           "sudo*": "deny",
           "pip*": "deny"
         }
@@ -92,6 +97,11 @@
           "git describe*": "allow",
           "git remote -v*": "allow",
           "git config --get*": "allow",
+          "git branch --show-current": "allow",
+          "head *": "allow",
+          "tail *": "allow",
+          "fd *": "allow",
+          "rg *": "allow",
           "sudo*": "deny",
           "pip*": "deny"
         }
@@ -139,6 +149,11 @@
           "git describe*": "allow",
           "git remote -v*": "allow",
           "git config --get*": "allow",
+          "git branch --show-current": "allow",
+          "head *": "allow",
+          "tail *": "allow",
+          "fd *": "allow",
+          "rg *": "allow",
           "sudo*": "deny",
           "pip*": "deny"
         }
