@@ -26,3 +26,4 @@
 !.config/naive/example.json
 .config/go/*
 !./.config/go/env
+.config/rofi/scripts/network-manager/enabled

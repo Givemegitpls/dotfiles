@@ -1,60 +1,34 @@
 #!/bin/bash
-# Проверяем sing-box и netbird
-case x"$@" in
-x"  Stop mihomo")
-  coproc (systemctl --user stop mihomo.target >/dev/null 2>&1) &
-  exit 0
-  ;;
-x"  Start mihomo")
-  coproc (systemctl --user start mihomo.target >/dev/null 2>&1) &
-  exit 0
-  ;;
-x"  Stop sing-box")
-  coproc (systemctl --user stop sing-box >/dev/null 2>&1) &
-  exit 0
-  ;;
-x"  Start sing-box")
-  coproc (systemctl --user start sing-box >/dev/null 2>&1) &
-  exit 0
-  ;;
-x"  Stop netbird")
-  coproc (netbird down >/dev/null 2>&1) &
-  exit 0
-  ;;
-x"  Start netbird")
-  coproc (netbird up >/dev/null 2>&1) &
-  exit 0
-  ;;
-esac
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ENABLED_DIR="$SCRIPT_DIR/enabled"
 
-active="\0active\x1f"
+STOP_ICON=$'\ueba5'
+START_ICON=$'\ueba6'
 
-# Добавляем mihomo
-if systemctl --user is-active --quiet mihomo.target; then
-  active+="0,"
-  echo "  Stop mihomo"
-else
-  echo "  Start mihomo"
+if [ -n "$1" ]; then
+  name="${1##* }"
+  module="$ENABLED_DIR/$name.sh"
+  if [ -x "$module" ]; then
+    coproc ("$module" toggle >/dev/null 2>&1) &
+  fi
+  exit 0
 fi
 
-# Добавляем sing-box
-if systemctl --user is-active --quiet sing-box; then
-  active+="1,"
-  echo "  Stop sing-box"
-else
-  echo "  Start sing-box"
-fi
+active=""
+index=0
 
-# Добавляем netbird
-if systemctl is-active --quiet netbird; then
-  netbird_status=$(netbird status | grep "Networks" | cut -d: -f2 | sed "s/ -//")
-else
-  $netbird_status=""
-fi
-if [ -z "$netbird_status" ]; then
-  echo "  Start netbird"
-else
-  active+="2"
-  echo "  Stop netbird"
-fi
-echo -en "$active\n"
+for module in "$ENABLED_DIR"/*.sh; do
+  [ -x "$module" ] || continue
+  name="$(basename "$module" .sh)"
+
+  if "$module" status; then
+    [ -n "$active" ] && active+=","
+    active+="$index"
+    printf '%s  Stop %s\n' "$STOP_ICON" "$name"
+  else
+    printf '%s  Start %s\n' "$START_ICON" "$name"
+  fi
+  ((index++))
+done
+
+printf '\0active\x1f%s\n' "$active"
