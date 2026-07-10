@@ -2,11 +2,11 @@
 # Проверяем sing-box и netbird
 case x"$@" in
 x"  Stop mihomo")
-  coproc (systemctl --user stop mihomo >/dev/null 2>&1) &
+  coproc (systemctl --user stop mihomo.target >/dev/null 2>&1) &
   exit 0
   ;;
 x"  Start mihomo")
-  coproc (systemctl --user start mihomo >/dev/null 2>&1) &
+  coproc (systemctl --user start mihomo.target >/dev/null 2>&1) &
   exit 0
   ;;
 x"  Stop sing-box")
@@ -30,7 +30,7 @@ esac
 active="\0active\x1f"
 
 # Добавляем mihomo
-if systemctl --user is-active --quiet mihomo; then
+if systemctl --user is-active --quiet mihomo.target; then
   active+="0,"
   echo "  Stop mihomo"
 else

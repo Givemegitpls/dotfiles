@@ -1,14 +1,12 @@
 [Unit]
-Description=Mihomo daemon
+Description=Naive proxy daemon
 After=network.target NetworkManager.service systemd-networkd.service iwd.service
 
 [Service]
 Type=simple
-LimitNPROC=500
-LimitNOFILE=1000000
 Restart=always
 RestartSec=5
-ExecStart=%h/.scripts/vpn/mihomo.sh
+ExecStart=/usr/bin/naiveproxy %h/.config/naive/config.json
 
 [Install]
-WantedBy=default.target
+WantedBy=mihomo.target

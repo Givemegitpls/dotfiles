@@ -1,0 +1,6 @@
+[Unit]
+Description=Mihomo services
+Wants=mihomo-naive.service mihomo-base.service
+
+[Install]
+WantedBy=default.target
