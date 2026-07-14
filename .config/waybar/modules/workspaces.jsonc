@@ -1,11 +1,12 @@
 {
   "group/workspaces-group": {
     "orientation": "horizontal",
-    "modules": ["ext/workspaces"],
+    "modules": ["mango/workspaces"],
   },
-  "ext/workspaces": {
+  "mango/workspaces": {
     "format": "{icon}",
     "on-click": "activate",
+    "hide-empty": true,
     "format-icons": {
       "active": "",
       "default": "",
