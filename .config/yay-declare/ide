@@ -23,7 +23,6 @@ lua-language-server
 
 # shell
 zsh
-oh-my-zsh-git
 
 # formatters
 prettier
