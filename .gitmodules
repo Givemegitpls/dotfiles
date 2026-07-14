@@ -17,3 +17,6 @@
 	path = .config/singbox/geoip
 	url = https://github.com/SagerNet/sing-geoip.git
 	branch = rule-set
+[submodule ".config/zsh/plugins/oh-my-zsh"]
+	path = .config/zsh/plugins/oh-my-zsh
+	url = https://github.com/ohmyzsh/ohmyzsh.git
