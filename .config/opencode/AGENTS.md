@@ -53,9 +53,20 @@ Steps:
 ## Memory files — durable knowledge (build and general)
 
 `~/.local/share/opencode/memory/PERSONALITY.md` and `USER.md` are loaded into
-the system prompt at session start. Append durable, non-sensitive facts you
-learn during a session (detailed trigger rules live in the `build` agent
-prompt). Read-only agents must not write to these files.
+the system prompt at session start.
+
+- `USER.md` — global user facts only: environment, workflow, and preferences
+  that would remain true across every project.
+- `PERSONALITY.md` — style and behaviour corrections.
+
+Project-specific facts (architecture, build/test/deploy commands, business
+logic, project conventions) belong in the current project's own memory:
+
+- `./AGENTS.md` in the workspace root
+- `.opencode/skills/` for reusable workflows
+
+Do NOT write project-specific facts to `USER.md` or `PERSONALITY.md`.
+Read-only agents must not write to any memory files.
 
 NEVER write secrets, API keys, tokens, internal URLs/hostnames, PII, or
 NDA-bound info. If unsure whether a fact is sensitive, do not write it down.
