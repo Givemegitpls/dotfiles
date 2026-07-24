@@ -58,7 +58,6 @@ proxies:
     port: 443
     uuid: changeme
     network: tcp
-    udp: true
     tls: true
     flow: xtls-rprx-vision
     servername: changeme
@@ -74,13 +73,11 @@ proxies:
     public-key: pbk
     private-key: pvk
     pre-shared-key: psk
-    udp: true
   # From naive config (listen)
   - name: naive
     type: socks5
     server: 127.0.0.1
     port: 1080
-    udp: true
     username: local_user
     password: local_pass
 
