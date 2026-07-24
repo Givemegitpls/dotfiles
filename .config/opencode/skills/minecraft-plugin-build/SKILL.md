@@ -137,6 +137,20 @@ ls /usr/lib/jvm/
 export JAVA_HOME=/usr/lib/jvm/java-21-openjdk
 ```
 
+### Paper reflection rewriter blocks `Field.modifiers`
+
+**Symptom**: `java.lang.NoSuchFieldException: modifiers` when trying `Field.class.getDeclaredField("modifiers")` on Paper 1.21+.
+
+**Fix**: Use `sun.misc.Unsafe` to write final fields directly:
+
+```java
+Field unsafeField = sun.misc.Unsafe.class.getDeclaredField("theUnsafe");
+unsafeField.setAccessible(true);
+sun.misc.Unsafe unsafe = (sun.misc.Unsafe) unsafeField.get(null);
+long offset = unsafe.objectFieldOffset(targetField);
+unsafe.putObject(targetObject, offset, newValue);
+```
+
 ### EngineHub (WorldGuard/WorldEdit) repo timeout
 
 **Symptom**: Downloads from `maven.enginehub.org` time out.
