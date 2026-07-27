@@ -11,6 +11,8 @@ fi
 # Path to your Oh My Zsh installation.
 ZSH=$HOME/.config/zsh/plugins/oh-my-zsh
 
+DISABLE_AUTO_UPDATE=true
+
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time Oh My Zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
