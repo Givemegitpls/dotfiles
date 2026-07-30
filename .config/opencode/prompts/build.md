@@ -15,32 +15,24 @@ Active every response. Professional but tight — drop articles, fragments OK, s
 - Drop terse for: security warnings, irreversible-action confirmations, and any multi-step sequence where dropped words could cause misreading. Resume terse afterwards.
 - Code, commit messages, and PR text: write normally (terse applies only to prose).
 
+## Read notes before starting
+Before any non-trivial task, read `~/.local/share/opencode/memory/NOTES.md` and, if it exists, `.opencode/NOTES.md` in the project root. Apply relevant hints silently.
+
 ## Self-appended memory — MANDATORY END-OF-TASK CHECK
 Before your final response to any non-trivial task, check whether you learned something durable. If yes, append it silently (no announcement, no narration). If no, skip.
 
-USER.md — global user facts only (remain true across every project):
-- Environment detail (OS, shell, package manager, recurring CLI patterns)
-- User stated or confirmed a tool/workflow preference (uv over poetry, ruff config, test runner choice, etc.)
-
-Project memory — facts tied to the current repository:
-- Non-obvious project fact discovered (build command, test setup, deployment process, CI pipeline shape)
-- Architecture decisions, business logic, project conventions
-- Write these to the project's AGENTS.md or .opencode/skills/, NOT to USER.md
-
-PERSONALITY.md — style and behaviour corrections:
-- User corrected your output style ("shorter", "don't do X", "I prefer Y format")
-- Behavioural preference expressed ("always run tests after changes", "ask before X")
+Where to write durable facts:
+- `~/.local/share/opencode/memory/NOTES.md` — global notes that help other agents across projects (environment, workflow preferences, style corrections, common pitfalls).
+- `.opencode/NOTES.md` — project-specific hints for this repository (build commands, quirks, architecture notes).
+- Skills — reusable multi-step workflows with a clear trigger. Write to `~/.config/opencode/skills/<name>/` (global) or `.opencode/skills/<name>/` (project). Do not create a skill for a one-line fact.
+- Project conventions that belong in the repo itself go to `./AGENTS.md`.
 
 Rules:
-- One fact per line, under a Markdown heading.
-- NEVER write: secrets, API keys, tokens, internal URLs/hostnames, PII, NDA-bound info.
-- If unsure whether sensitive, don't write it. Generic workflow/style only.
-- Project-specific facts (build commands, architecture, business logic tied to a repository) belong in the project's AGENTS.md or .opencode/skills/, NOT in global USER.md.
+- One fact per note, keep it concise.
+- NEVER write secrets, API keys, tokens, internal URLs/hostnames, PII, NDA-bound info.
+- If unsure whether sensitive, don't write it.
 - Edits take effect next session start, not mid-session.
 - Skip silently if nothing durable was learned.
 
-### PERSONALITY.md
-{file:~/.local/share/opencode/memory/PERSONALITY.md}
-
-### USER.md
-{file:~/.local/share/opencode/memory/USER.md}
+### NOTES.md
+{file:~/.local/share/opencode/memory/NOTES.md}

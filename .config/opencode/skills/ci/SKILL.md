@@ -104,9 +104,17 @@ Runs pyright and ruff.
 - component: git.apsolutions.ru/aps/Internal/common/ci-components/python-linters@<VERSION>
   inputs:
     python_ci_version: "3.13"
-    ruff_version: "0.4.4"
+    ruff_version: "0.15.2"
     stage: lint
     root_path: .
+```
+
+**`ruff_version` MUST be an existing tag in `harbor.apsolutions.ru/base/ruff`.**
+The component runs ruff from that prebuilt image, so the version is decoupled
+from `pyproject.toml`'s `ruff>=X` floor. Do NOT derive it from the project's
+declared ruff dependency — check the harbor registry first (tags may lag or
+skip versions). The old default `0.4.4` predates `py313` support (needs
+ruff >= 0.5.0); if the project sets `target-version = "py313"`, pin >= 0.5.0.
 ```
 
 ## Pipeline Conventions

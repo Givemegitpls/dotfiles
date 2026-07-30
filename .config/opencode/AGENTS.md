@@ -50,23 +50,24 @@ Steps:
 4. Verify every CLI command against actual `--help` or `man` output (see `verify-cli` skill).
 5. Follow conventions of existing skills in the directory.
 
-## Memory files — durable knowledge (build and general)
+## Agent notes — durable knowledge (build and general)
 
-`~/.local/share/opencode/memory/PERSONALITY.md` and `USER.md` are loaded into
-the system prompt at session start.
+Agents share hints via markdown notes. Read relevant notes before a task;
+append concise facts you discover so other agents can reuse them.
 
-- `USER.md` — global user facts only: environment, workflow, and preferences
-  that would remain true across every project.
-- `PERSONALITY.md` — style and behaviour corrections.
+- `~/.local/share/opencode/memory/NOTES.md` — global notes for cross-project
+  facts (environment, workflow preferences, style, common pitfalls).
+- `.opencode/NOTES.md` — project-specific hints for the current repository
+  (build commands, quirks, architecture notes). Create it if it does not exist
+  and you learn something worth sharing.
+- Skills (`~/.config/opencode/skills/` global, `.opencode/skills/` project) —
+  reusable multi-step workflows with a clear trigger. Do not create a skill for
+  a one-line fact; put it in NOTES.md instead.
+- `./AGENTS.md` — high-level project rules and conventions that belong in the
+  repository itself.
 
-Project-specific facts (architecture, build/test/deploy commands, business
-logic, project conventions) belong in the current project's own memory:
-
-- `./AGENTS.md` in the workspace root
-- `.opencode/skills/` for reusable workflows
-
-Do NOT write project-specific facts to `USER.md` or `PERSONALITY.md`.
-Read-only agents must not write to any memory files.
+Do NOT write project-specific facts to global notes or skills. Read-only agents
+must not write to any memory files.
 
 NEVER write secrets, API keys, tokens, internal URLs/hostnames, PII, or
 NDA-bound info. If unsure whether a fact is sensitive, do not write it down.

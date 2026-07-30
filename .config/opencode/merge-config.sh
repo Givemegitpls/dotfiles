@@ -43,24 +43,12 @@ echo "opencode.json generated successfully."
 MEMORY_DIR="$HOME/.local/share/opencode/memory"
 mkdir -p "$MEMORY_DIR"
 
-PERSONALITY="$MEMORY_DIR/PERSONALITY.md"
-if [[ ! -f "$PERSONALITY" ]]; then
-  cat >"$PERSONALITY" <<'EOF'
-# Personality
+NOTES="$MEMORY_DIR/NOTES.md"
+if [[ ! -f "$NOTES" ]]; then
+  cat >"$NOTES" <<'EOF'
+# Agent Notes
 
-<!-- Agent-maintained notes on manner, style, and behavioral preferences.
-     Loaded into the system prompt at session start. Edit sparingly. -->
+<!-- Shared hints for all agents. Read before a task; append useful facts you discover. -->
 EOF
-  echo "Created $PERSONALITY"
-fi
-
-USER_MEM="$MEMORY_DIR/USER.md"
-if [[ ! -f "$USER_MEM" ]]; then
-  cat >"$USER_MEM" <<'EOF'
-# User
-
-<!-- Durable facts about the user: preferences, workflow, environment.
-     Loaded into the system prompt at session start. Edit sparingly. -->
-EOF
-  echo "Created $USER_MEM"
+  echo "Created $NOTES"
 fi
