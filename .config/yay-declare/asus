@@ -3,4 +3,3 @@ power-profiles-daemon --asdeps
 switcheroo-control
 lib32-nvidia-utils --asdeps
 nvidia-open-dkms
-supergfxctl
