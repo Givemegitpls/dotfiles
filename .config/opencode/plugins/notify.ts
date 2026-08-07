@@ -27,7 +27,7 @@ function runNotifySend(args: string[]): Promise<string | undefined> {
 }
 
 async function sendNotificationImpl(title: string, body: string) {
-  const args = ["-a", "opencode", "-t", "0"];
+  const args = ["-a", "opencode"];
   if (notificationId) {
     args.push("--replace-id", notificationId);
   } else {
