@@ -167,6 +167,21 @@
         }
       }
     },
+    "vision": {
+      "description": "Analyzes images: describes content, extracts text (OCR), reads charts, diagrams and screenshots. Use for any image-understanding task.",
+      "mode": "subagent",
+      "prompt": "You are a vision subagent. Analyze the images the user provides: describe their content, extract text (OCR), interpret charts, diagrams, screenshots and UI. Answer questions about the images. Reply in the user's language. You are read-only: do not modify files or run commands.",
+      "permission": {
+        "edit": "deny",
+        "read": {
+          "**/.env": "ask",
+          "**/.env.*": "ask",
+          "*": "allow"
+        },
+        "external_directory": "ask",
+        "bash": "deny"
+      }
+    },
     "title": {
       "permission": {
         "edit": "deny",

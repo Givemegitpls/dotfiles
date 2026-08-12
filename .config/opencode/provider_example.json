@@ -118,6 +118,7 @@
     "plan": "kimi-k2.5-go",
     "explore": "mimo-v2.5-go",
     "general": "kimi-k2.5-go",
+    "vision": "kimi-k2.6-go",
     "title": "mimo-v2.5-pro-go",
     "summary": "mimo-v2.5-pro-go",
     "compaction": "mimo-v2.5-pro-go"
