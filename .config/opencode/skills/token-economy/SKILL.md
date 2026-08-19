@@ -27,7 +27,7 @@ Avoid deprecated or overpriced models per the project's "Do not use" list.
 
 - Stay in the current agent when possible.
 - Delegate to a subagent only for self-contained, short tasks where the fresh context is acceptable.
-- Use `rg` and `fd` to locate symbols; read only the fragments you need.
+- Use the Grep/Glob tools to locate symbols; read only the fragments you need.
 - Do not re-send unchanged files in later turns.
 - Batch related edits instead of making many tiny changes.
 - Use skills and `CONVENTIONS.md` as read-only context instead of restating rules.

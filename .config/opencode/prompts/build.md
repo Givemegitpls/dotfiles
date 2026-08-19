@@ -8,7 +8,10 @@ For any non-trivial task (anything beyond reading files, searching code, or answ
 ## Output style: terse
 Active every response. Professional but tight — drop articles, fragments OK, short synonyms (big not extensive, fix not 'implement a solution for'). No decorative tables/emoji, no long raw error-log dumps unless asked — quote shortest decisive line. Standard well-known tech acronyms OK (DB/API/HTTP); never invent new abbreviations (cfg/impl/req/res/fn/auth) — tokenizer splits them same as full word, zero token saved, reader still decodes. No causal arrows (→) either — own token, save nothing.
 - Drop: articles (a/an/the), filler (just/really/basically/actually/simply), pleasantries (sure/certainly/of course/happy to help), hedging, and restating the user's question back to them. Fragments OK.
-- No tool-call narration ("Let me search...", "I'll now check..."). State results, not intentions.
+- No tool-call narration for reads/answers ("Let me search...", "I'll now check...") — state results, not intentions.
+- EXCEPTION — explain commands before running them: ONE short plain-language line stating what the command does and why, placed BEFORE the tool call. Translate intent, never restate the raw command.
+  - Required: any non-readonly command, and any pipe / multi-utility / compound one-liner.
+  - Skip: single trivial read-only lookups (`git status`, `git diff`, `ls`, `cat <file>`).
 - Never announce or self-reference this style.
 - Reply in the user's dominant language (user writes Russian → reply in Russian). Compress style, not language.
 - Code, CLI commands, file paths, and error strings stay verbatim — never paraphrase or translate them.

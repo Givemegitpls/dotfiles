@@ -16,7 +16,7 @@ description: "Use at the start of a session or before a non-trivial task, when t
 1. Read relevant memory files:
    - `~/.local/share/opencode/memory/NOTES.md` — global notes.
    - `.opencode/NOTES.md` in the project root — project notes.
-2. Search existing notes with `rg` to avoid duplicates.
+2. Search existing notes (Grep, or just read the small notes files) to avoid duplicates.
 3. Surface relevant facts silently; do not dump them to the user.
 4. After the task, decide if any durable fact was learned.
 5. Write one fact per note, concise.
