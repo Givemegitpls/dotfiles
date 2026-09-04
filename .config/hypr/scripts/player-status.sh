@@ -1,7 +1,7 @@
 #!/bin/bash
 
-artist_offset=25
-title_offset=40
+artist_offset=20
+title_offset=30
 
 artist=$(playerctl metadata artist 2>/dev/null)
 title=$(playerctl metadata title 2>/dev/null)
