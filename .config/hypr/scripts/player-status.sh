@@ -15,5 +15,5 @@ if [ ! ${#title} -eq 0 ]; then
     title=$(echo $title | cut -c1-$title_offset)
     title=$(echo $title'...')
   fi
-  echo $artist - $title
+  echo "<span color='#$foreground'>$artist - </span><span color='#$accent'>$title</span>"
 fi
