@@ -3,8 +3,7 @@
     "icon-size": 14,
     "spacing": 10,
     "icons": {
-      "Steam": "",
-      "Telegram Desktop": "",
+      "steam": ".config/waybar/icons/steam.svg",
     },
   },
 }
