@@ -2,6 +2,7 @@
   "default-direction": "right",
   "monitors": {
     "Acer Technologies Acer B247YU 0x122166F9 (HDMI-A-1)": "--right-of eDP-1 --custom-mode 2560x1440@60",
-    "Mitsubishi Electric Corporation DPro930SB 4200401YB (HDMI-A-1)": "--left-of eDP-1 --custom-mode 1400x1050@85"
+    "Mitsubishi Electric Corporation DPro930SB 4200401YB (HDMI-A-1)": "--left-of eDP-1 --custom-mode 1400x1050@85",
+    "Shenzhen KTC Technology Group AQW34H3 (HDMI-A-1)": "--right-of eDP-1 --mode 3440x1440@100.001999 --adaptive-sync enabled"
   }
 }
