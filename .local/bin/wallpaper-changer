@@ -1,9 +1,9 @@
 #!/usr/bin/python
 import os
-from random import randrange
-import subprocess
 import re
+import subprocess
 import sys
+from random import randrange
 
 awww_output = subprocess.check_output(("awww", "query")).decode("utf-8")
 if not (path := re.search(r"(?<=image: ).*$", awww_output)):
@@ -43,5 +43,6 @@ subprocess.run(
                 str(float(randrange(0, 10, 1)) / 10),
             )
         ),
-    ]
+    ],
+    check=False,
 )

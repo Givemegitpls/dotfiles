@@ -6,10 +6,8 @@ from __future__ import annotations
 import asyncio
 import os
 import signal
-import subprocess
 import sys
 from dataclasses import dataclass
-
 
 BATTERY_STATE = {"Discharging": False, "Not charging": False, "Charging": True}
 
@@ -45,6 +43,10 @@ class BSCDaemon:
         self._low_battery_notified = False
         self._critical_battery_notified = False
 
+    def _rename_process(self) -> None:
+        with open("/proc/self/comm", "w") as f:
+            _ = f.write(self.service_name)
+
     def _read_battery(self) -> Battery:
         with open(self.battery_path + "capacity") as c:
             percent = int(c.read().strip())
@@ -60,8 +62,7 @@ class BSCDaemon:
 
     async def start(self) -> None:
         try:
-            with open("/proc/self/comm", "w") as f:
-                _ = f.write(self.service_name)
+            await asyncio.to_thread(self._rename_process)
         except OSError:
             pass
 
@@ -213,10 +214,15 @@ async def _main() -> None:
         _print("Can't get battery info")
         sys.exit(1)
 
-    if (
-        subprocess.run(["pgrep", "-x", service_name], capture_output=True).returncode
-        != 1
-    ):
+    proc = await asyncio.create_subprocess_exec(
+        "pgrep",
+        "-x",
+        service_name,
+        stdout=asyncio.subprocess.PIPE,
+        stderr=asyncio.subprocess.DEVNULL,
+    )
+    _ = await proc.communicate()
+    if proc.returncode != 1:
         _print("Process already exists")
         sys.exit(1)
 

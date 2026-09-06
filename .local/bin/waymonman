@@ -4,10 +4,11 @@
 from __future__ import annotations
 
 import asyncio
+import ctypes
 import json
 import os
 import signal
-import subprocess
+import struct
 import sys
 from enum import StrEnum
 
@@ -24,11 +25,39 @@ def _print(message: str) -> None:
     _ = sys.stdout.flush()
 
 
+def _rename_process(service_name: str) -> None:
+    with open("/proc/self/comm", "w") as f:
+        _ = f.write(service_name)
+
+
+# inotify constants
+IN_MODIFY = 0x00000002
+IN_CLOSE_WRITE = 0x00000008
+IN_MOVED_TO = 0x00000080
+IN_MOVE_SELF = 0x00000800
+IN_CREATE = 0x00000100
+IN_DELETE_SELF = 0x00000400
+IN_IGNORED = 0x00008000
+
+
+def _setup_inotify() -> ctypes.CDLL:
+    libc = ctypes.CDLL("libc.so.6", use_errno=True)
+    libc.inotify_init1.argtypes = [ctypes.c_int]
+    libc.inotify_init1.restype = ctypes.c_int
+    libc.inotify_add_watch.argtypes = [ctypes.c_int, ctypes.c_char_p, ctypes.c_uint32]
+    libc.inotify_add_watch.restype = ctypes.c_int
+    libc.inotify_rm_watch.argtypes = [ctypes.c_int, ctypes.c_int]
+    libc.inotify_rm_watch.restype = ctypes.c_int
+    return libc
+
+
 class WaymonmanDaemon:
     def __init__(self, config_path: str) -> None:
         self.config_path = config_path
         self._udev_proc: asyncio.subprocess.Process | None = None
         self._debounce_task: asyncio.Task[None] | None = None
+        self._inotify_fd: int | None = None
+        self._inotify_libc: ctypes.CDLL | None = None
 
     async def start(self) -> None:
         loop = asyncio.get_running_loop()
@@ -36,6 +65,8 @@ class WaymonmanDaemon:
             loop.add_signal_handler(sig, self._shutdown)
 
         await self.setup_monitors()
+
+        self._watch_config()
 
         self._udev_proc = await asyncio.create_subprocess_exec(
             "udevadm",
@@ -51,9 +82,7 @@ class WaymonmanDaemon:
                 if not line:
                     break
                 if b"drm" in line:
-                    if self._debounce_task:
-                        self._debounce_task.cancel()
-                    self._debounce_task = asyncio.create_task(self._debounced_setup())
+                    self._schedule_setup()
         except asyncio.CancelledError:
             pass
         finally:
@@ -64,6 +93,7 @@ class WaymonmanDaemon:
             self._udev_proc.terminate()
         if self._debounce_task:
             self._debounce_task.cancel()
+        self._close_inotify()
 
     async def _cleanup(self) -> None:
         if self._debounce_task:
@@ -79,6 +109,7 @@ class WaymonmanDaemon:
             except asyncio.TimeoutError:
                 self._udev_proc.kill()
                 await self._udev_proc.wait()
+        self._close_inotify()
 
     async def _debounced_setup(self) -> None:
         try:
@@ -87,10 +118,98 @@ class WaymonmanDaemon:
         except asyncio.CancelledError:
             pass
 
+    def _schedule_setup(self) -> None:
+        if self._debounce_task:
+            self._debounce_task.cancel()
+        self._debounce_task = asyncio.create_task(self._debounced_setup())
+
+    def _watch_config(self) -> None:
+        """Watch the config file for changes via inotify and re-run setup."""
+        try:
+            self._inotify_libc = _setup_inotify()
+            self._inotify_fd = self._inotify_libc.inotify_init1(os.O_NONBLOCK)
+        except (OSError, AttributeError) as e:
+            _ = sys.stderr.write(f"waymonman: config watcher unavailable: {e}\n")
+            return
+        if self._inotify_fd < 0:
+            _ = sys.stderr.write("waymonman: inotify_init1 failed\n")
+            self._inotify_fd = None
+            return
+
+        config_dir = os.path.dirname(self.config_path) or "."
+        mask = (
+            IN_MODIFY
+            | IN_CLOSE_WRITE
+            | IN_MOVED_TO
+            | IN_MOVE_SELF
+            | IN_CREATE
+            | IN_DELETE_SELF
+        )
+        assert self._inotify_libc is not None
+        wd = self._inotify_libc.inotify_add_watch(
+            self._inotify_fd, config_dir.encode(), mask
+        )
+        if wd < 0:
+            _ = sys.stderr.write("waymonman: inotify_add_watch failed\n")
+            self._close_inotify()
+            return
+
+        loop = asyncio.get_running_loop()
+        loop.add_reader(self._inotify_fd, self._on_config_event)
+
+    def _on_config_event(self) -> None:
+        assert self._inotify_fd is not None
+        target = os.path.basename(self.config_path).encode()
+        try:
+            buf = os.read(self._inotify_fd, 4096)
+        except OSError:
+            return
+        if not buf:
+            return
+        # inotify_event layout: int wd, uint32 mask/cookie/len, then name.
+        i = 0
+        while i < len(buf):
+            if len(buf) - i < 16:
+                break
+            _wd, mask, _cookie, name_len = struct.unpack_from("iIII", buf, i)
+            i += 16
+            if name_len > 0:
+                name = buf[i : i + name_len].rstrip(b"\x00")
+                i += name_len
+            else:
+                name = b""
+            if mask & IN_IGNORED:
+                continue
+            if name == target or name == b"":
+                self._schedule_setup()
+                return
+
+    def _close_inotify(self) -> None:
+        if self._inotify_fd is not None:
+            fd = self._inotify_fd
+            loop = asyncio.get_event_loop()
+            try:
+                loop.remove_reader(fd)
+            except (NotImplementedError, ValueError):
+                pass
+            try:
+                os.close(fd)
+            except OSError:
+                pass
+            self._inotify_fd = None
+        self._inotify_libc = None
+
+    def _load_config(self) -> dict[str, object]:
+        try:
+            with open(self.config_path) as f:
+                return json.load(f)
+        except (OSError, json.JSONDecodeError) as e:
+            _ = sys.stderr.write(f"waymonman: failed to read config: {e}\n")
+            return {}
+
     async def setup_monitors(self) -> None:
         if os.path.exists(self.config_path):
-            with open(self.config_path) as f:
-                settings: dict[str, object] = json.load(f)
+            settings = await asyncio.to_thread(self._load_config)
         else:
             settings = {}
 
@@ -197,23 +316,27 @@ async def _main() -> None:
     home = os.getenv("XDG_CONFIG_HOME", os.path.expanduser("~/.config"))
     config_path = os.path.join(home, service_name, "config.json")
 
-    try:
-        with open("/proc/self/comm", "w") as f:
-            _ = f.write(service_name)
-    except OSError:
-        pass
-
     if len(sys.argv) > 1 and sys.argv[1] == "--once":
         daemon = WaymonmanDaemon(config_path)
         await daemon.setup_monitors()
         return
 
-    if (
-        subprocess.run(["pgrep", "-x", service_name], capture_output=True).returncode
-        != 1
-    ):
+    proc = await asyncio.create_subprocess_exec(
+        "pgrep",
+        "-x",
+        service_name,
+        stdout=asyncio.subprocess.PIPE,
+        stderr=asyncio.subprocess.DEVNULL,
+    )
+    _ = await proc.communicate()
+    if proc.returncode != 1:
         _print("Process already exists")
         sys.exit(1)
+
+    try:
+        await asyncio.to_thread(_rename_process, service_name)
+    except OSError:
+        pass
 
     daemon = WaymonmanDaemon(config_path)
     await daemon.start()

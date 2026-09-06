@@ -19,7 +19,7 @@ def _set_pdeathsig(sig: int) -> None:
     try:
         libc = ctypes.CDLL("libc.so.6")
         libc.prctl(1, sig)  # PR_SET_PDEATHSIG = 1
-    except Exception:
+    except OSError:
         pass
 
 
@@ -31,10 +31,13 @@ class VolumeDaemon:
         self._read_tasks: list[asyncio.Task[None]] = []
         self._shutdown_event = asyncio.Event()
 
+    def _rename_process(self) -> None:
+        with open("/proc/self/comm", "w") as f:
+            _ = f.write(self.service_name)
+
     async def start(self) -> None:
         try:
-            with open("/proc/self/comm", "w") as f:
-                _ = f.write(self.service_name)
+            await asyncio.to_thread(self._rename_process)
         except OSError:
             pass
 
@@ -83,7 +86,7 @@ class VolumeDaemon:
         for device in self._devices:
             try:
                 device.close()
-            except Exception:
+            except OSError:
                 pass
 
     async def _read_device(self, device: evdev.InputDevice) -> None:
@@ -102,7 +105,7 @@ class VolumeDaemon:
         except OSError as e:
             if e.errno != errno.ENODEV:
                 _ = sys.stderr.write(f"evdev error on {device.path}: {e}\n")
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001 — last-resort guard for evdev reads
             _ = sys.stderr.write(f"Unexpected error on {device.path}: {e}\n")
 
     async def _set_volume(self, delta: str) -> None:
@@ -135,9 +138,12 @@ async def _main() -> None:
     service_name = "gamescope-volume-daemon"
     pidfile = f"/tmp/{service_name}.pid"
 
-    if os.path.exists(pidfile):
+    def _read_pidfile() -> str:
         with open(pidfile) as f:
-            old_pid = f.read().strip()
+            return f.read().strip()
+
+    if os.path.exists(pidfile):
+        old_pid = await asyncio.to_thread(_read_pidfile)
         if old_pid.isdigit():
             try:
                 os.kill(int(old_pid), 0)
@@ -147,8 +153,11 @@ async def _main() -> None:
                 pass
         os.unlink(pidfile)
 
-    with open(pidfile, "w") as f:
-        _ = f.write(str(os.getpid()))
+    def _write_pidfile() -> None:
+        with open(pidfile, "w") as f:
+            _ = f.write(str(os.getpid()))
+
+    await asyncio.to_thread(_write_pidfile)
 
     try:
         daemon = VolumeDaemon(service_name)

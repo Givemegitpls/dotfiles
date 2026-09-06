@@ -12,7 +12,6 @@ import subprocess
 import sys
 from typing import Any
 
-
 ICONS = (
     "brightness-low.svg",
     "brightness-medium.svg",
@@ -186,7 +185,9 @@ if __name__ == "__main__":
     if len(sys.argv) == 2 and sys.argv[1] in ("up", "down"):
         asyncio.run(send_command(sys.argv[1], service_name))
     elif (
-        subprocess.run(["pgrep", "-x", service_name], capture_output=True).returncode
+        subprocess.run(
+            ["pgrep", "-x", service_name], capture_output=True, check=False
+        ).returncode
         == 1
     ):
         if os.path.exists(config_path):

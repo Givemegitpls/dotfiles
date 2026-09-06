@@ -48,8 +48,7 @@ class Daemon:
         except FileNotFoundError:
             pass
         try:
-            with open("/proc/self/comm", "w") as f:
-                _ = f.write(self.service_name)
+            await asyncio.to_thread(self._rename_process)
         except OSError:
             pass
         self._server = await asyncio.start_unix_server(
@@ -61,6 +60,10 @@ class Daemon:
                 await self._server.serve_forever()
         finally:
             await self.stop_current()
+
+    def _rename_process(self) -> None:
+        with open("/proc/self/comm", "w") as f:
+            _ = f.write(self.service_name)
 
     async def handle_client(
         self, reader: asyncio.StreamReader, writer: asyncio.StreamWriter
@@ -81,7 +84,7 @@ class Daemon:
                 await self.stop_current()
             else:
                 _ = sys.stderr.write(f"Unknown command: {data}\n")
-        except Exception as e:
+        except OSError as e:
             _ = sys.stderr.write(f"Error: {e}\n")
         writer.write(b"OK")
         await writer.drain()
@@ -110,7 +113,7 @@ class Daemon:
                     stdout=subprocess.DEVNULL,
                     stderr=subprocess.DEVNULL,
                 )
-            except Exception as e:
+            except OSError as e:
                 _ = sys.stderr.write(f"Failed to start volume daemon: {e}\n")
 
     async def _monitor_process(self) -> None:
@@ -142,7 +145,7 @@ class Daemon:
                 stdout=subprocess.DEVNULL,
                 stderr=subprocess.DEVNULL,
             )
-        except Exception as e:
+        except OSError as e:
             _ = sys.stderr.write(f"Error running stop command: {e}\n")
         if self.process and self.process.returncode is None:
             self.process.terminate()
@@ -185,7 +188,12 @@ if __name__ == "__main__":
         "stop",
     ):
         asyncio.run(send_command(sys.argv[1], service_name))
-    elif subprocess.run(["pgrep", service_name], capture_output=True).returncode != 0:
+    elif (
+        subprocess.run(
+            ["pgrep", service_name], capture_output=True, check=False
+        ).returncode
+        != 0
+    ):
         asyncio.run(Daemon(service_name).start())
     else:
         print("Usage: steamui_switcher.py gamescope|uwsm|status|stop")
