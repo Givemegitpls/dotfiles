@@ -7,11 +7,11 @@
   "pulseaudio#output": {
     "format": "{icon}",
     "tooltip-format": "{volume}%",
-    "format-muted": " ",
+    "format-muted": "",
     "format-icons": {
-      "headphone": " ",
-      "hdmi": "󰽟 ",
-      "default": [" ", " ", " ", " "],
+      "headphone": "",
+      "hdmi": "󰽟",
+      "default": ["", "", "", ""],
     },
     "scroll-step": 1,
     "on-click": "rofi-mixer",
