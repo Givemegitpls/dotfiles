@@ -1,9 +1,10 @@
 {
   "tray": {
     "icon-size": 14,
-    "spacing": 10,
+    "spacing": 14,
     "icons": {
       "steam": ".config/waybar/icons/steam.svg",
+      "obs": ".config/waybar/icons/obs.svg",
     },
   },
 }

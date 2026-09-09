@@ -13,9 +13,9 @@
   },
   "network": {
     "format-wifi": "{icon}",
-    "format-icons": ["󰤟 ", "󰤢 ", "󰤥 ", "󰤨 "],
-    "format-ethernet": "󰈀 ",
-    "format-disconnected": "󰤮 ",
+    "format-icons": ["󰤟", "󰤢", "󰤥", "󰤨"],
+    "format-ethernet": "󰈀",
+    "format-disconnected": "󰤮",
     "format-disabled": "{ifname} ",
     "tooltip-format-wifi": "{essid}",
     "tooltip-format-ethernet": "{ipaddr}",
