@@ -16,7 +16,7 @@ handle_selection() {
     loginctl lock-session
     ;;
   x"󰒲 Sleep")
-    systemctl sleep
+    systemctl suspend-then-hibernate
     ;;
   x"󰓓 Gamescope")
     steamui_switcher gamescope
