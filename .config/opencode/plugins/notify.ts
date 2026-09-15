@@ -1,11 +1,9 @@
-import type { Plugin } from "@opencode-ai/plugin";
 import { spawn } from "node:child_process";
 
 // Module-level state so duplicated plugin instances share the same
-// notification ID and deduplication set.
+// notification ID.
 let notificationId: string | undefined;
 let notifyChain: Promise<void> = Promise.resolve();
-const notifiedPermissionIds = new Set<string>();
 
 function runNotifySend(args: string[]): Promise<string | undefined> {
   return new Promise((resolve) => {
@@ -50,48 +48,40 @@ function sendNotification(title: string, body: string) {
   return notifyChain;
 }
 
-export default (async () => {
-  return {
-    event: async (input) => {
-      const event = input.event as any;
+export default {
+  id: "notify",
+  async setup(ctx: any) {
+    const permissionRegistration = await ctx.permission.hook(
+      "evaluate",
+      async (event) => {
+        if (event.effect !== "ask") return;
 
-      if (event.type === "permission.asked") {
-        const props = event.properties;
-        const id = props?.id;
-        if (!id || notifiedPermissionIds.has(id)) return;
+        const resources = event.resources.length
+          ? event.resources.join(", ")
+          : undefined;
+        const body = resources
+          ? `Требуется разрешение: ${event.action} (${resources})`
+          : `Требуется разрешение: ${event.action}`;
 
-        notifiedPermissionIds.add(id);
-        const type = props?.permission ?? "opencode";
-        const metadata = props?.metadata ?? {};
-        const pattern =
-          metadata.command ??
-          metadata.filepath ??
-          (props?.patterns?.length ? props.patterns.join(", ") : undefined);
+        await sendNotification(`opencode: ${event.action}`, body);
+      },
+    );
 
-        const body = pattern
-          ? `Требуется разрешение: ${type} (${pattern})`
-          : `Требуется разрешение: ${type}`;
-
-        await sendNotification(`opencode: ${type}`, body);
-        return;
-      }
-
-      if (event.type === "permission.replied") {
-        const id = event.properties?.permissionID;
-        if (id) notifiedPermissionIds.delete(id);
-      }
-    },
-
-    "tool.execute.before": async (input, output) => {
-      if (input.tool !== "question") return;
+    const toolRegistration = await ctx.tool.hook("execute.before", (event) => {
+      if (event.tool !== "question") return;
 
       const questions: Array<{ header?: string; question?: string }> =
-        output.args?.questions ?? [];
+        (event.input as any)?.questions ?? [];
       const first = questions[0];
       const header = first?.header ?? "Вопрос";
       const text = first?.question ?? "opencode ждёт вашего ответа";
 
-      await sendNotification(`opencode: ${header}`, text);
-    },
-  };
-}) satisfies Plugin;
+      return sendNotification(`opencode: ${header}`, text);
+    });
+
+    return async () => {
+      await permissionRegistration.dispose();
+      await toolRegistration.dispose();
+    };
+  },
+};
