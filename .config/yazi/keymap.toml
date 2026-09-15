@@ -11,5 +11,12 @@ prepend_keymap = [
   { on = ["v"], run = "select_all --state=true", desc = "Select all files" },
   { on = ["V"], run = "visual_mode", desc = "Enter visual mode" },
   { on = ["D", "<Enter>"], run = "remove --force --permanently", desc = "Permanently delete files" },
-  { on = ["M"], run = "plugin mount", desc = "A mount manager for Yazi" },
+
+  # Mount
+  { on = ["M", "m"], run = "plugin gvfs -- select-then-mount --jump", desc = "Select device to mount and jump to its mount point" },
+  { on = ["M", "u"], run = "plugin gvfs -- select-then-unmount", desc = "Select device then unmount" },
+  { on = ["M", "a"], run = "plugin gvfs -- add-mount", desc = "Add a GVFS mount URI" },
+  { on = ["M", "e"], run = "plugin gvfs -- edit-mount", desc = "Edit a GVFS mount URI" },
+  { on = ["M", "r"], run = "plugin gvfs -- remove-mount", desc = "Remove a GVFS mount URI" },
+  { on = ["g", "m"], run = "plugin gvfs -- jump-to-device", desc = "Select device then jump to its mount point" },
 ]

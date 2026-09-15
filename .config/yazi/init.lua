@@ -1,8 +1,8 @@
 -- install plugins
 local packages = {
-	"yazi-rs/plugins:mount",
 	"yazi-rs/flavors:catppuccin-mocha",
 	"yazi-rs/plugins:full-border",
+	"boydaihungst/gvfs",
 }
 
 local function install_if_not_exists(package, ya_report)
@@ -25,3 +25,5 @@ do
 end
 
 require("full-border"):setup()
+
+require("gvfs"):setup({})
