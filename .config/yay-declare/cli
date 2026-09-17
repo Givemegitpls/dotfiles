@@ -40,8 +40,6 @@ resvg --asdeps    # svg previewer for yazi
 ncdu              # A fast, terminal-based disk space analyzer for Unix-like systems 
 fd
 ripgrep
-sshfs
-s3cmd             # A command line client for S3
 7zip
 stow              # Perfect dotfiles manager
 

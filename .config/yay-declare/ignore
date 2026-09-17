@@ -5,9 +5,14 @@ lshw
 npm
 switch-lan-play
 flatpak
+
 # asus
 nvidia-laptop-power-cfg
 winboat-bin
 robo3t-bin
 remmina
 helm
+
+# important, not aur
+hyprlock-accent-git-debug
+hyprlock-accent-git

@@ -8,13 +8,11 @@ localsend-bin
 mpv             # video player
 nicotine+       # Soulseek client
 obs-studio
-thunar          # GUI file manager
 timeshift
-# tauon-music-box
 
 # thunar add-ons
-gvfs --asdeps
-gvfs-mtp --asdeps
+thunar          # GUI file manager
 file-roller     # Bruh archive manager
+s3cmd           # A command line client for S3
 s3fs-fuse
 thunar-archive-plugin --asdeps

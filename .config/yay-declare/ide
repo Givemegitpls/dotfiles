@@ -4,6 +4,7 @@ neovim
 tree-sitter-cli
 tree-sitter-query --asdeps
 ttf-jetbrains-mono-nerd
+noto-fonts-emoji
 
 # git
 git
