@@ -5,6 +5,7 @@
     "icons": {
       "steam": ".config/waybar/icons/steam.svg",
       "obs": ".config/waybar/icons/obs.svg",
+      "WebCord_status_icon_1": ".config/waybar/icons/discord.svg",
     },
   },
 }
