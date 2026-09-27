@@ -1,4 +1,7 @@
 uwsm finalize
+# Restart portal after uwsm imported DISPLAY/WAYLAND_DISPLAY into the user
+# manager, otherwise termfilechooser starts without a display and hangs.
+systemctl --user restart xdg-desktop-portal-termfilechooser
 uwsm app -- awww-daemon &
 uwsm app -- swayidle -C ~/.config/swayidle/config &
 uwsm app -- dunst &
