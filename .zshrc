@@ -121,7 +121,7 @@ source $ZSH/oh-my-zsh.sh
 
 function choose_session() {
   if which gamescope &>/dev/null; then
-    exec steamui_switcher
+    exec gamescope-session-switcher
   else
     exec uwsm start default
   fi
