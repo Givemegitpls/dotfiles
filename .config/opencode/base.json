@@ -9,14 +9,8 @@
       "disabled": true
     },
     "python": {
-      "command": [
-        "basedpyright-langserver",
-        "--stdio"
-      ],
-      "extensions": [
-        ".py",
-        ".pyi"
-      ],
+      "command": ["basedpyright-langserver", "--stdio"],
+      "extensions": [".py", ".pyi"],
       "initialization": {
         "settings": {
           "basedpyright": {
@@ -51,20 +45,9 @@
         },
         "bash": {
           "*": "ask",
-          "git *": "deny",
-          "git diff*": "allow",
-          "git show*": "allow",
-          "git log*": "allow",
-          "git ls-tree*": "allow",
-          "git merge-base*": "allow",
-          "git reflog*": "allow",
-          "git status*": "allow",
-          "git blame*": "allow",
-          "git rev-parse*": "allow",
-          "git describe*": "allow",
-          "git remote -v*": "allow",
-          "git config --get*": "allow",
-          "git branch --show-current": "allow",
+          "git *": "allow",
+          "git commit*": "deny",
+          "git push*": "deny",
           "head *": "allow",
           "tail *": "allow",
           "fd *": "allow",
