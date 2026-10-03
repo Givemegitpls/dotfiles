@@ -3,7 +3,7 @@
 # Only `--check startup` correctly detects management disconnect;
 # `ready` and `live` return 0 even when disconnected.
 is_connected() {
-  netbird status | grep Management | grep Connected >/dev/null 2>&1
+  [[ -z "$(netbird status | grep 'NetBird IP: N/A')" ]]
 }
 
 case "$1" in
