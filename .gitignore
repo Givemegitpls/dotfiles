@@ -39,3 +39,10 @@
 !.local/bin/wallpaper-changer
 !.local/bin/monbrighter
 !.local/bin/waymonman
+.local/share/applications/*
+!.local/share/applications/kitty-nvim.desktop
+!.local/share/applications/kitty-yazi.desktop
+.local/share/backgrounds/*
+!.local/share/backgrounds/hypr*
+!.local/share/backgrounds/kotamota*
+.opencode

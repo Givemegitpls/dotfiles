@@ -1,0 +1,6 @@
+[Default Applications]
+image/jpeg=org.gnome.eog.desktop
+text/x.gcode=kitty-nvim.desktop
+text/markdown=kitty-nvim.desktop
+inode/directory=kitty-yazi.desktop
+application/x-directory=kitty-yazi.desktop
