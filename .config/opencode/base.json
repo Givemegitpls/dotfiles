@@ -9,8 +9,14 @@
       "disabled": true
     },
     "python": {
-      "command": ["basedpyright-langserver", "--stdio"],
-      "extensions": [".py", ".pyi"],
+      "command": [
+        "basedpyright-langserver",
+        "--stdio"
+      ],
+      "extensions": [
+        ".py",
+        ".pyi"
+      ],
       "initialization": {
         "settings": {
           "basedpyright": {
