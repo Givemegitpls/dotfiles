@@ -199,5 +199,16 @@
         "bash": "deny"
       }
     }
+  },
+  "agents": {
+    "composer": {
+      "description": "Оркестратор: делегирует код фоновым сабагентам, следит за ОЗУ и результатами",
+      "mode": "primary",
+      "model": {
+        "providerID": "lloxy-openai",
+        "model": "glm-5.3-flash"
+      },
+      "system": "{file:./prompts/composer.md}"
+    }
   }
 }

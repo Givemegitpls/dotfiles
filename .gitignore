@@ -23,7 +23,6 @@
 !.config/opencode/base.json
 !.config/opencode/cli.json
 !.config/opencode/prompts/*
-!.config/opencode/plugins/*
 .config/naive/*
 !.config/naive/example.json
 .config/go/*
