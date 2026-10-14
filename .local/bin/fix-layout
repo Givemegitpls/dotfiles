@@ -1,0 +1,60 @@
+#!/usr/bin/env python3
+"""Fix text typed in the wrong keyboard layout (RU <-> EN).
+
+Per-character physical-key mapping (QWERTY <-> ЙЦУКЕН): Latin -> Cyrillic and
+Cyrillic -> Latin, so mixed strings like "ghbdtn? фззду" convert both
+directions at once.
+
+Usage:
+    fix-layout "ghbdtn? rfr ltkf, z k.,k. фззду"
+    echo "ghbdtn" | fix-layout
+"""
+
+import sys
+
+# English char -> Russian char on the same physical key.
+EN_TO_RU = {
+    # letters
+    "q": "й", "w": "ц", "e": "у", "r": "к", "t": "е", "y": "н",
+    "u": "г", "i": "ш", "o": "щ", "p": "з", "[": "х", "]": "ъ",
+    "a": "ф", "s": "ы", "d": "в", "f": "а", "g": "п", "h": "р",
+    "j": "о", "k": "л", "l": "д", ";": "ж", "'": "э",
+    "z": "я", "x": "ч", "c": "с", "v": "м", "b": "и", "n": "т",
+    "m": "ь", ",": "б", ".": "ю", "/": ".",
+    # ё key
+    "`": "ё", "~": "Ё",
+    # shifted punctuation (digit keys are identical on both layouts)
+    "@": '"', "#": "№", "$": ";", "^": ":", "&": "?", "?": ",", "|": "/",
+}
+
+RU_TO_EN = {ru: en for en, ru in EN_TO_RU.items()}
+RU_TO_EN["Ё"] = "~"  # backtick has no uppercase form
+
+
+def fix(text: str) -> str:
+    out = []
+    for ch in text:
+        upper = ch.isupper()
+        low = ch.lower()
+        if low in EN_TO_RU:
+            mapped = EN_TO_RU[low]
+            out.append(mapped.upper() if upper else mapped)
+        elif low in RU_TO_EN:
+            mapped = RU_TO_EN[low]
+            out.append(mapped.upper() if upper else mapped)
+        else:
+            out.append(ch)
+    return "".join(out)
+
+
+def main() -> None:
+    text = " ".join(sys.argv[1:]) if len(sys.argv) > 1 else sys.stdin.read()
+    result = fix(text)
+    sys.stdout.write(result)
+    # newline when piping, keep verbatim when called with args
+    if len(sys.argv) == 1 and result and not result.endswith("\n"):
+        sys.stdout.write("\n")
+
+
+if __name__ == "__main__":
+    main()
