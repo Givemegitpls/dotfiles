@@ -10,9 +10,6 @@ nicotine+       # Soulseek client
 obs-studio
 timeshift
 
-# thunar add-ons
-thunar          # GUI file manager
-file-roller     # Bruh archive manager
+# s3
 s3cmd           # A command line client for S3
 s3fs-fuse
-thunar-archive-plugin --asdeps
