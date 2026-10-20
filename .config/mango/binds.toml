@@ -177,12 +177,12 @@ exec_once = ["mmsg dispatch setkeymode,master"]
 "CTRL+SHIFT+a" = "view_insert,prev"
 "CTRL+SHIFT+d" = "view_insert,next"
 
-[mousebind.default]
+[mousebind.common]
 "SUPER+btn_left" = "moveresize,curmove"
 "SUPER+btn_right" = "moveresize,curresize"
 "SUPER+SHIFT+btn_left" = "moveresize,curresize"
 
-[switchbind.default]
+[switchbind.common]
 "fold" = "spawn,~/.scripts/laptop/eDPower.sh"
 "unfold" = "spawn_shell,wlr-randr --output eDP-1 --on"
 

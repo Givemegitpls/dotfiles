@@ -38,6 +38,7 @@
 !.local/bin/wallpaper-changer
 !.local/bin/monbrighter
 !.local/bin/waymonman
+!.local/bin/fix-layout
 .local/share/applications/*
 !.local/share/applications/kitty-nvim.desktop
 !.local/share/applications/kitty-yazi.desktop
