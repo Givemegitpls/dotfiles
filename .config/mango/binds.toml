@@ -1,0 +1,211 @@
+# Key Bindings
+# key name refer to `xev` or `wev` command output,
+# mod keys name: super,ctrl,alt,shift,none
+[global]
+exec_once = ["mmsg dispatch setkeymode,master"]
+
+[bind.common]
+# menu and terminal
+"SUPER+r" = "spawn,rofi -show drun"
+"SUPER+e" = "spawn,kitty yazi"
+"SUPER+q" = "spawn,kitty"
+"CTRL+ALT+l" = "spawn,loginctl lock-session"
+"SUPER+w" = "spawn,uwsm app -- ~/.config/waybar/scripts/waybar_toggle.sh"
+
+# clipboard
+"SUPER+v" = "spawn,$HOME/.config/rofi/scripts/cliphist/entrypoint.sh"
+"SUPER+SHIFT+s" = "spawn_shell,grim -g '$(slurp)' - | wl-copy"
+"Print" = "spawn_shell,grim - | wl-copy"
+"ALT+v" = "spawn_shell,cliphist list | head -n 1 | cliphist decode | fix-layout | wl-copy"
+
+# exit
+"SUPER+m" = "spawn,$HOME/.config/rofi/scripts/power-menu/entrypoint.sh"
+"SUPER+c" = "killclient"
+"XF86PowerOff" = "spawn,$HOME/.config/rofi/scripts/power-menu/entrypoint.sh"
+
+# multimedia binds
+"XF86AudioRaiseVolume" = "spawn_shell,~/.scripts/media/volume-changer.sh up"
+"XF86AudioLowerVolume" = "spawn_shell,~/.scripts/media/volume-changer.sh down"
+"XF86AudioMute" = "spawn,~/.scripts/media/volume-mute.sh"
+"XF86AudioMicMute" = "spawn,~/.scripts/media/microphone-toggle.sh"
+"XF86AudioStop" = "spawn,playerctl stop"
+"XF86AudioPrev" = "spawn_shell,~/.scripts/media/playerctl-notifier.sh previous"
+"XF86AudioNext" = "spawn_shell,~/.scripts/media/playerctl-notifier.sh next"
+"XF86AudioPlay" = "spawn,playerctl play-pause"
+
+# brightness binds
+"XF86KbdBrightnessUp" = "spawn,brightnessctl --device='asus::kbd_backlight' set 1+"
+"XF86KbdBrightnessDown" = "spawn,brightnessctl --device='asus::kbd_backlight' set 1-"
+"XF86MonBrightnessUp" = "spawn_shell,emonbrighter up"
+"XF86MonBrightnessDown" = "spawn_shell,emonbrighter down"
+"SUPER+ALT+Up" = "spawn,monbrighter up"
+"SUPER+ALT+Down" = "spawn,monbrighter down"
+
+# switch window status
+"SUPER+g" = "toggleglobal"
+"ALT+Tab" = "overcircle,next"
+"ALT+backslash" = "togglefloating"
+"SUPER+f" = "togglemaximizescreen"
+"SUPER+SHIFT+f" = "togglefullscreen"
+"SUPER+i" = "minimized"
+"SUPER+o" = "toggleoverlay"
+"SUPER+SHIFT+i" = "restore_minimized"
+"ALT+z" = "toggle_scratchpad"
+
+# switch layout
+"SUPER+n" = "switch_layout"
+
+# monitor switch
+"SUPER+TAB" = "focusmon,right"
+"SUPER+SHIFT+Tab" = "tagmon,right"
+
+# resizewin
+"CTRL+SHIFT+Up" = "resizewin,+0,-50"
+"CTRL+SHIFT+Down" = "resizewin,+0,+50"
+"CTRL+SHIFT+Left" = "resizewin,-50,+0"
+"CTRL+SHIFT+Right" = "resizewin,+50,+0"
+# ----- ----- #
+"CTRL+SHIFT+k" = "resizewin,+0,-50"
+"CTRL+SHIFT+j" = "resizewin,+0,+50"
+"CTRL+SHIFT+h" = "resizewin,-50,+0"
+"CTRL+SHIFT+l" = "resizewin,+50,+0"
+
+# reload config
+[bind.common.conflict]
+"SUPER+SHIFT+r" = "reload_config"
+
+[bind.master]
+# swap window
+"SUPER+SHIFT+Up" = "exchange_client,up"
+"SUPER+SHIFT+Down" = "exchange_client,down"
+"SUPER+SHIFT+Left" = "exchange_client,left"
+"SUPER+SHIFT+Right" = "exchange_client,right"
+# ----- ----- #
+"SUPER+SHIFT+k" = "exchange_client,up"
+"SUPER+SHIFT+j" = "exchange_client,down"
+"SUPER+SHIFT+h" = "exchange_client,left"
+"SUPER+SHIFT+l" = "exchange_client,right"
+
+# switch window focus
+"SUPER+Up" = "focusdir,up"
+"SUPER+Down" = "focusdir,down"
+"SUPER+Left" = "focus_window_or_workspace,left"
+"SUPER+Right" = "focus_window_or_workspace,right"
+# ----- ----- #
+"SUPER+k" = "focusdir,up"
+"SUPER+j" = "focusdir,down"
+"SUPER+h" = "focus_window_or_workspace,left"
+"SUPER+l" = "focus_window_or_workspace,right"
+
+# tag switch
+"SUPER+a" = "viewtoleft"
+"SUPER+d" = "viewtoright"
+"SUPER+SHIFT+a" = "tagtoleft,0"
+"SUPER+SHIFT+d" = "tagtoright,0"
+
+# insert tag
+"CTRL+SHIFT+a" = "view_insert,prev"
+"CTRL+SHIFT+d" = "view_insert,next"
+
+# inc master_count
+"SUPER+Equal" = "incnmaster,+1"
+"SUPER+Minus" = "incnmaster,-1"
+
+[bind.scroller]
+# swap window
+"SUPER+SHIFT+Up" = "exchange_client,up"
+"SUPER+SHIFT+Down" = "exchange_client,down"
+"SUPER+SHIFT+Left" = "scroller_stack,left"
+"SUPER+SHIFT+Right" = "scroller_stack,right"
+# ----- ----- #
+"SUPER+SHIFT+k" = "exchange_client,up"
+"SUPER+SHIFT+j" = "exchange_client,down"
+"SUPER+SHIFT+h" = "scroller_stack,left"
+"SUPER+SHIFT+l" = "scroller_stack,right"
+
+# switch window focus
+"SUPER+Up" = "focusdir,up"
+"SUPER+Down" = "focusdir,down"
+"SUPER+Left" = "focusdir,left"
+"SUPER+Right" = "focusdir,right"
+# ----- ----- #
+"SUPER+k" = "focusdir,up"
+"SUPER+j" = "focusdir,down"
+"SUPER+h" = "focusdir,left"
+"SUPER+l" = "focusdir,right"
+
+# tag switch
+"SUPER+a" = "focusdir,left"
+"SUPER+d" = "focusdir,right"
+"SUPER+SHIFT+a" = "scroller_stack,left"
+"SUPER+SHIFT+d" = "scroller_stack,right"
+
+# scroller layout
+"ALT+e" = "set_proportion,1.0"
+"ALT+x" = "switch_proportion_preset"
+
+[bind.dwindle]
+# swap window
+"SUPER+SHIFT+Up" = "move_client,up"
+"SUPER+SHIFT+Down" = "move_client,down"
+"SUPER+SHIFT+Left" = "move_client,left"
+"SUPER+SHIFT+Right" = "move_client,right"
+# ----- ----- #
+"SUPER+SHIFT+k" = "move_client,up"
+"SUPER+SHIFT+j" = "move_client,down"
+"SUPER+SHIFT+h" = "move_client,left"
+"SUPER+SHIFT+l" = "move_client,right"
+
+# switch window focus
+"SUPER+Up" = "focusdir,up"
+"SUPER+Down" = "focusdir,down"
+"SUPER+Left" = "focus_window_or_workspace,left"
+"SUPER+Right" = "focus_window_or_workspace,right"
+# ----- ----- #
+"SUPER+k" = "focusdir,up"
+"SUPER+j" = "focusdir,down"
+"SUPER+h" = "focus_window_or_workspace,left"
+"SUPER+l" = "focus_window_or_workspace,right"
+
+# tag switch
+"SUPER+a" = "viewtoleft"
+"SUPER+d" = "viewtoright"
+"SUPER+SHIFT+a" = "tagtoleft,0"
+"SUPER+SHIFT+d" = "tagtoright,0"
+
+# insert tag
+"CTRL+SHIFT+a" = "view_insert,prev"
+"CTRL+SHIFT+d" = "view_insert,next"
+
+[mousebind.default]
+"SUPER+btn_left" = "moveresize,curmove"
+"SUPER+btn_right" = "moveresize,curresize"
+"SUPER+SHIFT+btn_left" = "moveresize,curresize"
+
+[switchbind.default]
+"fold" = "spawn,~/.scripts/laptop/eDPower.sh"
+"unfold" = "spawn_shell,wlr-randr --output eDP-1 --on"
+
+[gesturebind.scroller]
+"none+right+3" = "focusdir,left"
+"none+left+3" = "focusdir,right"
+
+[gesturebind.master]
+"none+right+3" = "viewtoleft"
+"none+left+3" = "viewtoright"
+
+[gesturebind.dwindle]
+"none+right+3" = "viewtoleft"
+"none+left+3" = "viewtoright"
+
+[axisbind.scroller]
+"SUPER+Up" = "focusdir,left"
+"SUPER+Down" = "focusdir,right"
+
+[axisbind.master]
+"SUPER+Up" = "viewtoleft"
+"SUPER+Down" = "viewtoright"
+
+[axisbind.dwindle]
+"SUPER+Up" = "viewtoleft"
+"SUPER+Down" = "viewtoright"
