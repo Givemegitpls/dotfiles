@@ -14,7 +14,7 @@ exec_once = ["mmsg dispatch setkeymode,master"]
 
 # clipboard
 "SUPER+v" = "spawn,$HOME/.config/rofi/scripts/cliphist/entrypoint.sh"
-"SUPER+SHIFT+s" = "spawn_shell,grim -g '$(slurp)' - | wl-copy"
+"SUPER+SHIFT+s" = "spawn_shell,grim -g \"$(slurp)\" - | wl-copy"
 "Print" = "spawn_shell,grim - | wl-copy"
 "ALT+v" = "spawn_shell,cliphist list | head -n 1 | cliphist decode | fix-layout | wl-copy"
 
@@ -110,6 +110,9 @@ exec_once = ["mmsg dispatch setkeymode,master"]
 # inc master_count
 "SUPER+Equal" = "incnmaster,+1"
 "SUPER+Minus" = "incnmaster,-1"
+# ----- ----- #
+"SUPER+Period" = "incnmaster,+1"
+"SUPER+Comma" = "incnmaster,-1"
 
 [bind.scroller]
 # swap window
