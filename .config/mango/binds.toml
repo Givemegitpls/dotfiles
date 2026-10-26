@@ -16,7 +16,7 @@ exec_once = ["mmsg dispatch setkeymode,master"]
 "SUPER+v" = "spawn,$HOME/.config/rofi/scripts/cliphist/entrypoint.sh"
 "SUPER+SHIFT+s" = "spawn_shell,grim -g \"$(slurp)\" - | wl-copy"
 "Print" = "spawn_shell,grim - | wl-copy"
-"ALT+v" = "spawn_shell,cliphist list | head -n 1 | cliphist decode | fix-layout | wl-copy"
+"ALT+v" = "spawn_shell,cliphist list | head -n 1 | cliphist decode | fix-layout | wl-copy -n"
 
 # exit
 "SUPER+m" = "spawn,$HOME/.config/rofi/scripts/power-menu/entrypoint.sh"
