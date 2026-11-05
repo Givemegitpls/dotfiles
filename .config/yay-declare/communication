@@ -1,3 +1,4 @@
 telegram-desktop
+webkitgtk-6.0 --asdeps
 webcord
 noisetorch

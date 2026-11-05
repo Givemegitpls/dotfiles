@@ -1,11 +1,9 @@
 blender
 chromium
 deluge-gtk      # Torrent client
-droidcam        # Android webcam ;)
-eog             # Image previewer
 gparted
 localsend-bin
-mpv             # video player
+mpv             # video and audio player, also image viewer
 nicotine+       # Soulseek client
 obs-studio
 timeshift

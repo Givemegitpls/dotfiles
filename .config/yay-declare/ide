@@ -9,6 +9,7 @@ noto-fonts-emoji
 # git
 git
 git-lfs
+git-filter-repo
 
 # python
 pyenv
