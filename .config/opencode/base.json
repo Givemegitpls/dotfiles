@@ -9,14 +9,8 @@
       "disabled": true
     },
     "python": {
-      "command": [
-        "basedpyright-langserver",
-        "--stdio"
-      ],
-      "extensions": [
-        ".py",
-        ".pyi"
-      ],
+      "command": ["basedpyright-langserver", "--stdio"],
+      "extensions": [".py", ".pyi"],
       "initialization": {
         "settings": {
           "basedpyright": {
@@ -202,13 +196,34 @@
   },
   "agents": {
     "composer": {
-      "description": "Оркестратор: делегирует код фоновым сабагентам, следит за ОЗУ и результатами",
+      "description": "Orchestrator: delegates code to background sub-agents, tracks memory usage, and retrieves the result",
       "mode": "primary",
-      "model": {
-        "providerID": "lloxy-openai",
-        "model": "glm-5.3-flash"
-      },
-      "system": "{file:./prompts/composer.md}"
+      "prompt": "{file:./prompts/composer.md}",
+      "permission": {
+        "edit": "allow",
+        "read": {
+          "**/.env": "ask",
+          "**/.env.*": "ask",
+          "*": "allow"
+        },
+        "external_directory": {
+          "*": "ask",
+          "~/.local/share/opencode/memory/**": "allow",
+          "~/.config/opencode/skills/**": "allow"
+        },
+        "bash": {
+          "*": "ask",
+          "git *": "allow",
+          "git commit*": "deny",
+          "git push*": "deny",
+          "head *": "allow",
+          "tail *": "allow",
+          "fd *": "allow",
+          "rg *": "allow",
+          "sudo*": "deny",
+          "pip*": "deny"
+        }
+      }
     }
   }
 }
